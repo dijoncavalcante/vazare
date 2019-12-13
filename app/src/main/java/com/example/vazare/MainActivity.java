@@ -10,21 +10,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
-
 import android.os.CountDownTimer;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.TimeUtils;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,11 +29,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-import java.security.Timestamp;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -210,6 +201,11 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
         // Register the broadcast receiver to receive the update action from the notification.
         registerReceiver(mReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
+        //TODO comentado para teste de BROADCASTReceiver
+        //countDownTimerNotification();
+    }
+
+    public void countDownTimerNotification(){
         /*
         Logica para calcular o countdown para sair do trabalho
          */
@@ -277,8 +273,23 @@ public class MainActivity extends AppCompatActivity {
     private void startAlarm() {
         //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 0, 5000, pendingIntent);
         //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,5000,pendingIntent);
-        alarmManager.set(AlarmManager.RTC_WAKEUP,5000,pendingIntent);
-}
+        //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,2000,pendingIntent);
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR, 0);
+        c.set(Calendar.MINUTE, 5);
+        c.set(Calendar.SECOND, 0);
+        String minutosRestantes = String.format(FORMAT,
+                TimeUnit.MILLISECONDS.toHours(c.getTimeInMillis()),
+                TimeUnit.MILLISECONDS.toMinutes(c.getTimeInMillis()) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(c.getTimeInMillis())),
+                TimeUnit.MILLISECONDS.toSeconds(c.getTimeInMillis()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(c.getTimeInMillis())));
+        //String minutos = String.format("%02d", )
+//        Log.d(TAG, "minutos restantes: "+minutosRestantes);
+        Log.d(TAG, "minutos restantes: " + Calendar.getInstance().get(Calendar.HOUR) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":" + Calendar.getInstance().get(Calendar.SECOND));
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 0, TimeUnit.MINUTES.toMillis(c.getTimeInMillis()) - TimeUnit.HOURS.toMinutes(TimeUnit.HOURS.toMillis(c.getTimeInMillis())), pendingIntent);
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * 3, pendingIntent);
+        //alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * 3, pendingIntent);
+
+    }
 
     private void cancelAlarm() {
         alarmManager.cancel(pendingIntent);
@@ -433,8 +444,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void createNotificationChannel() {
         // Create a notification manager object.
-        mNotifyManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         // Notification channels are only available in OREO and higher.
         // So, add a check on SDK version.
