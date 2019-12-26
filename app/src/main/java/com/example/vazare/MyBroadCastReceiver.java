@@ -7,18 +7,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.core.app.NotificationCompat;
-
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
-
-import static android.content.Context.CONTEXT_IGNORE_SECURITY;
 import static android.content.Context.NOTIFICATION_SERVICE;
-import static androidx.core.content.ContextCompat.getSystemService;
+
 
 public class MyBroadCastReceiver extends BroadcastReceiver {
     private static final String TAG = "MyBroadCastReceiver";
@@ -34,18 +28,9 @@ private static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.no
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // TODO: This method is called when the BroadcastReceiver is receiving
-        //if (intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
-//        Intent serviceIntent = new Intent(context, MyService.class);
-//        context.startService(serviceIntent);
-        //} else {
-        Log.d(TAG, "Alarm Manager just ran");
-        Toast.makeText(context.getApplicationContext(), "Alarm Manager just ran", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onReceive");
         createNotificationChannel(context);
-//        getNotificationBuilder(context);
         sendNotification(context);
-
-        //}
     }
 
     private NotificationCompat.Builder getNotificationBuilder(Context context) {
@@ -83,7 +68,7 @@ private static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.no
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder(context);
         // Add the action button using the pending intent.
         //definir a imagem da notificacao
-        notifyBuilder.addAction(R.drawable.ic_notification_app, "Teste de Broadcast", updatePendingIntent);
+        notifyBuilder.addAction(R.drawable.ic_notification_app, context.getString(R.string.notification_title), updatePendingIntent);
         // Deliver the notification.
         mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
     }
@@ -99,13 +84,13 @@ private static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.no
             // Create the NotificationChannel with all the parameters.
             NotificationChannel notificationChannel = new NotificationChannel
                     (PRIMARY_CHANNEL_ID,
-                            "Teste de Broadcast",
+                            context.getString(R.string.notification_title),
                             NotificationManager.IMPORTANCE_HIGH);
 
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.enableVibration(true);
-            notificationChannel.setDescription("Teste de Broadcast");
+            notificationChannel.setDescription(context.getString(R.string.notification_text_5));
             mNotifyManager.createNotificationChannel(notificationChannel);
         }
     }

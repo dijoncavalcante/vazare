@@ -270,25 +270,27 @@ public class MainActivity extends AppCompatActivity {
             return  true;
     }
 
-    private void startAlarm() {
-        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 0, 5000, pendingIntent);
-        //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,5000,pendingIntent);
-        //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,2000,pendingIntent);
+    private void startAlarm(String HoraMinutoSegundo) {
+        // primeiro cria a intenção
+        Intent it = new Intent(this, MyBroadCastReceiver.class);
+        PendingIntent p = PendingIntent.getBroadcast(this, 0, it, 0);
         Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR, 0);
-        c.set(Calendar.MINUTE, 5);
-        c.set(Calendar.SECOND, 0);
-        String minutosRestantes = String.format(FORMAT,
-                TimeUnit.MILLISECONDS.toHours(c.getTimeInMillis()),
-                TimeUnit.MILLISECONDS.toMinutes(c.getTimeInMillis()) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(c.getTimeInMillis())),
-                TimeUnit.MILLISECONDS.toSeconds(c.getTimeInMillis()) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(c.getTimeInMillis())));
-        //String minutos = String.format("%02d", )
-//        Log.d(TAG, "minutos restantes: "+minutosRestantes);
-        Log.d(TAG, "minutos restantes: " + Calendar.getInstance().get(Calendar.HOUR) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":" + Calendar.getInstance().get(Calendar.SECOND));
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 0, TimeUnit.MINUTES.toMillis(c.getTimeInMillis()) - TimeUnit.HOURS.toMinutes(TimeUnit.HOURS.toMillis(c.getTimeInMillis())), pendingIntent);
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * 3, pendingIntent);
-        //alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * 3, pendingIntent);
+        c.setTimeInMillis(System.currentTimeMillis());
+        String txtNotificacao = "Start do Alarme  às: " + Calendar.getInstance().get(Calendar.HOUR) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":" + Calendar.getInstance().get(Calendar.SECOND);
+        Log.d(TAG, txtNotificacao);
+        //Toast.makeText(getApplicationContext(), "Alarm Start = " + txtNotificacao, Toast.LENGTH_LONG).show();
 
+        int hora =  getHour(HoraMinutoSegundo);
+        int minutos = getMinute(HoraMinutoSegundo);
+        int segundos = getSecond();
+        c.set(Calendar.HOUR_OF_DAY, hora);
+        c.set(Calendar.MINUTE, minutos);
+        c.set(Calendar.SECOND, segundos);
+        // agendar o alarme
+        AlarmManager alarme = (AlarmManager) getSystemService(ALARM_SERVICE);
+        long time = c.getTimeInMillis();
+        alarme.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, p);
+        Toast.makeText(getApplicationContext(), "Agendado para: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND), Toast.LENGTH_SHORT).show();
     }
 
     private void cancelAlarm() {
@@ -322,34 +324,50 @@ public class MainActivity extends AppCompatActivity {
         calculate();
     }
     public void calculate() {
-        //TODO teste delete-me
-        startAlarm();
+        if (validate()) {
+            //hora gasta no almoço
+            String almoco = calculateLunch();
+            //recuperando o texto/hora inicial
+            String texto = etInit.getText().toString();
+            //separando a hora e minuto por :
+            String[] horaMinuto = texto.split(":");
+            //somando as 08:00 horas de trabalho diários
+            int horaSaida = Integer.parseInt(horaMinuto[0]) + 8 + Integer.parseInt(almoco.split(":")[0]);
+            int minutoSaida = Integer.parseInt(horaMinuto[1]) + 13 + Integer.parseInt(almoco.split(":")[1]);
 
-        if(!campoInicialHasValue())
-            return;
-        //hora gasta no almoço
-        String almoco = calculateLunch();
-        //recuperando o texto/hora inicial
-        String texto = etInit.getText().toString();
-        //separando a hora e minuto por :
-        String[] horaMinuto = texto.split(":");
-        //somando as 08:00 horas de trabalho diários
-        int horaSaida = Integer.parseInt(horaMinuto[0]) + 8 + Integer.parseInt(almoco.split(":")[0]);
-        int minutoSaida = Integer.parseInt(horaMinuto[1]) + 13 + Integer.parseInt(almoco.split(":")[1]);
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            //horario de saída
+            Calendar dateTimeExit = Calendar.getInstance();
+            dateTimeExit.set(Calendar.HOUR_OF_DAY, horaSaida);
+            dateTimeExit.set(Calendar.MINUTE, minutoSaida);
+            dateTimeExit.set(Calendar.SECOND, Integer.valueOf(getSecond()));
+            etSaida.setText(dateTimeExit.get(Calendar.HOUR_OF_DAY) + ":" + dateTimeExit.get(Calendar.MINUTE));
 
-        SimpleDateFormat fmt = new SimpleDateFormat("HH:mm aaa");
-        //horario de saída
-        Date date = new Date();
-        date.setHours(horaSaida);
-        date.setMinutes(minutoSaida);
+            startAlarm(etSaida.getText().toString());
+            //horas trabalhadas
+            ethorasTrabalhadas.setText(calculateHorasTrabalhadas());
+            //calcular horas permitidas
+            if (cb0147.isChecked()) {
+                etSaida.setText(calcular0147());
+            }
 
-        etSaida.setText(fmt.format(date));
-        //horas trabalhadas
-        ethorasTrabalhadas.setText(calculateHorasTrabalhadas());
-        //calcular horas permitidas
-        if (cb0147.isChecked()) {
-            etSaida.setText(calcular0147());
         }
+    }
+
+    public int getHour(String fullTime){
+        String[] horaMinuto = fullTime.split(":");
+        int horaSaida = Integer.parseInt(horaMinuto[0]);
+        return horaSaida;
+    }
+
+    public int getMinute(String fullTime){
+        String[] horaMinuto = fullTime.split(":");
+        int minutoSaida = Integer.parseInt(horaMinuto[1]);
+        return minutoSaida;
+    }
+
+    public int getSecond(){
+        return 0;
     }
 
 
@@ -518,5 +536,14 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onReceive");
             ignoreNotification();
         }
+    }
+
+    public boolean validate(){
+        if (TextUtils.isEmpty(etInit.getText())){
+            etInit.setError("Informe a hora de entrada!");
+            etInit.setFocusable(true);
+            return false;
+        }
+        return true;
     }
 }
