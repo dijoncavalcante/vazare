@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -66,11 +67,17 @@ public class MainActivity extends AppCompatActivity {
     Button btnCalculate;
     private static final String TAG = "MainActivity";
 
+    public static final String myPreference = "mypref";
+    public static final String horaInicialKey = "hora_inicial_key";
+    public static final String horaFinalKey = "hora_final_key";
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
-
+        verifySharedPreference();
         Intent alarmIntent = new Intent(this, MyBroadCastReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
 
@@ -78,9 +85,16 @@ public class MainActivity extends AppCompatActivity {
         etInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int hour,minute  =0;
                 Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
+                if(TextUtils.isEmpty(etInit.getText())){
+                    hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    minute = mcurrentTime.get(Calendar.MINUTE);
+                }
+                else {
+                    hour = getHour(etInit.getText().toString());
+                    minute = getMinute(etInit.getText().toString());
+                }
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
                     @Override
@@ -94,25 +108,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        etDuracao.setText("08:13");
-        etDuracao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        etDuracao.setText(selectedHour + ":" + selectedMinute);
-
-                    }
-                }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle("Select Time");
-                mTimePicker.show();
-            }
-        });
+        etDuracao.setText("08:17");
+//        etDuracao.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Calendar mcurrentTime = Calendar.getInstance();
+//                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+//                int minute = mcurrentTime.get(Calendar.MINUTE);
+//                TimePickerDialog mTimePicker;
+//                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+//                    @Override
+//                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+//                        etDuracao.setText(selectedHour + ":" + selectedMinute);
+//
+//                    }
+//                }, hour, minute, true);//Yes 24 hour time
+//                mTimePicker.setTitle("Select Time");
+//                mTimePicker.show();
+//            }
+//        });
 
         etAlmocoSaida.setText("12:00");
         etAlmocoSaida.setOnClickListener(new View.OnClickListener() {
@@ -154,24 +168,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        etSaida.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        etSaida.setText(selectedHour + ":" + selectedMinute);
-
-                    }
-                }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle("Select Time");
-                mTimePicker.show();
-            }
-        });
+//        etSaida.setOnClickListener(new View.OnClickListener() {
+////            @Override
+////            public void onClick(View v) {
+////                Calendar mcurrentTime = Calendar.getInstance();
+////                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+////                int minute = mcurrentTime.get(Calendar.MINUTE);
+////                TimePickerDialog mTimePicker;
+////                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+////                    @Override
+////                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+////                        etSaida.setText(selectedHour + ":" + selectedMinute);
+////
+////                    }
+////                }, hour, minute, true);//Yes 24 hour time
+////                mTimePicker.setTitle("Select Time");
+////                mTimePicker.show();
+////            }
+////        });
 
         cb0147.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(view, "Valores resetados com sucesso!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 Reset();
+                clearSharedPreferences();
             }
         });
 
@@ -203,6 +218,18 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(mReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
         //TODO comentado para teste de BROADCASTReceiver
         //countDownTimerNotification();
+    }
+
+    public void verifySharedPreference() {
+        sharedPreferences = getApplication().getSharedPreferences(myPreference, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        if (sharedPreferences.contains(horaInicialKey)) {
+            etInit.setText(sharedPreferences.getString(horaInicialKey, ""));
+        }
+        if (sharedPreferences.contains(horaFinalKey)) {
+            etSaida.setText(sharedPreferences.getString(horaFinalKey, ""));
+        }
+        Log.d(TAG, "verifySharedPreference: " + etInit.getText().toString() + " - " + etSaida.getText().toString());
     }
 
     public void countDownTimerNotification(){
@@ -455,9 +482,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        Log.d(TAG, "onPause");
+        salveSharedPreferences();
+        super.onPause();
+    }
+
+    @Override
     protected void onDestroy() {
+        Log.d(TAG, "onDestroy");
         unregisterReceiver(mReceiver);
         super.onDestroy();
+    }
+
+    public void salveSharedPreferences() {
+        Log.d(TAG, "salveSharedPreferences: " + etInit.getText().toString() + " - " + etSaida.getText().toString());
+        editor.putString(horaInicialKey, etInit.getText().toString());
+        editor.putString(horaFinalKey, etSaida.getText().toString());
+        editor.commit();
+    }
+
+    public void clearSharedPreferences() {
+        editor.remove(horaInicialKey);
+        editor.remove(horaFinalKey);
+        editor.clear();
+        editor.commit();
     }
 
     public void createNotificationChannel() {
