@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         verifySharedPreference();
         Intent alarmIntent = new Intent(this, MyBroadCastReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
-
+        etDuracao.setText("08:17");
 
         etInit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,26 +107,6 @@ public class MainActivity extends AppCompatActivity {
                 mTimePicker.show();
             }
         });
-
-        etDuracao.setText("08:17");
-//        etDuracao.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Calendar mcurrentTime = Calendar.getInstance();
-//                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-//                int minute = mcurrentTime.get(Calendar.MINUTE);
-//                TimePickerDialog mTimePicker;
-//                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
-//                    @Override
-//                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-//                        etDuracao.setText(selectedHour + ":" + selectedMinute);
-//
-//                    }
-//                }, hour, minute, true);//Yes 24 hour time
-//                mTimePicker.setTitle("Select Time");
-//                mTimePicker.show();
-//            }
-//        });
 
         etAlmocoSaida.setText("12:00");
         etAlmocoSaida.setOnClickListener(new View.OnClickListener() {
@@ -167,25 +147,6 @@ public class MainActivity extends AppCompatActivity {
                 mTimePicker.show();
             }
         });
-
-//        etSaida.setOnClickListener(new View.OnClickListener() {
-////            @Override
-////            public void onClick(View v) {
-////                Calendar mcurrentTime = Calendar.getInstance();
-////                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-////                int minute = mcurrentTime.get(Calendar.MINUTE);
-////                TimePickerDialog mTimePicker;
-////                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
-////                    @Override
-////                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-////                        etSaida.setText(selectedHour + ":" + selectedMinute);
-////
-////                    }
-////                }, hour, minute, true);//Yes 24 hour time
-////                mTimePicker.setTitle("Select Time");
-////                mTimePicker.show();
-////            }
-////        });
 
         cb0147.setOnClickListener(new View.OnClickListener() {
             @Override
