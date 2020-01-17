@@ -6,9 +6,9 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
-import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 import java.util.Calendar;
 import static android.content.Context.NOTIFICATION_SERVICE;
@@ -25,12 +25,38 @@ private static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.no
     private static final int NOTIFICATION_ID = 0;
     private NotificationManager mNotifyManager;
     //
+    public static final String myPreference = "mypref";
+    public static final String horaInicialKey = "hora_inicial_key";
+    public static final String horaFinalKey = "hora_final_key";
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "onReceive");
         createNotificationChannel(context);
         sendNotification(context);
+        //verifySharedPreference(context);
+        sharedPreferences = context.getSharedPreferences(myPreference, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        editor.remove(horaInicialKey);
+        editor.remove(horaFinalKey);
+        editor.clear();
+        editor.commit();
+
+    }
+
+    public void verifySharedPreference(Context context) {
+        sharedPreferences = context.getSharedPreferences(myPreference, Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        if (sharedPreferences.contains(horaFinalKey)) {
+            String horaFinal = sharedPreferences.getString(horaFinalKey, "");
+            if (!horaFinal.isEmpty()){
+                //TODO fazer o calculo para limpar a preferencia
+            }
+
+        }
+//        Log.d(TAG, "verifySharedPreference: " + etInit.getText().toString() + " - " + etSaida.getText().toString());
     }
 
     private NotificationCompat.Builder getNotificationBuilder(Context context) {

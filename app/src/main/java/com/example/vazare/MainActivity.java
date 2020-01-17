@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String horaFinalKey = "hora_final_key";
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (campoInicialHasValue()) {
+                    cancelCountDownTimer();
                     calculate();
                 } else {
                     cb0147.setChecked(false);
@@ -167,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
                 Reset();
                 clearSharedPreferences();
+                cancelCountDownTimer();
             }
         });
 
@@ -177,39 +180,49 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
         // Register the broadcast receiver to receive the update action from the notification.
         registerReceiver(mReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
-        //TODO comentado para teste de BROADCASTReceiver
-        //countDownTimerNotification();
+    }
+
+    public void cancelCountDownTimer(){
+        if (countDownTimer != null){
+            countDownTimer.cancel();
+        }
     }
 
     public void verifySharedPreference() {
         sharedPreferences = getApplication().getSharedPreferences(myPreference, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         if (sharedPreferences.contains(horaInicialKey)) {
-            etInit.setText(sharedPreferences.getString(horaInicialKey, ""));
+            String horaInicial = sharedPreferences.getString(horaInicialKey, "");
+            if (!horaInicial.isEmpty())
+                etInit.setText(horaInicial);
         }
         if (sharedPreferences.contains(horaFinalKey)) {
-            etSaida.setText(sharedPreferences.getString(horaFinalKey, ""));
+            String horaFinal = sharedPreferences.getString(horaFinalKey, "");
+            if (!horaFinal.isEmpty()){
+                etSaida.setText(horaFinal);
+                countDownTimerNotification();
+            }
+
         }
         Log.d(TAG, "verifySharedPreference: " + etInit.getText().toString() + " - " + etSaida.getText().toString());
     }
 
     public void countDownTimerNotification(){
-        /*
-        Logica para calcular o countdown para sair do trabalho
-         */
+        /*        Logica para calcular o countdown para sair do trabalho         */
+        Calendar calendarCurrent = Calendar.getInstance();
         Date dataHoraEntrada = new Date();
-        dataHoraEntrada.setHours(16);
-        dataHoraEntrada.setMinutes(8);
-        dataHoraEntrada.setSeconds(0);
+        dataHoraEntrada.setHours(calendarCurrent.get(Calendar.HOUR_OF_DAY));
+        dataHoraEntrada.setMinutes(calendarCurrent.get(Calendar.MINUTE));
+        dataHoraEntrada.setSeconds(calendarCurrent.get(Calendar.SECOND));
 
         Date dataHoraSaida = new Date();
-        dataHoraSaida.setHours(16);
-        dataHoraSaida.setMinutes(13);
-        dataHoraSaida.setSeconds(10);
+        dataHoraSaida.setHours(getHour(etSaida.getText().toString()));
+        dataHoraSaida.setMinutes(getMinute(etSaida.getText().toString()));
+        dataHoraSaida.setSeconds(getSecond());
 
-        long diff = dataHoraSaida.getTime() - dataHoraEntrada.getTime();
+        long diffDate = dataHoraSaida.getTime() - dataHoraEntrada.getTime();
 
-        new CountDownTimer(diff, 1000) { // adjust the milli seconds here 16069000
+        countDownTimer = new CountDownTimer(diffDate, 1000) { // adjust the milli seconds here 16069000
 
             public void onTick(long millisUntilFinished) {
 
@@ -243,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
                     tvTimetogo.setText(R.string.horas_trabalhadas);
                     sendNotification(1);
                 }
+                clearSharedPreferences();
             }
         }.start();
     }
@@ -329,7 +343,12 @@ public class MainActivity extends AppCompatActivity {
             dateTimeExit.set(Calendar.HOUR_OF_DAY, horaSaida);
             dateTimeExit.set(Calendar.MINUTE, minutoSaida);
             dateTimeExit.set(Calendar.SECOND, Integer.valueOf(getSecond()));
+            //TODO comentado apenas para teste de hora de saída
             etSaida.setText(dateTimeExit.get(Calendar.HOUR_OF_DAY) + ":" + dateTimeExit.get(Calendar.MINUTE));
+            //TODO duas linhas apenas para teste de hora de saida
+//            Calendar d = Calendar.getInstance();
+//            d.add(Calendar.MINUTE,2);
+//            etSaida.setText(d.get(Calendar.HOUR_OF_DAY) + ":" + d.get(Calendar.MINUTE));
 
             startAlarm(etSaida.getText().toString());
             //horas trabalhadas
@@ -338,6 +357,7 @@ public class MainActivity extends AppCompatActivity {
             if (cb0147.isChecked()) {
                 etSaida.setText(calcular0147());
             }
+            countDownTimerNotification();
 
         }
     }
@@ -409,6 +429,7 @@ public class MainActivity extends AppCompatActivity {
         etAlmocoEntrada.setText("13:00");
         etSaida.setText("");
         tvTimer.setText("");
+        ethorasTrabalhadas.setText("");
         cb0147.setChecked(false);
     }
 
