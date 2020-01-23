@@ -51,10 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int NOTIFICATION_ID = 0;
     private NotificationManager mNotifyManager;
     private NotificationReceiver mReceiver = new NotificationReceiver();
-
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
-
     TextView tvTimetogo;
     TextView tvTimer;
     EditText etInit;
@@ -66,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
     CheckBox cb0147;
     Button btnCalculate;
     private static final String TAG = "MainActivity";
-
     public static final String myPreference = "mypref";
     public static final String horaInicialKey = "hora_inicial_key";
     public static final String horaFinalKey = "hora_final_key";
+    public static final String check0147Key = "check_0147_Key";
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     CountDownTimer countDownTimer;
@@ -78,10 +76,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
+        //TODO Add linha com hora inicial para teste
+        etInit.setText("06:42");
+        //
         verifySharedPreference();
         Intent alarmIntent = new Intent(this, MyBroadCastReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
-        etDuracao.setText("08:17");
 
         etInit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
                     calculate();
                 } else {
                     cb0147.setChecked(false);
+                    etDuracao.setText("");
                 }
             }
         });
@@ -202,9 +203,17 @@ public class MainActivity extends AppCompatActivity {
                 etSaida.setText(horaFinal);
                 countDownTimerNotification();
             }
-
         }
-        Log.d(TAG, "verifySharedPreference: " + etInit.getText().toString() + " - " + etSaida.getText().toString());
+        if (sharedPreferences.contains(check0147Key)) {
+            Boolean check = sharedPreferences.getBoolean(check0147Key, false);
+            if(check) {
+                cb0147.setChecked(check);
+                etDuracao.setText("10:00");
+            }
+            else
+                etDuracao.setText("08:17");
+        }
+        Log.d(TAG, "verifySharedPreference: " + etInit.getText().toString() + " - " + etSaida.getText().toString() + " - " + cb0147.isChecked());
     }
 
     public void countDownTimerNotification(){
@@ -356,6 +365,10 @@ public class MainActivity extends AppCompatActivity {
             //calcular horas permitidas
             if (cb0147.isChecked()) {
                 etSaida.setText(calcular0147());
+                etDuracao.setText("10:00");
+            }
+            else{
+                etDuracao.setText("08:17");
             }
             countDownTimerNotification();
 
@@ -478,15 +491,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void salveSharedPreferences() {
-        Log.d(TAG, "salveSharedPreferences: " + etInit.getText().toString() + " - " + etSaida.getText().toString());
+        Log.d(TAG, "salveSharedPreferences: " + etInit.getText().toString() + " - " + etSaida.getText().toString() + " - " + cb0147.isChecked());
         editor.putString(horaInicialKey, etInit.getText().toString());
         editor.putString(horaFinalKey, etSaida.getText().toString());
+        editor.putBoolean (check0147Key, cb0147.isChecked());
         editor.commit();
     }
 
     public void clearSharedPreferences() {
         editor.remove(horaInicialKey);
         editor.remove(horaFinalKey);
+        editor.remove(check0147Key);
         editor.clear();
         editor.commit();
     }
