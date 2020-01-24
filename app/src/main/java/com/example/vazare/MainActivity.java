@@ -56,10 +56,10 @@ public class MainActivity extends AppCompatActivity {
     TextView tvTimetogo;
     TextView tvTimer;
     EditText etInit;
-    EditText etDuracao;
+    TextView tvDuracao;
     EditText etAlmocoSaida;
     EditText etAlmocoEntrada;
-    EditText etSaida;
+    TextView tvSaida;
     EditText ethorasTrabalhadas;
     CheckBox cb0147;
     Button btnCalculate;
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initUI();
         //TODO Add linha com hora inicial para teste
-        etInit.setText("06:42");
+        etInit.setText("06:38");
         //
         verifySharedPreference();
         Intent alarmIntent = new Intent(this, MyBroadCastReceiver.class);
@@ -113,9 +113,16 @@ public class MainActivity extends AppCompatActivity {
         etAlmocoSaida.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int hour,minute =0;
                 Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
+
+                if (TextUtils.isEmpty(etAlmocoSaida.getText())){
+                     hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                     minute = mcurrentTime.get(Calendar.MINUTE);
+                }else {
+                    hour = getHour(etAlmocoSaida.getText().toString());
+                    minute = getMinute(etAlmocoSaida.getText().toString());
+                }
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
                     @Override
@@ -133,9 +140,15 @@ public class MainActivity extends AppCompatActivity {
         etAlmocoEntrada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int hour,minute =0;
                 Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
+                if(TextUtils.isEmpty(etAlmocoEntrada.getText())) {
+                    hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    minute = mcurrentTime.get(Calendar.MINUTE);
+                }else{
+                    hour = getHour(etAlmocoEntrada.getText().toString());
+                    minute = getMinute(etAlmocoEntrada.getText().toString());
+                }
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
                     @Override
@@ -153,11 +166,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (campoInicialHasValue()) {
-                    cancelCountDownTimer();
                     calculate();
                 } else {
                     cb0147.setChecked(false);
-                    etDuracao.setText("");
+                    tvDuracao.setText("");
                 }
             }
         });
@@ -200,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
         if (sharedPreferences.contains(horaFinalKey)) {
             String horaFinal = sharedPreferences.getString(horaFinalKey, "");
             if (!horaFinal.isEmpty()){
-                etSaida.setText(horaFinal);
+                tvSaida.setText(horaFinal);
                 countDownTimerNotification();
             }
         }
@@ -208,12 +220,12 @@ public class MainActivity extends AppCompatActivity {
             Boolean check = sharedPreferences.getBoolean(check0147Key, false);
             if(check) {
                 cb0147.setChecked(check);
-                etDuracao.setText("10:00");
+                tvDuracao.setText("10:00");
             }
             else
-                etDuracao.setText("08:17");
+                tvDuracao.setText("08:17");
         }
-        Log.d(TAG, "verifySharedPreference: " + etInit.getText().toString() + " - " + etSaida.getText().toString() + " - " + cb0147.isChecked());
+        Log.d(TAG, "verifySharedPreference: " + etInit.getText().toString() + " - " + tvSaida.getText().toString() + " - " + cb0147.isChecked());
     }
 
     public void countDownTimerNotification(){
@@ -225,8 +237,8 @@ public class MainActivity extends AppCompatActivity {
         dataHoraEntrada.setSeconds(calendarCurrent.get(Calendar.SECOND));
 
         Date dataHoraSaida = new Date();
-        dataHoraSaida.setHours(getHour(etSaida.getText().toString()));
-        dataHoraSaida.setMinutes(getMinute(etSaida.getText().toString()));
+        dataHoraSaida.setHours(getHour(tvSaida.getText().toString()));
+        dataHoraSaida.setMinutes(getMinute(tvSaida.getText().toString()));
         dataHoraSaida.setSeconds(getSecond());
 
         long diffDate = dataHoraSaida.getTime() - dataHoraEntrada.getTime();
@@ -336,6 +348,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void calculate() {
         if (validate()) {
+            cancelCountDownTimer();
             //hora gasta no almoço
             String almoco = calculateLunch();
             //recuperando o texto/hora inicial
@@ -353,22 +366,22 @@ public class MainActivity extends AppCompatActivity {
             dateTimeExit.set(Calendar.MINUTE, minutoSaida);
             dateTimeExit.set(Calendar.SECOND, Integer.valueOf(getSecond()));
             //TODO comentado apenas para teste de hora de saída
-            etSaida.setText(dateTimeExit.get(Calendar.HOUR_OF_DAY) + ":" + dateTimeExit.get(Calendar.MINUTE));
+            tvSaida.setText(dateTimeExit.get(Calendar.HOUR_OF_DAY) + ":" + dateTimeExit.get(Calendar.MINUTE));
             //TODO duas linhas apenas para teste de hora de saida
 //            Calendar d = Calendar.getInstance();
 //            d.add(Calendar.MINUTE,2);
-//            etSaida.setText(d.get(Calendar.HOUR_OF_DAY) + ":" + d.get(Calendar.MINUTE));
+//            tvSaida.setText(d.get(Calendar.HOUR_OF_DAY) + ":" + d.get(Calendar.MINUTE));
 
-            startAlarm(etSaida.getText().toString());
+            startAlarm(tvSaida.getText().toString());
             //horas trabalhadas
             ethorasTrabalhadas.setText(calculateHorasTrabalhadas());
             //calcular horas permitidas
             if (cb0147.isChecked()) {
-                etSaida.setText(calcular0147());
-                etDuracao.setText("10:00");
+                tvSaida.setText(calcular0147());
+                tvDuracao.setText("10:00");
             }
             else{
-                etDuracao.setText("08:17");
+                tvDuracao.setText("08:17");
             }
             countDownTimerNotification();
 
@@ -419,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String calcular0147() {
-        String saida = etSaida.getText().toString();
+        String saida = tvSaida.getText().toString();
         Date dateSaida = new Date();
         dateSaida.setHours(Integer.valueOf(saida.split(":")[0]));
         dateSaida.setMinutes(Integer.valueOf(saida.split(":")[1]));
@@ -437,10 +450,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void Reset() {
         etInit.setText("");
-        etDuracao.setText("08:13");
+        tvDuracao.setText("");
         etAlmocoSaida.setText("12:00");
         etAlmocoEntrada.setText("13:00");
-        etSaida.setText("");
+        tvSaida.setText("");
         tvTimer.setText("");
         ethorasTrabalhadas.setText("");
         cb0147.setChecked(false);
@@ -466,10 +479,10 @@ public class MainActivity extends AppCompatActivity {
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         tvTimetogo = findViewById(R.id.tvTimetogo);
         etInit = findViewById(R.id.etInit);
-        etDuracao = findViewById(R.id.etDuracao);
+        tvDuracao = findViewById(R.id.tvDuracao);
         etAlmocoSaida = findViewById(R.id.etAlmocoSaida);
         etAlmocoEntrada = findViewById(R.id.etAlmocoEntrada);
-        etSaida = findViewById(R.id.etSaida);
+        tvSaida = findViewById(R.id.tvSaida);
         ethorasTrabalhadas = findViewById(R.id.ethorasTrabalhadas);
         btnCalculate = findViewById(R.id.btnCalculate);
         cb0147 = findViewById(R.id.cb0147);
@@ -491,9 +504,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void salveSharedPreferences() {
-        Log.d(TAG, "salveSharedPreferences: " + etInit.getText().toString() + " - " + etSaida.getText().toString() + " - " + cb0147.isChecked());
+        Log.d(TAG, "salveSharedPreferences: " + etInit.getText().toString() + " - " + tvSaida.getText().toString() + " - " + cb0147.isChecked());
         editor.putString(horaInicialKey, etInit.getText().toString());
-        editor.putString(horaFinalKey, etSaida.getText().toString());
+        editor.putString(horaFinalKey, tvSaida.getText().toString());
         editor.putBoolean (check0147Key, cb0147.isChecked());
         editor.commit();
     }
