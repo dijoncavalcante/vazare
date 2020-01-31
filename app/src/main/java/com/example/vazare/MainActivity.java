@@ -15,6 +15,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import android.os.CountDownTimer;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         initUI();
         //TODO Add linha com hora inicial para teste
-        etInit.setText("06:38");
+        etInit.setText("06:47");
         //
         verifySharedPreference();
         Intent alarmIntent = new Intent(this, MyBroadCastReceiver.class);
@@ -323,24 +324,36 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        int nightMode = AppCompatDelegate.getDefaultNightMode();
+        if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            menu.findItem(R.id.night_mode).setTitle(R.string.day_mode);
+        } else {
+            menu.findItem(R.id.night_mode).setTitle(R.string.night_mode);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        int nightMode = AppCompatDelegate.getDefaultNightMode();
         //noinspection SimplifiableIfStatement
+
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.night_mode) {
+            if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+            recreate();
+        }
+        return true;
+        //return super.onOptionsItemSelected(item);
 
-        return super.onOptionsItemSelected(item);
     }
 
     public void calculateOnClick(View view) {
@@ -477,6 +490,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        // Create a notification manager object.
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         tvTimetogo = findViewById(R.id.tvTimetogo);
         etInit = findViewById(R.id.etInit);
         tvDuracao = findViewById(R.id.tvDuracao);
@@ -520,8 +535,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createNotificationChannel() {
-        // Create a notification manager object.
-        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
 
         // Notification channels are only available in OREO and higher.
         // So, add a check on SDK version.
@@ -542,6 +556,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sendNotification(int opcao) {
+        // Create a notification manager object.
+        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        //
         Intent updateIntent = new Intent(ACTION_UPDATE_NOTIFICATION);
         PendingIntent updatePendingIntent = PendingIntent.getBroadcast(this, NOTIFICATION_ID, updateIntent, PendingIntent.FLAG_ONE_SHOT);
         // Build the notification with all of the parameters using helper method
@@ -583,6 +600,15 @@ public class MainActivity extends AppCompatActivity {
         return notifyBuilder;
     }
 
+    public boolean validate(){
+        if (TextUtils.isEmpty(etInit.getText())){
+            etInit.setError("Informe a hora de entrada!");
+            etInit.setFocusable(true);
+            return false;
+        }
+        return true;
+    }
+//--------------------new class//
     public class NotificationReceiver extends BroadcastReceiver {
         private static final String TAG = "NotificationReceiver";
 
@@ -597,12 +623,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public boolean validate(){
-        if (TextUtils.isEmpty(etInit.getText())){
-            etInit.setError("Informe a hora de entrada!");
-            etInit.setFocusable(true);
-            return false;
-        }
-        return true;
-    }
+
 }
