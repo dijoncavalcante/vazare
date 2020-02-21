@@ -1,12 +1,14 @@
 package com.example.vazare;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -275,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
                 if (cb0147.isChecked()) {
                     tvTimetogo.setText(R.string.horas_extras_0147);
                 } else {
-                    tvTimetogo.setText(R.string.horas_trabalhadas);
+                    showAlertDialog(getString(R.string.horas_trabalhadas));
                     sendNotification(1);
                 }
                 clearSharedPreferences();
@@ -375,6 +377,7 @@ public class MainActivity extends AppCompatActivity {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             //horario de saída
             Calendar dateTimeExit = Calendar.getInstance();
+
             dateTimeExit.set(Calendar.HOUR_OF_DAY, horaSaida);
             dateTimeExit.set(Calendar.MINUTE, minutoSaida);
             dateTimeExit.set(Calendar.SECOND, Integer.valueOf(getSecond()));
@@ -385,7 +388,9 @@ public class MainActivity extends AppCompatActivity {
 //            d.add(Calendar.MINUTE,2);
 //            tvSaida.setText(d.get(Calendar.HOUR_OF_DAY) + ":" + d.get(Calendar.MINUTE));
 
+            //TODO Validar se o calculo é necessário antes iniciar o alarme
             startAlarm(tvSaida.getText().toString());
+
             //horas trabalhadas
             ethorasTrabalhadas.setText(calculateHorasTrabalhadas());
             //calcular horas permitidas
@@ -598,6 +603,31 @@ public class MainActivity extends AppCompatActivity {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
         return notifyBuilder;
+    }
+
+    //atributo da classe.
+    private AlertDialog alerta;
+    private void showAlertDialog(String message) {
+        //Cria o gerador do AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Titulo");
+        builder.setMessage(message);
+        //define um botão como positivo
+        builder.setPositiveButton("Positivo", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(MainActivity.this, "positivo=" + arg1, Toast.LENGTH_SHORT).show();
+            }
+        });
+        //define um botão como negativo.
+        builder.setNegativeButton("Negativo", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface arg0, int arg1) {
+                Toast.makeText(MainActivity.this, "negativo=" + arg1, Toast.LENGTH_SHORT).show();
+            }
+        });
+        //cria o AlertDialog
+        alerta = builder.create();
+        //Exibe
+        alerta.show();
     }
 
     public boolean validate(){
