@@ -164,8 +164,8 @@
                 android:text="HORAS TRABALHADAS"/>
 
 
-                <EditText
-                    android:id="@+id/ethorasTrabalhadas"
+                <TextView
+                    android:id="@+id/tvhorasTrabalhadas"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
