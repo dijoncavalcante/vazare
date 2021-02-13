@@ -72,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
     public static final String horaInicialKey = "hora_inicial_key";
     public static final String horaFinalKey = "hora_final_key";
     public static final String check0147Key = "check_0147_Key";
+    public static final String STR_DURACAO_TRABALHO__DIARIO_2021 = "08:15";
+    public static final String STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS = "10:00";
+
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     CountDownTimer countDownTimer;
@@ -245,10 +248,11 @@ public class MainActivity extends AppCompatActivity {
             Boolean check = sharedPreferences.getBoolean(check0147Key, false);
             if(check) {
                 cb0147.setChecked(check);
-                tvDuracao.setText("10:00");
+                tvDuracao.setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
             }
-            else
-                tvDuracao.setText("08:17");
+            else {// a duração normal de um dia de trabalho
+                tvDuracao.setText(STR_DURACAO_TRABALHO__DIARIO_2021);
+            }
         }
         Log.d(TAG, "verifySharedPreference: " + etInit.getText().toString() + " - " + tvSaida.getText().toString() + " - " + cb0147.isChecked());
     }
@@ -433,10 +437,10 @@ public class MainActivity extends AppCompatActivity {
             //calcular horas permitidas
             if (cb0147.isChecked()) {
                 tvSaida.setText(calcular0147());
-                tvDuracao.setText("10:00");
+                tvDuracao.setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
             }
             else{
-                tvDuracao.setText("08:17");
+                tvDuracao.setText(STR_DURACAO_TRABALHO__DIARIO_2021);
             }
             countDownTimerNotification();
 
