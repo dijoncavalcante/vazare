@@ -501,8 +501,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String calcular0147(Date dateHoraInial) {
-        int totalHoras = dateHoraInial.getHours() * 60 + dateHoraInial.getMinutes();
-        int horasPermitidas = 107;
+        int totalHoras = (dateHoraInial.getHours() * 60) + dateHoraInial.getMinutes();
+        int horasPermitidas = 105;//01:45 == 105 minutos permitidos
         int total = totalHoras + horasPermitidas;
         int horas = total / 60;
         int minutos = total % 60;
