@@ -408,9 +408,9 @@ public class MainActivity extends AppCompatActivity {
             String texto = etInit.getText().toString();
             //separando a hora e minuto por :
             String[] horaMinuto = texto.split(":");
-            //somando as 08:00 horas de trabalho diários
+            //soma as 08:00 horas de trabalho diários
             int horaSaida = Integer.parseInt(horaMinuto[0]) + 8 + Integer.parseInt(almoco.split(":")[0]);
-            int minutoSaida = Integer.parseInt(horaMinuto[1]) + 13 + Integer.parseInt(almoco.split(":")[1]);
+            int minutoSaida = Integer.parseInt(horaMinuto[1]) + 15 + Integer.parseInt(almoco.split(":")[1]);
 
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             //horario de saída
