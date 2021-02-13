@@ -126,11 +126,12 @@
                     android:maxLength="5"
                     android:textSize="18sp"
                     android:focusable="false"/>
+
                 <CheckBox
                     android:id="@+id/cb0147"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="+01:47"/>
+                    android:text="+01:45" />
 
             </LinearLayout>
 
