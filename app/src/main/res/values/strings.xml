@@ -20,10 +20,11 @@
     <string name="night_mode">Modo Noturno</string>
     <string name="day_mode">Modo Dia</string>
     <string name="time_to_go">TIME TO GO</string>
-    <string name="banco_de_horas">Banco de Horas</string>
+    <string name="add_banco_de_horas">Adicionar Banco de Horas</string>
     <string name="calcular">Calcular</string>
     <string name="horas_trabalhadas_label">HORAS TRABALHADAS</string>
     <string name="timer">TIMER</string>
     <string name="saida">SAÍDA</string>
     <string name="start">START</string>
+    <string name="duracao">DURAÇÃO</string>
 </resources>
