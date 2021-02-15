@@ -93,8 +93,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             if (isRunning) {
-                long seconds = (System.currentTimeMillis() - initialTime) / MILLIS_IN_SEC;
-                tvhorasTrabalhadas.setText(String.format(FORMAT_HOUR_MIN_SEC, (seconds / SECS_IN_MIN) / 60, seconds / SECS_IN_MIN, seconds % SECS_IN_MIN));
+                long ms = (System.currentTimeMillis() - initialTime);
+                tvhorasTrabalhadas.setText(String.format(FORMAT_HOUR_MIN_SEC
+                        , ms / 3600000 % 24       /* HORAS 86400000 = 24 * 60 * 60 * 1000 */
+                        , (ms / 60000) % 60     /* MINUTOS 60000   = 60 * 1000 */
+                        , (ms / 1000) % 60));/* SEGUNDOS */
                 handler.postDelayed(runnable, MILLIS_IN_SEC);
             }
         }
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         //novo
         handler = new Handler();
         //TODO Add linha com hora inicial para teste
-        etInit.setText("06:45");
+        etInit.setText("08:00");
         //
         verifySharedPreference();
         Intent alarmIntent = new Intent(this, MyBroadCastReceiver.class);
@@ -313,10 +316,13 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
+    //    private static long initialTime_;
     public void initCronometro(Date dateHoraEntrada) {
         if (!isRunning) {
             isRunning = true;
-            initialTime = System.currentTimeMillis();//  System.currentTimeMillis();  dateHoraEntrada.getTime()
+//            initialTime = System.currentTimeMillis();
+            initialTime = dateHoraEntrada.getTime();
+            //  System.currentTimeMillis();  dateHoraEntrada.getTime()
             handler.postDelayed(runnable, MILLIS_IN_SEC);
         } else {
             isRunning = false;
@@ -434,8 +440,7 @@ public class MainActivity extends AppCompatActivity {
             startAlarm(tvSaida.getText().toString());
 
             //horas trabalhadas
-            tvhorasTrabalhadas.setText(calculateHorasTrabalhadas());
-//            calculateHorasTrabalhadas();
+            calculateHorasTrabalhadas();
 
             //calcular horas permitidas
             if (cb0147.isChecked()) {
@@ -491,6 +496,7 @@ public class MainActivity extends AppCompatActivity {
         dateHoraEntrada.setMinutes(Integer.valueOf(horaEntrada.split(":")[1]));
         //calcular horas trabalhadas
         initCronometro(dateHoraEntrada);
+//        retorna meu horário ja trabalhado até o momento
         return diff_time(dateHoraEntrada, new Date());
     }
 
@@ -523,16 +529,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String diff_time(Date saida, Date retorno) {
-
         int totalRetorno = retorno.getHours() * 60 + retorno.getMinutes();
         int totalSaida = saida.getHours() * 60 + saida.getMinutes();
-
         int total = totalRetorno - totalSaida;
-
         int horas = total / 60;
         int minutos = total % 60;
-
-//        return horas + ":" + minutos;
         return String.format("%02d:%02d", horas, minutos);
     }
 
