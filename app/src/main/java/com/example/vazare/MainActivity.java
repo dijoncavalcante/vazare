@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     variaveis para mostrar o countdown mais vibração
      */
     private static final String FORMAT_HOUR_MIN_SEC = "%02d:%02d:%02d";
+    private static final String FORMAT_HOUR_MIN = "%02d:%02d";
     /*
     variaveis para a notificação
      */
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        etAlmocoSaida.setText(selectedHour + ":" + selectedMinute);
+                        etAlmocoSaida.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
 
                     }
                 }, hour, minute, true);//Yes 24 hour time
@@ -185,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        etAlmocoEntrada.setText(selectedHour + ":" + selectedMinute);
+                        etAlmocoEntrada.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
 
                     }
                 }, hour, minute, true);//Yes 24 hour time
