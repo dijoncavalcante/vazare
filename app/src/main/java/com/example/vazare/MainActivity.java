@@ -14,12 +14,15 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
+
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -34,6 +37,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     /*
     variaveis para mostrar o countdown mais vibração
      */
-    private static final String FORMAT = "%02d:%02d:%02d";
+    private static final String FORMAT_HOUR_MIN_SEC = "%02d:%02d:%02d";
     /*
     variaveis para a notificação
      */
@@ -78,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     CountDownTimer countDownTimer;
-    //cronometro
+
+    //cronometro horas trabalhadas
     private static long initialTime;
     private static Handler handler;
     private static boolean isRunning;
@@ -87,14 +92,13 @@ public class MainActivity extends AppCompatActivity {
     private final static Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if (isRunning){
+            if (isRunning) {
                 long seconds = (System.currentTimeMillis() - initialTime) / MILLIS_IN_SEC;
-                tvhorasTrabalhadas.setText(String.format("%02d:%02d", seconds / SECS_IN_MIN,  seconds % SECS_IN_MIN));
+                tvhorasTrabalhadas.setText(String.format(FORMAT_HOUR_MIN_SEC, (seconds / SECS_IN_MIN) / 60, seconds / SECS_IN_MIN, seconds % SECS_IN_MIN));
                 handler.postDelayed(runnable, MILLIS_IN_SEC);
             }
         }
     };
-    //cronometro ^
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,13 +116,12 @@ public class MainActivity extends AppCompatActivity {
         etInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int hour,minute  =0;
+                int hour, minute = 0;
                 Calendar mcurrentTime = Calendar.getInstance();
-                if(TextUtils.isEmpty(etInit.getText())){
+                if (TextUtils.isEmpty(etInit.getText())) {
                     hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                     minute = mcurrentTime.get(Calendar.MINUTE);
-                }
-                else {
+                } else {
                     hour = getHour(etInit.getText().toString());
                     minute = getMinute(etInit.getText().toString());
                 }
@@ -139,13 +142,13 @@ public class MainActivity extends AppCompatActivity {
         etAlmocoSaida.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int hour,minute =0;
+                int hour, minute = 0;
                 Calendar mcurrentTime = Calendar.getInstance();
 
-                if (TextUtils.isEmpty(etAlmocoSaida.getText())){
-                     hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                     minute = mcurrentTime.get(Calendar.MINUTE);
-                }else {
+                if (TextUtils.isEmpty(etAlmocoSaida.getText())) {
+                    hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    minute = mcurrentTime.get(Calendar.MINUTE);
+                } else {
                     hour = getHour(etAlmocoSaida.getText().toString());
                     minute = getMinute(etAlmocoSaida.getText().toString());
                 }
@@ -166,12 +169,12 @@ public class MainActivity extends AppCompatActivity {
         etAlmocoEntrada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int hour,minute =0;
+                int hour, minute = 0;
                 Calendar mcurrentTime = Calendar.getInstance();
-                if(TextUtils.isEmpty(etAlmocoEntrada.getText())) {
+                if (TextUtils.isEmpty(etAlmocoEntrada.getText())) {
                     hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                     minute = mcurrentTime.get(Calendar.MINUTE);
-                }else{
+                } else {
                     hour = getHour(etAlmocoEntrada.getText().toString());
                     minute = getMinute(etAlmocoEntrada.getText().toString());
                 }
@@ -204,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Valores resetados com sucesso!", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Valores redefinidos com sucesso!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 Reset();
                 clearSharedPreferences();
@@ -223,8 +226,8 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(mReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
     }
 
-    public void cancelCountDownTimer(){
-        if (countDownTimer != null){
+    public void cancelCountDownTimer() {
+        if (countDownTimer != null) {
             countDownTimer.cancel();
         }
     }
@@ -239,25 +242,24 @@ public class MainActivity extends AppCompatActivity {
         }
         if (sharedPreferences.contains(horaFinalKey)) {
             String horaFinal = sharedPreferences.getString(horaFinalKey, "");
-            if (!horaFinal.isEmpty()){
+            if (!horaFinal.isEmpty()) {
                 tvSaida.setText(horaFinal);
                 countDownTimerNotification();
             }
         }
         if (sharedPreferences.contains(check0147Key)) {
             Boolean check = sharedPreferences.getBoolean(check0147Key, false);
-            if(check) {
+            if (check) {
                 cb0147.setChecked(check);
                 tvDuracao.setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
-            }
-            else {// a duração normal de um dia de trabalho
+            } else {// a duração normal de um dia de trabalho
                 tvDuracao.setText(STR_DURACAO_TRABALHO__DIARIO_2021);
             }
         }
         Log.d(TAG, "verifySharedPreference: " + etInit.getText().toString() + " - " + tvSaida.getText().toString() + " - " + cb0147.isChecked());
     }
 
-    public void countDownTimerNotification(){
+    public void countDownTimerNotification() {
         /*        Logica para calcular o countdown para sair do trabalho         */
         Calendar calendarCurrent = Calendar.getInstance();
         Date dataHoraEntrada = new Date();
@@ -276,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
 
             public void onTick(long millisUntilFinished) {
 
-                String minutosRestantes = String.format(FORMAT,
+                String minutosRestantes = String.format(FORMAT_HOUR_MIN_SEC,
                         TimeUnit.MILLISECONDS.toHours(millisUntilFinished),
                         TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)),
                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
@@ -311,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
-    public void initCronometro(Date dateHoraEntrada ) {
+    public void initCronometro(Date dateHoraEntrada) {
         if (!isRunning) {
             isRunning = true;
             initialTime = System.currentTimeMillis();//  System.currentTimeMillis();  dateHoraEntrada.getTime()
@@ -319,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             isRunning = false;
             handler.removeCallbacks(runnable);
-            tvhorasTrabalhadas.setText("00:00");
+            tvhorasTrabalhadas.setText("00:00:00");
         }
     }
 
@@ -329,9 +331,8 @@ public class MainActivity extends AppCompatActivity {
             etInit.setFocusable(true);
             etInit.requestFocus();
             return false;
-        }
-        else
-            return  true;
+        } else
+            return true;
     }
 
     private void startAlarm(String HoraMinutoSegundo) {
@@ -344,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, txtNotificacao);
         //Toast.makeText(getApplicationContext(), "Alarm Start = " + txtNotificacao, Toast.LENGTH_LONG).show();
 
-        int hora =  getHour(HoraMinutoSegundo);
+        int hora = getHour(HoraMinutoSegundo);
         int minutos = getMinute(HoraMinutoSegundo);
         int segundos = getSecond();
         c.set(Calendar.HOUR_OF_DAY, hora);
@@ -399,6 +400,7 @@ public class MainActivity extends AppCompatActivity {
     public void calculateOnClick(View view) {
         calculate();
     }
+
     public void calculate() {
         if (validate()) {
             cancelCountDownTimer();
@@ -421,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
             dateTimeExit.set(Calendar.SECOND, Integer.valueOf(getSecond()));
             //TODO comentado apenas para teste de hora de saída
             //tvSaida.setText(dateTimeExit.get(Calendar.HOUR_OF_DAY) + ":" + dateTimeExit.get(Calendar.MINUTE));
-            tvSaida.setText(String.format("%02d:%02d", dateTimeExit.get(Calendar.HOUR_OF_DAY),dateTimeExit.get(Calendar.MINUTE)));
+            tvSaida.setText(String.format("%02d:%02d", dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
 
             //TODO duas linhas apenas para teste de hora de saida
 //            Calendar d = Calendar.getInstance();
@@ -433,13 +435,13 @@ public class MainActivity extends AppCompatActivity {
 
             //horas trabalhadas
             tvhorasTrabalhadas.setText(calculateHorasTrabalhadas());
+//            calculateHorasTrabalhadas();
 
             //calcular horas permitidas
             if (cb0147.isChecked()) {
                 tvSaida.setText(calcular0147());
                 tvDuracao.setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
-            }
-            else{
+            } else {
                 tvDuracao.setText(STR_DURACAO_TRABALHO__DIARIO_2021);
             }
             countDownTimerNotification();
@@ -447,19 +449,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public int getHour(String fullTime){
+    public int getHour(String fullTime) {
         String[] horaMinuto = fullTime.split(":");
         int horaSaida = Integer.parseInt(horaMinuto[0]);
         return horaSaida;
     }
 
-    public int getMinute(String fullTime){
+    public int getMinute(String fullTime) {
         String[] horaMinuto = fullTime.split(":");
         int minutoSaida = Integer.parseInt(horaMinuto[1]);
         return minutoSaida;
     }
 
-    public int getSecond(){
+    public int getSecond() {
         return 0;
     }
 
@@ -487,7 +489,7 @@ public class MainActivity extends AppCompatActivity {
         Date dateHoraEntrada = new Date();
         dateHoraEntrada.setHours(Integer.valueOf(horaEntrada.split(":")[0]));
         dateHoraEntrada.setMinutes(Integer.valueOf(horaEntrada.split(":")[1]));
-        //novo calcular de horas trabalhadas
+        //calcular horas trabalhadas
         initCronometro(dateHoraEntrada);
         return diff_time(dateHoraEntrada, new Date());
     }
@@ -530,7 +532,8 @@ public class MainActivity extends AppCompatActivity {
         int horas = total / 60;
         int minutos = total % 60;
 
-        return horas + ":" + minutos;
+//        return horas + ":" + minutos;
+        return String.format("%02d:%02d", horas, minutos);
     }
 
     private void initUI() {
@@ -570,7 +573,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "salveSharedPreferences: " + etInit.getText().toString() + " - " + tvSaida.getText().toString() + " - " + cb0147.isChecked());
         editor.putString(horaInicialKey, etInit.getText().toString());
         editor.putString(horaFinalKey, tvSaida.getText().toString());
-        editor.putBoolean (check0147Key, cb0147.isChecked());
+        editor.putBoolean(check0147Key, cb0147.isChecked());
         editor.commit();
     }
 
@@ -650,6 +653,7 @@ public class MainActivity extends AppCompatActivity {
 
     //atributo da classe.
     private AlertDialog alerta;
+
     private void showAlertDialog(String message) {
         //Cria o gerador do AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -673,15 +677,16 @@ public class MainActivity extends AppCompatActivity {
         alerta.show();
     }
 
-    public boolean validate(){
-        if (TextUtils.isEmpty(etInit.getText())){
+    public boolean validate() {
+        if (TextUtils.isEmpty(etInit.getText())) {
             etInit.setError("Informe a hora de entrada!");
             etInit.setFocusable(true);
             return false;
         }
         return true;
     }
-//--------------------new class//
+
+    //--------------------new class//
     public class NotificationReceiver extends BroadcastReceiver {
         private static final String TAG = "NotificationReceiver";
 

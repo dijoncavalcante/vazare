@@ -171,9 +171,10 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
-                    android:maxLength="5"
+                    android:maxLength="8"
                     android:editable="false"
-                    android:focusable="false"/>
+                    android:focusable="false"
+                    android:textSize="20sp"/>
 
             <Button
                 android:id="@+id/btnCalculate"
