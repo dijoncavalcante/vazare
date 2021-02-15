@@ -27,4 +27,5 @@
     <string name="saida">SAÍDA</string>
     <string name="start">START</string>
     <string name="duracao">DURAÇÃO</string>
+    <string name="select_time">Selecione o horário</string>
 </resources>

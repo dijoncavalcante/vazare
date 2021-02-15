@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
                         etInit.setError(null);
                     }
                 }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle("Select Time");
+                mTimePicker.setTitle(R.string.select_time);
                 mTimePicker.show();
             }
         });
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle("Select Time");
+                mTimePicker.setTitle(R.string.select_time);
                 mTimePicker.show();
             }
         });
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle("Select Time");
+                mTimePicker.setTitle(R.string.select_time);
                 mTimePicker.show();
             }
         });
