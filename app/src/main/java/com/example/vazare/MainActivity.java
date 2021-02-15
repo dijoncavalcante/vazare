@@ -657,15 +657,15 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle("Titulo");
         builder.setMessage(message);
         //define um botão como positivo
-        builder.setPositiveButton("Positivo", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Fechar Vazare", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(MainActivity.this, "positivo=" + arg1, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Fechar Vazare=" + arg1, Toast.LENGTH_SHORT).show();
             }
         });
         //define um botão como negativo.
-        builder.setNegativeButton("Negativo", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Chamar UBER", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(MainActivity.this, "negativo=" + arg1, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Chamando o UBER=" + arg1, Toast.LENGTH_SHORT).show();
             }
         });
         //cria o AlertDialog
