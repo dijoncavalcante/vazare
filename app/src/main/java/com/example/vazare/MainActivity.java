@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         //novo
         handler = new Handler();
         //TODO Add linha com hora inicial para teste
-        etInit.setText("08:00");
+        etInit.setText("09:00");
         //
         verifySharedPreference();
         Intent alarmIntent = new Intent(this, MyBroadCastReceiver.class);
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Valores redefinidos com sucesso!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                Reset();
+                reset();
                 clearSharedPreferences();
                 cancelCountDownTimer();
             }
@@ -316,18 +316,11 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
-    //    private static long initialTime_;
     public void initCronometro(Date dateHoraEntrada) {
         if (!isRunning) {
             isRunning = true;
-//            initialTime = System.currentTimeMillis();
             initialTime = dateHoraEntrada.getTime();
-            //  System.currentTimeMillis();  dateHoraEntrada.getTime()
             handler.postDelayed(runnable, MILLIS_IN_SEC);
-        } else {
-            isRunning = false;
-            handler.removeCallbacks(runnable);
-            tvhorasTrabalhadas.setText("00:00:00");
         }
     }
 
@@ -517,7 +510,7 @@ public class MainActivity extends AppCompatActivity {
         return horas + ":" + minutos;
     }
 
-    public void Reset() {
+    public void reset() {
         etInit.setText("");
         tvDuracao.setText("");
         etAlmocoSaida.setText("12:00");
@@ -526,6 +519,8 @@ public class MainActivity extends AppCompatActivity {
         tvTimer.setText("");
         tvhorasTrabalhadas.setText("");
         cb0147.setChecked(false);
+        isRunning = false;
+        handler.removeCallbacks(runnable);
     }
 
     public String diff_time(Date saida, Date retorno) {
