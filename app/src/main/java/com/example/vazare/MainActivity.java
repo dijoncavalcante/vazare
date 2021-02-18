@@ -651,7 +651,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void showAlertDialog(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Titulo");
+        builder.setTitle("Horas trabalhadas finalizadas");
         builder.setMessage(message);
         builder.setPositiveButton("Pedir Corrida", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
