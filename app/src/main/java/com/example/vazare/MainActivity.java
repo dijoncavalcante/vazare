@@ -143,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        etAlmocoSaida.setText("12:00");
         etAlmocoSaida.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        etAlmocoEntrada.setText("13:00");
         etAlmocoEntrada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -467,6 +465,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public String calculateLunch() {
+        //TODO Criar logica para validar o horario do almoço, horario de entrada nao pode ser menor que horario de saida. podem ser vazio se o campo inicial tiver valor.
         if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
             return "01:00";
         }
@@ -474,12 +473,12 @@ public class MainActivity extends AppCompatActivity {
         String saida = etAlmocoSaida.getText().toString();
         String entrada = etAlmocoEntrada.getText().toString();
         Date dateSaida = new Date();
-        dateSaida.setHours(Integer.valueOf(saida.split(":")[0]));
-        dateSaida.setMinutes(Integer.valueOf(saida.split(":")[1]));
+        dateSaida.setHours(Integer.parseInt(saida.split(":")[0]));
+        dateSaida.setMinutes(Integer.parseInt(saida.split(":")[1]));
 
         Date dateEntrada = new Date();
-        dateEntrada.setHours(Integer.valueOf(entrada.split(":")[0]));
-        dateEntrada.setMinutes(Integer.valueOf(entrada.split(":")[1]));
+        dateEntrada.setHours(Integer.parseInt(entrada.split(":")[0]));
+        dateEntrada.setMinutes(Integer.parseInt(entrada.split(":")[1]));
 
         return diff_time(dateSaida, dateEntrada);
     }
@@ -487,8 +486,8 @@ public class MainActivity extends AppCompatActivity {
     public String calculateHorasTrabalhadas() {
         String horaEntrada = etInit.getText().toString();
         Date dateHoraEntrada = new Date();
-        dateHoraEntrada.setHours(Integer.valueOf(horaEntrada.split(":")[0]));
-        dateHoraEntrada.setMinutes(Integer.valueOf(horaEntrada.split(":")[1]));
+        dateHoraEntrada.setHours(Integer.parseInt(horaEntrada.split(":")[0]));
+        dateHoraEntrada.setMinutes(Integer.parseInt(horaEntrada.split(":")[1]));
         //calcular horas trabalhadas
         initCronometro(dateHoraEntrada);
 //        retorna meu horário ja trabalhado até o momento
@@ -498,8 +497,8 @@ public class MainActivity extends AppCompatActivity {
     public String calcular0147() {
         String saida = tvSaida.getText().toString();
         Date dateSaida = new Date();
-        dateSaida.setHours(Integer.valueOf(saida.split(":")[0]));
-        dateSaida.setMinutes(Integer.valueOf(saida.split(":")[1]));
+        dateSaida.setHours(Integer.parseInt(saida.split(":")[0]));
+        dateSaida.setMinutes(Integer.parseInt(saida.split(":")[1]));
         return calcular0147(dateSaida);
     }
 
@@ -515,8 +514,8 @@ public class MainActivity extends AppCompatActivity {
     public void reset() {
         etInit.setText("");
         tvDuracao.setText("");
-        etAlmocoSaida.setText("12:00");
-        etAlmocoEntrada.setText("13:00");
+        etAlmocoSaida.setText("");
+        etAlmocoEntrada.setText("");
         tvSaida.setText("");
         tvTimer.setText("");
         tvhorasTrabalhadas.setText("");
@@ -666,9 +665,9 @@ public class MainActivity extends AppCompatActivity {
                     launchIntent = getPackageManager().getLaunchIntentForPackage("com.ubercab");
                 } else {
                     launchIntent = getPackageManager().getLaunchIntentForPackage("com.taxis99");
-                    if(launchIntent == null) {
+                    if (launchIntent == null) {
                         launchIntent = getPackageManager().getLaunchIntentForPackage("net.taxidigital.tocantins");
-                        if(launchIntent == null) {
+                        if (launchIntent == null) {
                             launchIntent = getPackageManager().getLaunchIntentForPackage("com.ubercab");
                         }
                     }
