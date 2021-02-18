@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int NOTIFICATION_ID = 0;
     private NotificationManager mNotifyManager;
     private NotificationReceiver mReceiver = new NotificationReceiver();
+    private AlertDialog alerta;
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
     TextView tvTimetogo;
@@ -648,29 +649,45 @@ public class MainActivity extends AppCompatActivity {
         return notifyBuilder;
     }
 
-    //atributo da classe.
-    private AlertDialog alerta;
-
     private void showAlertDialog(String message) {
-        //Cria o gerador do AlertDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Titulo");
         builder.setMessage(message);
-        //define um botão como positivo
-        builder.setPositiveButton("Fechar Vazare", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Pedir Corrida", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(MainActivity.this, "Fechar Vazare=" + arg1, Toast.LENGTH_SHORT).show();
+                /* adb shell "dumpsys activity activities | grep mResumedActivity
+                    mResumedActivity: ActivityRecord{5986b19 u0 com.example.vazare/.MainActivity t17}
+                    mResumedActivity: ActivityRecord{51b9692 u0 com.ubercab/.presidio.app.core.root.RootActivity t16
+                    mResumedActivity: ActivityRecord{5909209 u0 com.taxis99/com.didi.sdk.app.MainActivityImpl t18}
+                    mResumedActivity: ActivityRecord{c91a10d u0 net.taxidigital.tocantins/net.taxidigital.ui.main.MainActivity t19}
+                 */
+                Intent launchIntent;
+                if (!cb0147.isChecked()) {
+                    launchIntent = getPackageManager().getLaunchIntentForPackage("com.ubercab");
+                } else {
+                    launchIntent = getPackageManager().getLaunchIntentForPackage("com.taxis99");
+                    if(launchIntent == null) {
+                        launchIntent = getPackageManager().getLaunchIntentForPackage("net.taxidigital.tocantins");
+                        if(launchIntent == null) {
+                            launchIntent = getPackageManager().getLaunchIntentForPackage("com.ubercab");
+                        }
+                    }
+                }
+                if (launchIntent != null) {
+                    startActivity(launchIntent);
+                    Toast.makeText(MainActivity.this, "Abrindo App de Corrida.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "Aplicativos: UBER, 99Taxi ou Tocantins não foram encontrados.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         //define um botão como negativo.
-        builder.setNegativeButton("Chamar UBER", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(MainActivity.this, "Chamando o UBER=" + arg1, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Fechando pop up", Toast.LENGTH_SHORT).show();
             }
         });
-        //cria o AlertDialog
         alerta = builder.create();
-        //Exibe
         alerta.show();
     }
 
