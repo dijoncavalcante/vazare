@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
     TextView tvTimer;
     EditText etInit;
     TextView tvDuracao;
-    EditText etAlmocoSaida;
-    EditText etAlmocoEntrada;
+    static EditText etAlmocoSaida;
+    static EditText etAlmocoEntrada;
     TextView tvSaida;
     static TextView tvhorasTrabalhadas;
     CheckBox cb0147;
@@ -91,15 +91,25 @@ public class MainActivity extends AppCompatActivity {
     private static boolean isRunning;
     private static final long MILLIS_IN_SEC = 1000L;
     private static final int SECS_IN_MIN = 60;
+    private static final int SECS_IN_ONE_HOUR = 60 * 60 * 1000;// 1 HORA
     private final static Runnable runnable = new Runnable() {
         @Override
         public void run() {
             if (isRunning) {
                 long ms = (System.currentTimeMillis() - initialTime);
-                tvhorasTrabalhadas.setText(String.format(FORMAT_HOUR_MIN_SEC
-                        , ms / 3600000 % 24       /* HORAS 86400000 = 24 * 60 * 60 * 1000 */
-                        , (ms / 60000) % 60     /* MINUTOS 60000   = 60 * 1000 */
-                        , (ms / 1000) % 60));/* SEGUNDOS */
+                long hour;
+                //caso não tenha nenhum campo de ALMOÇO preenchido
+                if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
+                    hour = ms / 3600000 % 24;
+                } else {//caso os dois campos de almoço estejam preenchidos, deve subtrair o intervalo do almoço
+                    hour = (ms - SECS_IN_ONE_HOUR) / 3600000 % 24;
+                }
+                /*
+                    ms / 3600000 % 24  HORAS 86400000  = 24 * 60 * 60 * 1000
+                    (ms / 60000) % 60  MINUTOS 60000   = 60 * 1000
+                    (ms / 1000) % 60)  SEGUNDOS
+                * */
+                tvhorasTrabalhadas.setText(String.format(FORMAT_HOUR_MIN_SEC, hour, (ms / 60000) % 60, (ms / 1000) % 60));
                 handler.postDelayed(runnable, MILLIS_IN_SEC);
             }
         }
@@ -134,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                 mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        etInit.setText(String.format("%02d:%02d", selectedHour, selectedMinute));
+                        etInit.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
                         etInit.setError(null);
                     }
                 }, hour, minute, true);//Yes 24 hour time
@@ -422,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
             dateTimeExit.set(Calendar.SECOND, Integer.valueOf(getSecond()));
             //TODO comentado apenas para teste de hora de saída
             //tvSaida.setText(dateTimeExit.get(Calendar.HOUR_OF_DAY) + ":" + dateTimeExit.get(Calendar.MINUTE));
-            tvSaida.setText(String.format("%02d:%02d", dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
+            tvSaida.setText(String.format(FORMAT_HOUR_MIN, dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
 
             //TODO duas linhas apenas para teste de hora de saida
 //            Calendar d = Calendar.getInstance();
@@ -465,22 +475,50 @@ public class MainActivity extends AppCompatActivity {
 
 
     public String calculateLunch() {
-        //TODO Criar logica para validar o horario do almoço, horario de entrada nao pode ser menor que horario de saida. podem ser vazio se o campo inicial tiver valor.
-        if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
+        if (validateLunch()){
             return "01:00";
         }
 
-        String saida = etAlmocoSaida.getText().toString();
-        String entrada = etAlmocoEntrada.getText().toString();
         Date dateSaida = new Date();
-        dateSaida.setHours(Integer.parseInt(saida.split(":")[0]));
-        dateSaida.setMinutes(Integer.parseInt(saida.split(":")[1]));
-
+        dateSaida.setHours(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
+        dateSaida.setMinutes(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
         Date dateEntrada = new Date();
-        dateEntrada.setHours(Integer.parseInt(entrada.split(":")[0]));
-        dateEntrada.setMinutes(Integer.parseInt(entrada.split(":")[1]));
+        dateEntrada.setHours(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[0]));
+        dateEntrada.setMinutes(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[1]));
 
         return diff_time(dateSaida, dateEntrada);
+    }
+
+    public boolean validateLunch() {
+        //TODO Criar logica para validar o horario do almoço, horario de entrada nao pode ser menor que horario de saida. podem ser vazio se o campo inicial tiver valor.
+        if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
+            return true;
+        }
+        if (!TextUtils.isEmpty(etAlmocoSaida.getText().toString())  && !TextUtils.isEmpty(etAlmocoEntrada.getText().toString())) {
+            Date dateSaida = new Date();
+            dateSaida.setHours(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
+            dateSaida.setMinutes(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
+            Date dateEntrada = new Date();
+            dateEntrada.setHours(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[0]));
+            dateEntrada.setMinutes(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[1]));
+
+
+            int totalSaidaAlmoco = dateSaida.getHours() * 60 + dateSaida.getMinutes();
+            int totalRetornoAlmoco = dateEntrada.getHours() * 60 + dateEntrada.getMinutes();
+            //se a saida do almoco(12:00) for maior que a hora de retorno do almoço(13:00)
+            if(totalSaidaAlmoco > totalRetornoAlmoco){
+                etAlmocoEntrada.setError("Horário de entrada do almoço deve ser maior que o horário de saída para o almoço");
+                etAlmocoEntrada.setFocusable(true);
+                return false;
+            }
+
+            int total = totalRetornoAlmoco - totalSaidaAlmoco;
+
+            int horas = total / 60;
+            int minutos = total % 60;
+        }
+
+        return false;
     }
 
     public String calculateHorasTrabalhadas() {
@@ -530,7 +568,7 @@ public class MainActivity extends AppCompatActivity {
         int total = totalRetorno - totalSaida;
         int horas = total / 60;
         int minutos = total % 60;
-        return String.format("%02d:%02d", horas, minutos);
+        return String.format(FORMAT_HOUR_MIN, horas, minutos);
     }
 
     private void initUI() {
