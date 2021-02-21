@@ -475,7 +475,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public String calculateLunch() {
-        if (validateLunch()){
+        if (validateLunch()) {
             return "01:00";
         }
 
@@ -494,7 +494,7 @@ public class MainActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
             return true;
         }
-        if (!TextUtils.isEmpty(etAlmocoSaida.getText().toString())  && !TextUtils.isEmpty(etAlmocoEntrada.getText().toString())) {
+        if (!TextUtils.isEmpty(etAlmocoSaida.getText().toString()) && !TextUtils.isEmpty(etAlmocoEntrada.getText().toString())) {
             Date dateSaida = new Date();
             dateSaida.setHours(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
             dateSaida.setMinutes(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
@@ -506,7 +506,7 @@ public class MainActivity extends AppCompatActivity {
             int totalSaidaAlmoco = dateSaida.getHours() * 60 + dateSaida.getMinutes();
             int totalRetornoAlmoco = dateEntrada.getHours() * 60 + dateEntrada.getMinutes();
             //se a saida do almoco(12:00) for maior que a hora de retorno do almoço(13:00)
-            if(totalSaidaAlmoco > totalRetornoAlmoco){
+            if (totalSaidaAlmoco > totalRetornoAlmoco) {
                 etAlmocoEntrada.setError("Horário de entrada do almoço deve ser maior que o horário de saída para o almoço");
                 etAlmocoEntrada.setFocusable(true);
                 return false;
@@ -546,7 +546,7 @@ public class MainActivity extends AppCompatActivity {
         int total = totalHoras + horasPermitidas;
         int horas = total / 60;
         int minutos = total % 60;
-        return horas + ":" + minutos;
+        return String.format(FORMAT_HOUR_MIN, horas, minutos);
     }
 
     public void reset() {
