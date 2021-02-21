@@ -688,9 +688,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void showAlertDialog(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Horas trabalhadas finalizadas");
+        builder.setTitle(R.string.hours_worked);
         builder.setMessage(message);
-        builder.setPositiveButton("Pedir Corrida", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.pedir_corrida, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
                 /* adb shell "dumpsys activity activities | grep mResumedActivity
                     mResumedActivity: ActivityRecord{5986b19 u0 com.example.vazare/.MainActivity t17}
@@ -719,9 +719,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //define um botão como negativo.
-        builder.setNegativeButton("Fechar", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(MainActivity.this, "Fechando pop up", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.close_popup, Toast.LENGTH_SHORT).show();
             }
         });
         alerta = builder.create();
@@ -730,7 +730,7 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean validate() {
         if (TextUtils.isEmpty(etInit.getText())) {
-            etInit.setError("Informe a hora de entrada!");
+            etInit.setError(getString(R.string.put_hour_initial));
             etInit.setFocusable(true);
             return false;
         }

@@ -28,4 +28,9 @@
     <string name="start">START</string>
     <string name="duracao">DURAÇÃO</string>
     <string name="select_time">Selecione o horário</string>
+    <string name="pedir_corrida">Pedir Corrida</string>
+    <string name="hours_worked">Horas trabalhadas finalizadas</string>
+    <string name="close">Fechar</string>
+    <string name="close_popup">Fechando pop up</string>
+    <string name="put_hour_initial">Informe a hora de entrada!</string>
 </resources>
