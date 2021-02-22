@@ -91,25 +91,47 @@ public class MainActivity extends AppCompatActivity {
     private static boolean isRunning;
     private static final long MILLIS_IN_SEC = 1000L;
     private static final int SECS_IN_MIN = 60;
-    private static final int SECS_IN_ONE_HOUR = 60 * 60 * 1000;// 1 HORA
-    private final static Runnable runnable = new Runnable() {
+    private static final int SECS_IN_ONE_HOUR = 60 * 60 * 1000;// this represents 1 hour
+    private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
             if (isRunning) {
                 long ms = (System.currentTimeMillis() - initialTime);
-                long hour;
+                Log.d(TAG, "initialTime:" + initialTime + " System.currentTimeMillis:" + System.currentTimeMillis() + " ms:" + ms);
+                long hour = 0;
+                long minute = 0;
+                long second = 0;
                 //caso não tenha nenhum campo de ALMOÇO preenchido
                 if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
-                    hour = ms / 3600000 % 24;
-                } else {//caso os dois campos de almoço estejam preenchidos, deve subtrair o intervalo do almoço
-                    hour = (ms - SECS_IN_ONE_HOUR) / 3600000 % 24;
-                }
-                /*
+                    hour = (ms / 3600000) % 24;
+                    minute = (ms / 60000) % 60;
+                    second = (ms / 1000) % 60;
+                    Log.d(TAG, "hour:" + hour);
+                } else {
+                    //subtrair o tempo de almoço, caso os dois campos de almoço estejam preenchidos
+                    Date dateSaidaAlmoco = new Date();
+                    dateSaidaAlmoco.setHours(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
+                    dateSaidaAlmoco.setMinutes(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
+                    Date dateEntradaAlmoco = new Date();
+                    dateEntradaAlmoco.setHours(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[0]));
+                    dateEntradaAlmoco.setMinutes(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[1]));
+
+                    long msIntervalLunch = dateEntradaAlmoco.getTime() - dateSaidaAlmoco.getTime();
+
+                    long timeLunchMillis = ms - msIntervalLunch;
+
+                    Log.d(TAG, "timeLunchMillis:" + timeLunchMillis + " = System.currentTimeMillis:" + System.currentTimeMillis() + " - initialTime:" + initialTime + " - ms:" + ms);
+
+                    hour = timeLunchMillis / 3600000 % 24;
+                    minute = (timeLunchMillis / 60000) % 60;
+                    second = (timeLunchMillis / 1000) % 60;
+                    Log.d(TAG, "hour:" + hour + " minute:" + minute + " second:" + second);
+                }/*
                     ms / 3600000 % 24  HORAS 86400000  = 24 * 60 * 60 * 1000
                     (ms / 60000) % 60  MINUTOS 60000   = 60 * 1000
                     (ms / 1000) % 60)  SEGUNDOS
                 * */
-                tvhorasTrabalhadas.setText(String.format(FORMAT_HOUR_MIN_SEC, hour, (ms / 60000) % 60, (ms / 1000) % 60));
+                tvhorasTrabalhadas.setText(String.format(FORMAT_HOUR_MIN_SEC, hour, minute, second));
                 handler.postDelayed(runnable, MILLIS_IN_SEC);
             }
         }
