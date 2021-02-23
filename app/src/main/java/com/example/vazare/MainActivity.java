@@ -202,25 +202,32 @@ public class MainActivity extends AppCompatActivity {
         etAlmocoEntrada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int hour, minute = 0;
-                Calendar mcurrentTime = Calendar.getInstance();
-                if (TextUtils.isEmpty(etAlmocoEntrada.getText())) {
-                    hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                    minute = mcurrentTime.get(Calendar.MINUTE);
-                } else {
-                    hour = getHour(etAlmocoEntrada.getText().toString());
-                    minute = getMinute(etAlmocoEntrada.getText().toString());
-                }
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        etAlmocoEntrada.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
-
+                if (!TextUtils.isEmpty(etAlmocoSaida.getText())) {
+                    etAlmocoSaida.setError(null);
+                    int hour, minute = 0;
+                    Calendar mcurrentTime = Calendar.getInstance();
+                    if (TextUtils.isEmpty(etAlmocoEntrada.getText())) {
+                        hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                        minute = mcurrentTime.get(Calendar.MINUTE);
+                    } else {
+                        hour = getHour(etAlmocoEntrada.getText().toString());
+                        minute = getMinute(etAlmocoEntrada.getText().toString());
                     }
-                }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle(R.string.select_time);
-                mTimePicker.show();
+                    TimePickerDialog mTimePicker;
+                    mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                            etAlmocoEntrada.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
+
+                        }
+                    }, hour, minute, true);//Yes 24 hour time
+                    mTimePicker.setTitle(R.string.select_time);
+                    mTimePicker.show();
+                }else{
+                    //TODO validar campo de retorno do almoço.
+                    etAlmocoSaida.setError(getString(R.string.validate_return_lunch));
+                    etAlmocoSaida.requestFocus();
+                }
             }
         });
 

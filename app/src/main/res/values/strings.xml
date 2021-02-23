@@ -33,4 +33,5 @@
     <string name="close">Fechar</string>
     <string name="close_popup">Fechando pop up</string>
     <string name="put_hour_initial">Informe a hora de entrada!</string>
+    <string name="validate_return_lunch">Por favor preencher a saída para o almoço.</string>
 </resources>
