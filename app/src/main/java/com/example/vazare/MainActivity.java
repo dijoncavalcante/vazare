@@ -204,6 +204,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(etAlmocoSaida.getText())) {
                     etAlmocoSaida.setError(null);
+                    final Date dateSaidaAlmoco = new Date();
+                    final Date dateEntradaAlmoco = new Date();
+                    dateSaidaAlmoco.setHours(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
+                    dateSaidaAlmoco.setMinutes(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
+
                     int hour, minute = 0;
                     Calendar mcurrentTime = Calendar.getInstance();
                     if (TextUtils.isEmpty(etAlmocoEntrada.getText())) {
@@ -213,18 +218,28 @@ public class MainActivity extends AppCompatActivity {
                         hour = getHour(etAlmocoEntrada.getText().toString());
                         minute = getMinute(etAlmocoEntrada.getText().toString());
                     }
+
                     TimePickerDialog mTimePicker;
                     mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                            dateEntradaAlmoco.setHours(selectedHour);
+                            dateEntradaAlmoco.setMinutes(selectedMinute);
+
+                            if (dateSaidaAlmoco.getTime() >= dateEntradaAlmoco.getTime()) {
+                                etAlmocoEntrada.setError(getString(R.string.validate_return_lunch_bigger));
+                                etAlmocoEntrada.requestFocus();
+                                return;
+                            }
+
+                            etAlmocoEntrada.setError(null);
                             etAlmocoEntrada.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
 
                         }
                     }, hour, minute, true);//Yes 24 hour time
                     mTimePicker.setTitle(R.string.select_time);
                     mTimePicker.show();
-                }else{
-                    //TODO validar campo de retorno do almoço.
+                } else {
                     etAlmocoSaida.setError(getString(R.string.validate_return_lunch));
                     etAlmocoSaida.requestFocus();
                 }
