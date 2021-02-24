@@ -3,7 +3,7 @@
     <string name="action_settings">Configurações</string>
 
 
-    <string name="notification_title">Chegou a hora de ir para casa!</string>
+    <string name="notification_title">Chegou a hora de dar um VAZARE!</string>
     <string name="notification_text_15">Restam 15 minutos para bater o ponto.</string>
     <string name="notification_text_10">Restam 10 minutos para bater o ponto.</string>
     <string name="notification_text_5">Restam 5 minutos para bater o ponto.</string>
@@ -15,8 +15,8 @@
     <string name="notification_updated">Notification Updated!</string>
     <string name="notification_channel_name">Vazare Notification</string>
     <string name="notification_channel_description">Notification from Vazare</string>
-    <string name="horas_extras_0147">Você COMPLETOU 10 horas de trabalho ja devia ter batido o ponto e deve sair das dependencias do Instituto SIDIA AMAZON TOWER!</string>
-    <string name="horas_trabalhadas">Você completou seu horário PADRÃO de trabalho e agora pode deixar as dependencias do Instituto SIDIA AMAZON TOWER!</string>
+    <string name="horas_extras_0147">Você COMPLETOU 10 horas de trabalho ja devia ter batido o ponto e dado um VAZARE!</string>
+    <string name="horas_trabalhadas">Você completou seu horário PADRÃO de trabalho e agora pode dar um VAZARE!</string>
     <string name="night_mode">Modo Noturno</string>
     <string name="day_mode">Modo Dia</string>
     <string name="time_to_go">TIME TO GO</string>

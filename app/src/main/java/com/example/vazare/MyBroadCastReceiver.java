@@ -19,8 +19,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class MyBroadCastReceiver extends BroadcastReceiver {
     private static final String TAG = "MyBroadCastReceiver";
-    //
-// Constants for the notification actions buttons.
+    // Constants for the notification actions buttons.
     private static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.notifyme.ACTION_UPDATE_NOTIFICATION";
     // Notification channel ID.
     private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
@@ -63,17 +62,11 @@ public class MyBroadCastReceiver extends BroadcastReceiver {
     }
 
     private NotificationCompat.Builder getNotificationBuilder(Context context) {
-
         // Set up the pending intent that is delivered when the notification is clicked.
         Intent notificationIntent = new Intent(context, MainActivity.class);
-        PendingIntent notificationPendingIntent = PendingIntent.getActivity
-                (context, NOTIFICATION_ID, notificationIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent notificationPendingIntent = PendingIntent.getActivity(context, NOTIFICATION_ID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 //      String txtNotificacao = "Teste BroadCastReceiver " + Calendar.getInstance().get(Calendar.HOUR)+":"+Calendar.getInstance().get(Calendar.MINUTE) +":"+ Calendar.getInstance().get(Calendar.SECOND);
-        String txtNotificacao = "Teste BroadCastReceiver "
-                + Calendar.getInstance().get(Calendar.HOUR) + ":"
-                + Calendar.getInstance().get(Calendar.MINUTE) + ":"
-                + Calendar.getInstance().get(Calendar.SECOND);
+        String txtNotificacao = "Teste BroadCastReceiver " + Calendar.getInstance().get(Calendar.HOUR) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":" + Calendar.getInstance().get(Calendar.SECOND);
         Log.d(TAG, txtNotificacao);
 
 
@@ -81,7 +74,7 @@ public class MyBroadCastReceiver extends BroadcastReceiver {
         NotificationCompat.Builder notifyBuilder = new NotificationCompat
                 .Builder(context, PRIMARY_CHANNEL_ID)
                 .setContentTitle(context.getResources().getString(R.string.notification_title))
-                .setContentText(txtNotificacao)
+                .setContentText(context.getString(R.string.notification_text_1))
                 .setSmallIcon(R.mipmap.ic_vazare)
                 .setAutoCancel(true)
                 .setContentIntent(notificationPendingIntent)
@@ -98,7 +91,7 @@ public class MyBroadCastReceiver extends BroadcastReceiver {
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder(context);
         // Add the action button using the pending intent.
         //definir a imagem da notificacao
-        notifyBuilder.addAction(R.mipmap.ic_vazare, context.getResources().getString(R.string.ignore), updatePendingIntent);
+        //notifyBuilder.addAction(R.mipmap.ic_vazare, context.getResources().getString(R.string.ignore), updatePendingIntent);
         // Deliver the notification.
         mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
     }
