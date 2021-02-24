@@ -15,9 +15,6 @@ import androidx.core.app.NotificationCompat;
 import java.util.Calendar;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
-import static android.provider.Settings.Global.getString;
-import static androidx.core.content.res.TypedArrayUtils.getText;
-import static androidx.core.graphics.drawable.IconCompat.getResources;
 
 
 public class MyBroadCastReceiver extends BroadcastReceiver {
@@ -102,7 +99,6 @@ public class MyBroadCastReceiver extends BroadcastReceiver {
         // Add the action button using the pending intent.
         //definir a imagem da notificacao
         notifyBuilder.addAction(R.mipmap.ic_vazare, context.getResources().getString(R.string.ignore), updatePendingIntent);
-
         // Deliver the notification.
         mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
     }
@@ -111,17 +107,11 @@ public class MyBroadCastReceiver extends BroadcastReceiver {
         Log.d(TAG, "createNotificationChannel");
         // Create a notification manager object.
         mNotifyManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-
         // Notification channels are only available in OREO and higher.
         // So, add a check on SDK version.
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-
             // Create the NotificationChannel with all the parameters.
-            NotificationChannel notificationChannel = new NotificationChannel
-                    (PRIMARY_CHANNEL_ID,
-                            context.getString(R.string.notification_title),
-                            NotificationManager.IMPORTANCE_HIGH);
-
+            NotificationChannel notificationChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, context.getString(R.string.notification_title), NotificationManager.IMPORTANCE_HIGH);
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.enableVibration(true);
