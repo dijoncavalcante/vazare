@@ -363,7 +363,8 @@ public class MainActivity extends AppCompatActivity {
                     showAlertDialog(getString(R.string.horas_trabalhadas));
                     sendNotification(1);
                 }
-                clearSharedPreferences();
+                //TODO não limpar quando acabar os minutos restantes
+                // clearSharedPreferences();
             }
         }.start();
     }
@@ -663,18 +664,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createNotificationChannel() {
-
-
         // Notification channels are only available in OREO and higher.
         // So, add a check on SDK version.
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-
             // Create the NotificationChannel with all the parameters.
-            NotificationChannel notificationChannel = new NotificationChannel
-                    (PRIMARY_CHANNEL_ID,
-                            getString(R.string.notification_channel_name),
-                            NotificationManager.IMPORTANCE_HIGH);
-
+            NotificationChannel notificationChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_HIGH);
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.RED);
             notificationChannel.enableVibration(true);
@@ -686,29 +680,27 @@ public class MainActivity extends AppCompatActivity {
     public void sendNotification(int opcao) {
         // Create a notification manager object.
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        //
+
         Intent updateIntent = new Intent(ACTION_UPDATE_NOTIFICATION);
         PendingIntent updatePendingIntent = PendingIntent.getBroadcast(this, NOTIFICATION_ID, updateIntent, PendingIntent.FLAG_ONE_SHOT);
         // Build the notification with all of the parameters using helper method
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder(opcao);
         // Add the action button using the pending intent.
         //definir a imagem da notificacao
-        notifyBuilder.addAction(R.drawable.ic_notification_app, getString(R.string.ignore), updatePendingIntent);
+        notifyBuilder.addAction(R.mipmap.ic_vazare, getString(R.string.ignore), updatePendingIntent);
         // Deliver the notification.
         mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
     }
 
     public void ignoreNotification() {
         mNotifyManager.cancel(NOTIFICATION_ID);
+        Log.d(TAG, "ignoreNotification NOTIFICATION_ID: " + NOTIFICATION_ID);
     }
 
     private NotificationCompat.Builder getNotificationBuilder(int opcao) {
-
         // Set up the pending intent that is delivered when the notification is clicked.
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent notificationPendingIntent = PendingIntent.getActivity
-                (this, NOTIFICATION_ID, notificationIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent notificationPendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         String txtNotificacao = "";
 
         if (opcao == 5) txtNotificacao = getString(R.string.notification_text_5);
@@ -720,7 +712,7 @@ public class MainActivity extends AppCompatActivity {
                 .Builder(this, PRIMARY_CHANNEL_ID)
                 .setContentTitle(getString(R.string.notification_title))
                 .setContentText(txtNotificacao)
-                .setSmallIcon(R.drawable.ic_notification_app)
+                .setSmallIcon(R.mipmap.ic_vazare)
                 .setAutoCancel(true)
                 .setContentIntent(notificationPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -773,7 +765,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean validate() {
         if (TextUtils.isEmpty(etInit.getText())) {
             etInit.setError(getString(R.string.put_hour_initial));
-            etInit.setFocusable(true);
+            etInit.requestFocus();
             return false;
         }
         return true;

@@ -9,16 +9,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.util.Log;
+
 import androidx.core.app.NotificationCompat;
+
 import java.util.Calendar;
+
 import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.provider.Settings.Global.getString;
+import static androidx.core.content.res.TypedArrayUtils.getText;
+import static androidx.core.graphics.drawable.IconCompat.getResources;
 
 
 public class MyBroadCastReceiver extends BroadcastReceiver {
     private static final String TAG = "MyBroadCastReceiver";
-//
+    //
 // Constants for the notification actions buttons.
-private static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.notifyme.ACTION_UPDATE_NOTIFICATION";
+    private static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.notifyme.ACTION_UPDATE_NOTIFICATION";
     // Notification channel ID.
     private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
     // Notification ID.
@@ -51,7 +57,7 @@ private static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.no
         editor = sharedPreferences.edit();
         if (sharedPreferences.contains(horaFinalKey)) {
             String horaFinal = sharedPreferences.getString(horaFinalKey, "");
-            if (!horaFinal.isEmpty()){
+            if (!horaFinal.isEmpty()) {
                 //TODO fazer o calculo para limpar a preferencia
             }
 
@@ -77,15 +83,16 @@ private static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.no
         // Build the notification with all of the parameters.
         NotificationCompat.Builder notifyBuilder = new NotificationCompat
                 .Builder(context, PRIMARY_CHANNEL_ID)
-                .setContentTitle("Chegou a hora de ir para casa!")
+                .setContentTitle(context.getResources().getString(R.string.notification_title))
                 .setContentText(txtNotificacao)
-                .setSmallIcon(R.drawable.ic_notification_app)
+                .setSmallIcon(R.mipmap.ic_vazare)
                 .setAutoCancel(true)
                 .setContentIntent(notificationPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
         return notifyBuilder;
     }
+
     public void sendNotification(Context context) {
         Log.d(TAG, "sendNotification");
         Intent updateIntent = new Intent(ACTION_UPDATE_NOTIFICATION);
@@ -94,14 +101,16 @@ private static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.no
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder(context);
         // Add the action button using the pending intent.
         //definir a imagem da notificacao
-        notifyBuilder.addAction(R.drawable.ic_notification_app, context.getString(R.string.notification_title), updatePendingIntent);
+        notifyBuilder.addAction(R.mipmap.ic_vazare, context.getResources().getString(R.string.ignore), updatePendingIntent);
+
         // Deliver the notification.
         mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
     }
+
     public void createNotificationChannel(Context context) {
         Log.d(TAG, "createNotificationChannel");
         // Create a notification manager object.
-        mNotifyManager =(NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+        mNotifyManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
 
         // Notification channels are only available in OREO and higher.
         // So, add a check on SDK version.
