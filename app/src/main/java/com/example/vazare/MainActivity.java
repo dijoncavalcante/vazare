@@ -603,6 +603,7 @@ public class MainActivity extends AppCompatActivity {
         cb0147.setChecked(false);
         isRunning = false;
         handler.removeCallbacks(runnable);
+        ignoreNotification();
     }
 
     public String diff_time(Date saida, Date retorno) {
