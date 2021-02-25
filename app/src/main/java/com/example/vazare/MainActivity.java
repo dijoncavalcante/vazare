@@ -36,7 +36,6 @@ import androidx.core.app.NotificationCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -77,7 +76,10 @@ public class MainActivity extends AppCompatActivity {
     public static final String horaEntradaAlmocoKey = "hora_entrada_almoco";
     public static final String check0147Key = "check_0147_Key";
     public static final String STR_DURACAO_TRABALHO__DIARIO_2021 = "08:15";
+    public static final Integer INT_DURACAO_TRABALHO__DIARIO_HORA_2021 = 8;
+    public static final Integer INT_DURACAO_TRABALHO__DIARIO_MINUTO_2021 = 15;
     public static final String STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS = "10:00";
+
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -138,11 +140,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
-        //novo
-        handler = new Handler();
         //TODO Add linha com hora inicial para teste
-        etInit.setText("09:00");
-        //
+        /* etInit.setText("09:00"); */
+
         verifySharedPreference();
         Intent alarmIntent = new Intent(this, MyBroadCastReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
@@ -330,6 +330,7 @@ public class MainActivity extends AppCompatActivity {
                 + " etAlmocoEntrada: " + etAlmocoEntrada.getText().toString()
                 + " tvSaida: " + tvSaida.getText().toString()
                 + " cb0147: " + cb0147.isChecked());
+        calculate();
     }
 
     public void countDownTimerNotification() {
@@ -476,33 +477,21 @@ public class MainActivity extends AppCompatActivity {
             //clear some fields or action
             cancelCountDownTimer();
             clearSharedPreferences();
-            //hora gasta no almoço
-            String almoco = calculateLunch();
-            //recuperando o texto/hora inicial
-            String texto = etInit.getText().toString();
-            //separando a hora e minuto por :
-            String[] horaMinuto = texto.split(":");
-            //soma as 08:00 horas de trabalho diários
-            int horaSaida = Integer.parseInt(horaMinuto[0]) + 8 + Integer.parseInt(almoco.split(":")[0]);
-            int minutoSaida = Integer.parseInt(horaMinuto[1]) + 15 + Integer.parseInt(almoco.split(":")[1]);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            String almoco = calculateLunch();
+            String[] horaMinuto = etInit.getText().toString().split(":");
+            int horaSaida = Integer.parseInt(horaMinuto[0]) + INT_DURACAO_TRABALHO__DIARIO_HORA_2021 + Integer.parseInt(almoco.split(":")[0]);
+            int minutoSaida = Integer.parseInt(horaMinuto[1]) + INT_DURACAO_TRABALHO__DIARIO_MINUTO_2021 + Integer.parseInt(almoco.split(":")[1]);
             //horario de saída
             Calendar dateTimeExit = Calendar.getInstance();
-
             dateTimeExit.set(Calendar.HOUR_OF_DAY, horaSaida);
             dateTimeExit.set(Calendar.MINUTE, minutoSaida);
-            dateTimeExit.set(Calendar.SECOND, Integer.valueOf(getSecond()));
-            //TODO comentado apenas para teste de hora de saída
-            //tvSaida.setText(dateTimeExit.get(Calendar.HOUR_OF_DAY) + ":" + dateTimeExit.get(Calendar.MINUTE));
+            dateTimeExit.set(Calendar.SECOND, getSecond());
             tvSaida.setText(String.format(FORMAT_HOUR_MIN, dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
-
             //TODO Validar se o calculo é necessário antes iniciar o alarme
             startAlarm(tvSaida.getText().toString());
-
             //horas trabalhadas
             calculateHorasTrabalhadas();
-
             //calcular horas permitidas
             if (cb0147.isChecked()) {
                 tvSaida.setText(calcular0147());
@@ -548,7 +537,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean validateLunch() {
-        //TODO Criar logica para validar o horario do almoço, horario de entrada nao pode ser menor que horario de saida. podem ser vazio se o campo inicial tiver valor.
         if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
             return true;
         }
@@ -559,8 +547,6 @@ public class MainActivity extends AppCompatActivity {
             Date dateEntrada = new Date();
             dateEntrada.setHours(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[0]));
             dateEntrada.setMinutes(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[1]));
-
-
             int totalSaidaAlmoco = dateSaida.getHours() * 60 + dateSaida.getMinutes();
             int totalRetornoAlmoco = dateEntrada.getHours() * 60 + dateEntrada.getMinutes();
             //se a saida do almoco(12:00) for maior que a hora de retorno do almoço(13:00)
@@ -647,6 +633,7 @@ public class MainActivity extends AppCompatActivity {
         btnCalculate = findViewById(R.id.btnCalculate);
         cb0147 = findViewById(R.id.cb0147);
         tvTimer = findViewById(R.id.tvTimer);
+        handler = new Handler();
     }
 
     @Override
