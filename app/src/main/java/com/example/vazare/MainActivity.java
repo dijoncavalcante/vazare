@@ -47,15 +47,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private static final String FORMAT_HOUR_MIN_SEC = "%02d:%02d:%02d";
     private static final String FORMAT_HOUR_MIN = "%02d:%02d";
-    /*
-    variaveis para a notificação
-     */
+    /*    variaveis para a notificação     */
     // Constants for the notification actions buttons.
-    private static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.notifyme.ACTION_UPDATE_NOTIFICATION";
+    public static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.notifyme.ACTION_UPDATE_NOTIFICATION";
     // Notification channel ID.
-    private static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
+    public static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
     // Notification ID.
-    private static final int NOTIFICATION_ID = 0;
+    public static final int NOTIFICATION_ID = 0;
     private NotificationManager mNotifyManager;
     private NotificationReceiver mReceiver = new NotificationReceiver();
     private AlertDialog alerta;
@@ -75,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String myPreference = "mypref";
     public static final String horaInicialKey = "hora_inicial_key";
     public static final String horaFinalKey = "hora_final_key";
+    public static final String horaSaidaAlmocoKey = "hora_saida_almoco";
+    public static final String horaEntradaAlmocoKey = "hora_entrada_almoco";
     public static final String check0147Key = "check_0147_Key";
     public static final String STR_DURACAO_TRABALHO__DIARIO_2021 = "08:15";
     public static final String STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS = "10:00";
@@ -88,8 +88,7 @@ public class MainActivity extends AppCompatActivity {
     private static Handler handler;
     private static boolean isRunning;
     private static final long MILLIS_IN_SEC = 1000L;
-    private static final int SECS_IN_MIN = 60;
-    private static final int SECS_IN_ONE_HOUR = 60 * 60 * 1000;// this represents 1 hour
+
     private final Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -311,7 +310,26 @@ public class MainActivity extends AppCompatActivity {
                 tvDuracao.setText(STR_DURACAO_TRABALHO__DIARIO_2021);
             }
         }
-        Log.d(TAG, "verifySharedPreference: " + etInit.getText().toString() + " - " + tvSaida.getText().toString() + " - " + cb0147.isChecked());
+        if (sharedPreferences.contains(horaSaidaAlmocoKey)) {
+            String horaSaidaAlmoco = sharedPreferences.getString(horaSaidaAlmocoKey, "");
+            if (!horaSaidaAlmoco.isEmpty()) {
+                etAlmocoSaida.setText(horaSaidaAlmoco);
+//                countDownTimerNotification();
+            }
+        }
+        if (sharedPreferences.contains(horaEntradaAlmocoKey)) {
+            String horaEntradaAlmoco = sharedPreferences.getString(horaEntradaAlmocoKey, "");
+            if (!horaEntradaAlmoco.isEmpty()) {
+                etAlmocoEntrada.setText(horaEntradaAlmoco);
+//                countDownTimerNotification();
+            }
+        }
+        Log.d(TAG, "verifySharedPreference:"
+                + " etInit: " + etInit.getText().toString()
+                + " etAlmocoSaida: " + etAlmocoSaida.getText().toString()
+                + " etAlmocoEntrada: " + etAlmocoEntrada.getText().toString()
+                + " tvSaida: " + tvSaida.getText().toString()
+                + " cb0147: " + cb0147.isChecked());
     }
 
     public void countDownTimerNotification() {
@@ -455,7 +473,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void calculate() {
         if (validate()) {
+            //clear some fields or action
             cancelCountDownTimer();
+            clearSharedPreferences();
             //hora gasta no almoço
             String almoco = calculateLunch();
             //recuperando o texto/hora inicial
@@ -477,11 +497,6 @@ public class MainActivity extends AppCompatActivity {
             //tvSaida.setText(dateTimeExit.get(Calendar.HOUR_OF_DAY) + ":" + dateTimeExit.get(Calendar.MINUTE));
             tvSaida.setText(String.format(FORMAT_HOUR_MIN, dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
 
-            //TODO duas linhas apenas para teste de hora de saida
-//            Calendar d = Calendar.getInstance();
-//            d.add(Calendar.MINUTE,2);
-//            tvSaida.setText(d.get(Calendar.HOUR_OF_DAY) + ":" + d.get(Calendar.MINUTE));
-
             //TODO Validar se o calculo é necessário antes iniciar o alarme
             startAlarm(tvSaida.getText().toString());
 
@@ -496,7 +511,7 @@ public class MainActivity extends AppCompatActivity {
                 tvDuracao.setText(STR_DURACAO_TRABALHO__DIARIO_2021);
             }
             countDownTimerNotification();
-
+            saveSharedPreferences();
         }
     }
 
@@ -649,17 +664,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveSharedPreferences() {
-        Log.d(TAG, "salveSharedPreferences: " + etInit.getText().toString() + " - " + tvSaida.getText().toString() + " - " + cb0147.isChecked());
         editor.putString(horaInicialKey, etInit.getText().toString());
         editor.putString(horaFinalKey, tvSaida.getText().toString());
+        editor.putString(horaSaidaAlmocoKey, etAlmocoSaida.getText().toString());
+        editor.putString(horaEntradaAlmocoKey, etAlmocoEntrada.getText().toString());
         editor.putBoolean(check0147Key, cb0147.isChecked());
         editor.commit();
+        Log.d(TAG, "salveSharedPreferences:"
+                + " etInit: " + etInit.getText().toString()
+                + " etAlmocoSaida: " + etAlmocoSaida.getText().toString()
+                + " etAlmocoEntrada: " + etAlmocoEntrada.getText().toString()
+                + " tvSaida: " + tvSaida.getText().toString()
+                + " cb0147: " + cb0147.isChecked());
     }
 
     public void clearSharedPreferences() {
         editor.remove(horaInicialKey);
         editor.remove(horaFinalKey);
         editor.remove(check0147Key);
+        editor.remove(horaSaidaAlmocoKey);
+        editor.remove(horaEntradaAlmocoKey);
         editor.clear();
         editor.commit();
     }
