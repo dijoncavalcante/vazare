@@ -291,14 +291,31 @@ public class MainActivity extends AppCompatActivity {
         editor = sharedPreferences.edit();
         if (sharedPreferences.contains(horaInicialKey)) {
             String horaInicial = sharedPreferences.getString(horaInicialKey, "");
-            if (!horaInicial.isEmpty())
+            if (!horaInicial.isEmpty()) {
                 etInit.setText(horaInicial);
+                Log.d(TAG, "verifySharedPreference: etInit: " + etInit.getText().toString());
+            }
+        }
+        if (sharedPreferences.contains(horaSaidaAlmocoKey)) {
+            String horaSaidaAlmoco = sharedPreferences.getString(horaSaidaAlmocoKey, "");
+            if (!horaSaidaAlmoco.isEmpty()) {
+                etAlmocoSaida.setText(horaSaidaAlmoco);
+                Log.d(TAG, "verifySharedPreference: etAlmocoSaida: " + etAlmocoSaida.getText().toString());
+            }
+        }
+        if (sharedPreferences.contains(horaEntradaAlmocoKey)) {
+            String horaEntradaAlmoco = sharedPreferences.getString(horaEntradaAlmocoKey, "");
+            if (!horaEntradaAlmoco.isEmpty()) {
+                etAlmocoEntrada.setText(horaEntradaAlmoco);
+                Log.d(TAG, "verifySharedPreference: etAlmocoEntrada: " + etAlmocoEntrada.getText().toString());
+            }
         }
         if (sharedPreferences.contains(horaFinalKey)) {
             String horaFinal = sharedPreferences.getString(horaFinalKey, "");
             if (!horaFinal.isEmpty()) {
                 tvSaida.setText(horaFinal);
                 countDownTimerNotification();
+                Log.d(TAG, "verifySharedPreference: tvSaida: " + tvSaida.getText().toString());
             }
         }
         if (sharedPreferences.contains(check0147Key)) {
@@ -309,28 +326,8 @@ public class MainActivity extends AppCompatActivity {
             } else {// a duração normal de um dia de trabalho
                 tvDuracao.setText(STR_DURACAO_TRABALHO__DIARIO_2021);
             }
+            Log.d(TAG, "verifySharedPreference: cb0147: " + cb0147.isChecked());
         }
-        if (sharedPreferences.contains(horaSaidaAlmocoKey)) {
-            String horaSaidaAlmoco = sharedPreferences.getString(horaSaidaAlmocoKey, "");
-            if (!horaSaidaAlmoco.isEmpty()) {
-                etAlmocoSaida.setText(horaSaidaAlmoco);
-//                countDownTimerNotification();
-            }
-        }
-        if (sharedPreferences.contains(horaEntradaAlmocoKey)) {
-            String horaEntradaAlmoco = sharedPreferences.getString(horaEntradaAlmocoKey, "");
-            if (!horaEntradaAlmoco.isEmpty()) {
-                etAlmocoEntrada.setText(horaEntradaAlmoco);
-//                countDownTimerNotification();
-            }
-        }
-        Log.d(TAG, "verifySharedPreference:"
-                + " etInit: " + etInit.getText().toString()
-                + " etAlmocoSaida: " + etAlmocoSaida.getText().toString()
-                + " etAlmocoEntrada: " + etAlmocoEntrada.getText().toString()
-                + " tvSaida: " + tvSaida.getText().toString()
-                + " cb0147: " + cb0147.isChecked());
-        calculate();
     }
 
     public void countDownTimerNotification() {
