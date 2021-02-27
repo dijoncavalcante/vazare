@@ -328,6 +328,9 @@ public class MainActivity extends AppCompatActivity {
             }
             Log.d(TAG, "verifySharedPreference: cb0147: " + cb0147.isChecked());
         }
+        if (!TextUtils.isEmpty(etInit.getText().toString())) {
+            calculateHourWorked();
+        }
     }
 
     public void countDownTimerNotification() {
@@ -396,7 +399,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean campoInicialHasValue() {
         if (TextUtils.isEmpty(etInit.getText())) {
             etInit.setError("Informe a hora de entrada!");
-            etInit.setFocusable(true);
             etInit.requestFocus();
             return false;
         } else
@@ -571,6 +573,16 @@ public class MainActivity extends AppCompatActivity {
         initCronometro(dateHoraEntrada);
 //        retorna meu horário ja trabalhado até o momento
         return diff_time(dateHoraEntrada, new Date());
+    }
+
+    public void calculateHourWorked() {
+        String horaEntrada = etInit.getText().toString();
+        Date dateHoraEntrada = new Date();
+        dateHoraEntrada.setHours(Integer.parseInt(horaEntrada.split(":")[0]));
+        dateHoraEntrada.setMinutes(Integer.parseInt(horaEntrada.split(":")[1]));
+        Log.d(TAG, "calculateHourWorked: dateHoraEntrada: " + dateHoraEntrada);
+        //calcular horas trabalhadas
+        initCronometro(dateHoraEntrada);
     }
 
     public String calcular0147() {
