@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
     TextView tvTimer;
     EditText etInit;
     TextView tvDuracao;
-    static EditText etAlmocoSaida;
-    static EditText etAlmocoEntrada;
+    public static EditText etAlmocoSaida;
+    public static EditText etAlmocoEntrada;
     TextView tvSaida;
     static TextView tvhorasTrabalhadas;
     CheckBox cb0147;
