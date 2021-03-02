@@ -104,32 +104,33 @@ public class MainActivity extends AppCompatActivity {
                     hour = (ms / 3600000) % 24;
                     minute = (ms / 60000) % 60;
                     second = (ms / 1000) % 60;
-                    Log.d(TAG, "hour:" + hour);
-                } else {
-                    //subtrair o tempo de almoço, caso os dois campos de almoço estejam preenchidos
-                    Date dateSaidaAlmoco = new Date();
-                    dateSaidaAlmoco.setHours(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
-                    dateSaidaAlmoco.setMinutes(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
-                    Date dateEntradaAlmoco = new Date();
-                    dateEntradaAlmoco.setHours(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[0]));
-                    dateEntradaAlmoco.setMinutes(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[1]));
+                } else {//subtrair o tempo de almoço, caso os dois campos de almoço estejam preenchidos
+                    Calendar calendarSaidaAlmoco = Calendar.getInstance();
+                    Calendar calendarEntradaAlmoco = Calendar.getInstance();
 
-                    long msIntervalLunch = dateEntradaAlmoco.getTime() - dateSaidaAlmoco.getTime();
+                    calendarSaidaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
+                    calendarSaidaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
+                    calendarSaidaAlmoco.set(Calendar.SECOND, 0);
 
-                    long timeLunchMillis = ms - msIntervalLunch;
+                    calendarEntradaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[0]));
+                    calendarEntradaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[1]));
+                    calendarEntradaAlmoco.set(Calendar.SECOND, 0);
 
-                    Log.d(TAG, "timeLunchMillis:" + timeLunchMillis + " = System.currentTimeMillis:" + System.currentTimeMillis() + " - initialTime:" + initialTime + " - ms:" + ms);
+                    long msIntervalLunchCalendar = calendarEntradaAlmoco.getTimeInMillis() - calendarSaidaAlmoco.getTimeInMillis();
+                    long timeLunchMillisCalendar = ms - msIntervalLunchCalendar;
 
-                    hour = timeLunchMillis / 3600000 % 24;
-                    minute = (timeLunchMillis / 60000) % 60;
-                    second = (timeLunchMillis / 1000) % 60;
-                    Log.d(TAG, "hour:" + hour + " minute:" + minute + " second:" + second);
+                    Log.d(TAG, "timeLunchMillisCalendar:" + timeLunchMillisCalendar + " = System.currentTimeMillis:" + System.currentTimeMillis() + " - initialTime:" + initialTime + " - ms:" + ms);
+
+                    hour = timeLunchMillisCalendar / 3600000 % 24;
+                    minute = (timeLunchMillisCalendar / 60000) % 60;
+                    second = (timeLunchMillisCalendar / 1000) % 60;
                 }/*
                     ms / 3600000 % 24  HORAS 86400000  = 24 * 60 * 60 * 1000
                     (ms / 60000) % 60  MINUTOS 60000   = 60 * 1000
                     (ms / 1000) % 60)  SEGUNDOS
                 * */
                 tvhorasTrabalhadas.setText(String.format(FORMAT_HOUR_MIN_SEC, hour, minute, second));
+                Log.d(TAG, "FORMAT_HOUR_MIN_SEC: " + String.format(FORMAT_HOUR_MIN_SEC, hour, minute, second));
                 handler.postDelayed(runnable, MILLIS_IN_SEC);
             }
         }
