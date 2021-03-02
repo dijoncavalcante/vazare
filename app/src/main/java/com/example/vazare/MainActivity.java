@@ -105,25 +105,11 @@ public class MainActivity extends AppCompatActivity {
                     minute = (ms / 60000) % 60;
                     second = (ms / 1000) % 60;
                 } else {//subtrair o tempo de almoço, caso os dois campos de almoço estejam preenchidos
-                    Calendar calendarSaidaAlmoco = Calendar.getInstance();
-                    Calendar calendarEntradaAlmoco = Calendar.getInstance();
-
-                    calendarSaidaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
-                    calendarSaidaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
-                    calendarSaidaAlmoco.set(Calendar.SECOND, 0);
-
-                    calendarEntradaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[0]));
-                    calendarEntradaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[1]));
-                    calendarEntradaAlmoco.set(Calendar.SECOND, 0);
-
-                    long msIntervalLunchCalendar = calendarEntradaAlmoco.getTimeInMillis() - calendarSaidaAlmoco.getTimeInMillis();
-                    long timeLunchMillisCalendar = ms - msIntervalLunchCalendar;
-
-                    Log.d(TAG, "timeLunchMillisCalendar:" + timeLunchMillisCalendar + " = System.currentTimeMillis:" + System.currentTimeMillis() + " - initialTime:" + initialTime + " - ms:" + ms);
-
-                    hour = timeLunchMillisCalendar / 3600000 % 24;
-                    minute = (timeLunchMillisCalendar / 60000) % 60;
-                    second = (timeLunchMillisCalendar / 1000) % 60;
+                    long timeWorkedMillisWithIntervalLunch = ms - returnMsIntervalLunch();
+                    Log.d(TAG, "timeWorkedMillisWithIntervalLunch:" + timeWorkedMillisWithIntervalLunch + " = System.currentTimeMillis:" + System.currentTimeMillis() + " - initialTime:" + initialTime + " - ms:" + ms);
+                    hour = timeWorkedMillisWithIntervalLunch / 3600000 % 24;
+                    minute = (timeWorkedMillisWithIntervalLunch / 60000) % 60;
+                    second = (timeWorkedMillisWithIntervalLunch / 1000) % 60;
                 }/*
                     ms / 3600000 % 24  HORAS 86400000  = 24 * 60 * 60 * 1000
                     (ms / 60000) % 60  MINUTOS 60000   = 60 * 1000
@@ -135,6 +121,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    public long returnMsIntervalLunch() {
+        Calendar calendarSaidaAlmoco = Calendar.getInstance();
+        Calendar calendarEntradaAlmoco = Calendar.getInstance();
+        calendarSaidaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
+        calendarSaidaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
+        calendarSaidaAlmoco.set(Calendar.SECOND, 0);
+        calendarEntradaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[0]));
+        calendarEntradaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[1]));
+        calendarEntradaAlmoco.set(Calendar.SECOND, 0);
+        return calendarEntradaAlmoco.getTimeInMillis() - calendarSaidaAlmoco.getTimeInMillis();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
