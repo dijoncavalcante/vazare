@@ -40,6 +40,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import static com.example.vazare.R.string.clear_values;
+
 public class MainActivity extends AppCompatActivity {
     /*
     variaveis para mostrar o countdown mais vibração
@@ -261,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Valores redefinidos com sucesso!", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, clear_values, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 reset();
                 clearSharedPreferences();

@@ -35,4 +35,5 @@
     <string name="put_hour_initial">Informe a hora de entrada!</string>
     <string name="validate_return_lunch">Por favor preencher a saída para o almoço.</string>
     <string name="validate_return_lunch_bigger">A entrada do almoço deve ser maior que a saída para o almoço.</string>
+    <string name="clear_values">Valores redefinidos com sucesso!</string>
 </resources>
