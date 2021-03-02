@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int NOTIFICATION_ID = 0;
     private NotificationManager mNotifyManager;
     private NotificationReceiver mReceiver = new NotificationReceiver();
-    private AlertDialog alerta;
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
     TextView tvTimetogo;
@@ -781,7 +780,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, R.string.close_popup, Toast.LENGTH_SHORT).show();
             }
         });
-        alerta = builder.create();
+        AlertDialog alerta = builder.create();
         alerta.show();
     }
 
