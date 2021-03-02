@@ -98,9 +98,7 @@ public class MainActivity extends AppCompatActivity {
             if (isRunning) {
                 long ms = (System.currentTimeMillis() - initialTime);
                 Log.d(TAG, "initialTime:" + initialTime + " System.currentTimeMillis:" + System.currentTimeMillis() + " ms:" + ms);
-                long hour = 0;
-                long minute = 0;
-                long second = 0;
+                long hour, minute, second = 0;
                 //caso não tenha nenhum campo de ALMOÇO preenchido
                 if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
                     hour = (ms / 3600000) % 24;
