@@ -1,5 +1,6 @@
 package com.example.vazare;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
@@ -98,13 +99,12 @@ public class MainActivity extends AppCompatActivity {
             if (isRunning) {
                 long ms = (System.currentTimeMillis() - initialTime);
                 Log.d(TAG, "initialTime:" + initialTime + " System.currentTimeMillis:" + System.currentTimeMillis() + " ms:" + ms);
-                long hour, minute, second = 0;
-                String timeComplete = "";
+                String timeComplete;
                 //caso não tenha nenhum campo de ALMOÇO preenchido
                 if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
                     timeComplete = fullTime(ms);
                 } else {//subtrair o tempo de almoço, caso os dois campos de almoço estejam preenchidos
-                    long timeWorkedMillisWithIntervalLunch = ms - returnMsIntervalLunch();
+                    long timeWorkedMillisWithIntervalLunch = ms - intervalLunchMS();
                     Log.d(TAG, "timeWorkedMillisWithIntervalLunch:" + timeWorkedMillisWithIntervalLunch + " = System.currentTimeMillis:" + System.currentTimeMillis() + " - initialTime:" + initialTime + " - ms:" + ms);
                     timeComplete = fullTime(timeWorkedMillisWithIntervalLunch);
                 }
@@ -119,24 +119,31 @@ public class MainActivity extends AppCompatActivity {
      *  ms / 3600000 % 24  HORAS 86400000  = 24 * 60 * 60 * 1000
      *  (ms / 60000) % 60  MINUTOS 60000   = 60 * 1000
      *  (ms / 1000) % 60)  SEGUNDOS
+     * @return Return the hour formated. E.g: 00:00:00
      * */
+    @SuppressLint("DefaultLocale")
     public String fullTime(long time) {
-        long hour, minute, second = 0;
+        long hour, minute, second;
         hour = (time / 3600000) % 24;
         minute = (time / 60000) % 60;
         second = (time / 1000) % 60;
         return String.format(FORMAT_HOUR_MIN_SEC, hour, minute, second);
     }
 
-    public long returnMsIntervalLunch() {
+    /***
+     *
+     * @return Return the quantity of the milliSeconds of the interval of the lunch
+     */
+    public long intervalLunchMS() {
         Calendar calendarSaidaAlmoco = Calendar.getInstance();
         Calendar calendarEntradaAlmoco = Calendar.getInstance();
+        calendarSaidaAlmoco.set(Calendar.SECOND, 0);
+        calendarEntradaAlmoco.set(Calendar.SECOND, 0);
         calendarSaidaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
         calendarSaidaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
-        calendarSaidaAlmoco.set(Calendar.SECOND, 0);
         calendarEntradaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[0]));
         calendarEntradaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[1]));
-        calendarEntradaAlmoco.set(Calendar.SECOND, 0);
+
         return calendarEntradaAlmoco.getTimeInMillis() - calendarSaidaAlmoco.getTimeInMillis();
     }
 
@@ -481,16 +488,7 @@ public class MainActivity extends AppCompatActivity {
             cancelCountDownTimer();
             clearSharedPreferences();
 
-            String almoco = calculateLunch();
-            String[] horaMinuto = etInit.getText().toString().split(":");
-            int horaSaida = Integer.parseInt(horaMinuto[0]) + INT_DURACAO_TRABALHO__DIARIO_HORA_2021 + Integer.parseInt(almoco.split(":")[0]);
-            int minutoSaida = Integer.parseInt(horaMinuto[1]) + INT_DURACAO_TRABALHO__DIARIO_MINUTO_2021 + Integer.parseInt(almoco.split(":")[1]);
-            //horario de saída
-            Calendar dateTimeExit = Calendar.getInstance();
-            dateTimeExit.set(Calendar.HOUR_OF_DAY, horaSaida);
-            dateTimeExit.set(Calendar.MINUTE, minutoSaida);
-            dateTimeExit.set(Calendar.SECOND, getSecond());
-            tvSaida.setText(String.format(FORMAT_HOUR_MIN, dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
+            calculateSaida();
             //TODO Validar se o calculo é necessário antes iniciar o alarme
             startAlarm(tvSaida.getText().toString());
             //horas trabalhadas
@@ -502,9 +500,24 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 tvDuracao.setText(STR_DURACAO_TRABALHO__DIARIO_2021);
             }
+            //start countDownTimer
             countDownTimerNotification();
+            //save fields on saveSharedPreferences
             saveSharedPreferences();
         }
+    }
+
+    public void calculateSaida() {
+        String almoco = calculateLunch();
+        String[] horaMinuto = etInit.getText().toString().split(":");
+        int horaSaida = Integer.parseInt(horaMinuto[0]) + INT_DURACAO_TRABALHO__DIARIO_HORA_2021 + Integer.parseInt(almoco.split(":")[0]);
+        int minutoSaida = Integer.parseInt(horaMinuto[1]) + INT_DURACAO_TRABALHO__DIARIO_MINUTO_2021 + Integer.parseInt(almoco.split(":")[1]);
+        //horario de saída
+        Calendar dateTimeExit = Calendar.getInstance();
+        dateTimeExit.set(Calendar.HOUR_OF_DAY, horaSaida);
+        dateTimeExit.set(Calendar.MINUTE, minutoSaida);
+        dateTimeExit.set(Calendar.SECOND, getSecond());
+        tvSaida.setText(String.format(FORMAT_HOUR_MIN, dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
     }
 
     public int getHour(String fullTime) {
@@ -528,25 +541,10 @@ public class MainActivity extends AppCompatActivity {
         if (validateLunch()) {
             return "01:00";
         }
-
-        Date dateSaida = new Date();
-        dateSaida.setHours(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
-        dateSaida.setMinutes(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
-        Date dateEntrada = new Date();
-        dateEntrada.setHours(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[0]));
-        dateEntrada.setMinutes(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[1]));
-
-        return diff_time(dateSaida, dateEntrada);
+        long timeLunchMS = intervalLunchMS();
+        return fullTime(timeLunchMS);
     }
 
-    public String diff_time_(Date saida, Date retorno) {
-        int totalRetorno = retorno.getHours() * 60 + retorno.getMinutes();
-        int totalSaida = saida.getHours() * 60 + saida.getMinutes();
-        int total = totalRetorno - totalSaida;
-        int horas = total / 60;
-        int minutos = total % 60;
-        return String.format(FORMAT_HOUR_MIN, horas, minutos);
-    }
 
     public boolean validateLunch() {
         if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
@@ -567,11 +565,6 @@ public class MainActivity extends AppCompatActivity {
                 etAlmocoEntrada.setFocusable(true);
                 return false;
             }
-
-            int total = totalRetornoAlmoco - totalSaidaAlmoco;
-
-            int horas = total / 60;
-            int minutos = total % 60;
         }
 
         return false;

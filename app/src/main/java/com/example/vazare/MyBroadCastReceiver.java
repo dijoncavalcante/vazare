@@ -33,7 +33,6 @@ public class MyBroadCastReceiver extends BroadcastReceiver {
         editor.remove(MainActivity.horaFinalKey);
         editor.clear();
         editor.commit();
-
     }
 
     public void verifySharedPreference(Context context) {
