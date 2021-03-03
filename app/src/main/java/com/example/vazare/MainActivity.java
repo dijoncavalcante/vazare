@@ -99,28 +99,34 @@ public class MainActivity extends AppCompatActivity {
                 long ms = (System.currentTimeMillis() - initialTime);
                 Log.d(TAG, "initialTime:" + initialTime + " System.currentTimeMillis:" + System.currentTimeMillis() + " ms:" + ms);
                 long hour, minute, second = 0;
+                String timeComplete = "";
                 //caso não tenha nenhum campo de ALMOÇO preenchido
                 if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
-                    hour = (ms / 3600000) % 24;
-                    minute = (ms / 60000) % 60;
-                    second = (ms / 1000) % 60;
+                    timeComplete = fullTime(ms);
                 } else {//subtrair o tempo de almoço, caso os dois campos de almoço estejam preenchidos
                     long timeWorkedMillisWithIntervalLunch = ms - returnMsIntervalLunch();
                     Log.d(TAG, "timeWorkedMillisWithIntervalLunch:" + timeWorkedMillisWithIntervalLunch + " = System.currentTimeMillis:" + System.currentTimeMillis() + " - initialTime:" + initialTime + " - ms:" + ms);
-                    hour = timeWorkedMillisWithIntervalLunch / 3600000 % 24;
-                    minute = (timeWorkedMillisWithIntervalLunch / 60000) % 60;
-                    second = (timeWorkedMillisWithIntervalLunch / 1000) % 60;
-                }/*
-                    ms / 3600000 % 24  HORAS 86400000  = 24 * 60 * 60 * 1000
-                    (ms / 60000) % 60  MINUTOS 60000   = 60 * 1000
-                    (ms / 1000) % 60)  SEGUNDOS
-                * */
-                tvhorasTrabalhadas.setText(String.format(FORMAT_HOUR_MIN_SEC, hour, minute, second));
-                Log.d(TAG, "FORMAT_HOUR_MIN_SEC: " + String.format(FORMAT_HOUR_MIN_SEC, hour, minute, second));
+                    timeComplete = fullTime(timeWorkedMillisWithIntervalLunch);
+                }
+                tvhorasTrabalhadas.setText(timeComplete);
+                Log.d(TAG, "timeComplete: " + timeComplete);
                 handler.postDelayed(runnable, MILLIS_IN_SEC);
             }
         }
     };
+
+    /***
+     *  ms / 3600000 % 24  HORAS 86400000  = 24 * 60 * 60 * 1000
+     *  (ms / 60000) % 60  MINUTOS 60000   = 60 * 1000
+     *  (ms / 1000) % 60)  SEGUNDOS
+     * */
+    public String fullTime(long time) {
+        long hour, minute, second = 0;
+        hour = (time / 3600000) % 24;
+        minute = (time / 60000) % 60;
+        second = (time / 1000) % 60;
+        return String.format(FORMAT_HOUR_MIN_SEC, hour, minute, second);
+    }
 
     public long returnMsIntervalLunch() {
         Calendar calendarSaidaAlmoco = Calendar.getInstance();
@@ -533,6 +539,15 @@ public class MainActivity extends AppCompatActivity {
         return diff_time(dateSaida, dateEntrada);
     }
 
+    public String diff_time_(Date saida, Date retorno) {
+        int totalRetorno = retorno.getHours() * 60 + retorno.getMinutes();
+        int totalSaida = saida.getHours() * 60 + saida.getMinutes();
+        int total = totalRetorno - totalSaida;
+        int horas = total / 60;
+        int minutos = total % 60;
+        return String.format(FORMAT_HOUR_MIN, horas, minutos);
+    }
+
     public boolean validateLunch() {
         if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
             return true;
@@ -572,6 +587,7 @@ public class MainActivity extends AppCompatActivity {
 //        retorna meu horário ja trabalhado até o momento
         return diff_time(dateHoraEntrada, new Date());
     }
+
 
     public void calculateHourWorked() {
         String horaEntrada = etInit.getText().toString();
