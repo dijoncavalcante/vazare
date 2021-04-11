@@ -1,5 +1,5 @@
 # Layout
-<img src="screenshot/vazare-home.jpg" width="200"> <img src="screenshot/vazare-hour-enter-8hour.jpg" width="200"> <img src="screenshot/vazare-hour-enter-10hour.jpg" width="200"> <img src="screenshot/vazare-10hours-completed.jpg" width="200"> <img src="screenshot/vazare-clear.jpg" width="200">
+<img src="screenshot/vazare-home.jpg" width="200"> <img src="screenshot/vazare-hour-enter-8hour.jpg" width="200"> <img src="screenshot/vazare-hour-enter-10hour.jpg" width="200"> <img src="screenshot/vazare-10hours-completed.jpg" width="200"> <img src="screenshot/vazare-forecast-8hour.jpg" width="200"> <img src="screenshot/vazare-clear.jpg" width="200">
 
 # Welcome to Vazare App!
 Project created to demonstrate some android apps development concepts. (personal)</br>
