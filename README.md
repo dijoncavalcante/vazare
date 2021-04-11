@@ -26,7 +26,7 @@ This projecet have the following features in the wich you can to use:
 - Limpar todos os campos de uma só vez.
 
 # TODO
-Change layout
-Change architecture to MMV
-Save datas daily
-Add local storage.
+- Change layout.
+- Change architecture to MMV.
+- Save datas daily.
+- Add local storage.
