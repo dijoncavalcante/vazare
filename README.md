@@ -30,3 +30,4 @@ This projecet have the following features in the wich you can to use:
 - Change architecture to MMV.
 - Save datas daily.
 - Add local storage.
+- Add layout for six hours of the work.
