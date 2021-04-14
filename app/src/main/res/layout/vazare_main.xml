@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--    https://www.uplabs.com/posts/app-design-to-help-special-children-->
@@ -9,69 +7,69 @@
     <!--    https://www.uplabs.com/posts/smart-home-app-ui-kit-e4bd4d03-4003-41e7-93bb-e7846caa812f-->
 
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_container_hi"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <!--    <androidx.cardview.widget.CardView-->
+    <!--        android:id="@+id/card_container_hi"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content">-->
 
-        <TextView
-            android:id="@+id/tvTimetogo_"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/time_to_go"
-            android:textSize="30sp" />
-    </androidx.cardview.widget.CardView>
-
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_container_start"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/card_container_hi">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/start"
-            android:textAlignment="center" />
+    <!--        <TextView-->
+    <!--            android:id="@+id/tvTimetogo_"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_gravity="center_horizontal"-->
+    <!--            android:layout_margin="5dp"-->
+    <!--            android:layout_marginTop="8dp"-->
+    <!--            android:text="@string/time_to_go"-->
+    <!--            android:textSize="30sp" />-->
+    <!--    </androidx.cardview.widget.CardView>-->
 
 
-        <EditText
-            android:id="@+id/etInit_"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:inputType="numberDecimal"
-            android:maxLength="5"
-            android:visibility="visible"
-            tools:text="07:30"/>
-    </androidx.cardview.widget.CardView>
+    <!--    <androidx.cardview.widget.CardView-->
+    <!--        android:id="@+id/card_container_start"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@id/card_container_hi">-->
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_container_lunch_out"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/card_container_start"
-        android:layout_toRightOf="@id/card_container_start">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="ALMOÇO 1"
-            android:textAlignment="center" />
-
-        <EditText
-            android:id="@+id/etAlmocoSaida"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:inputType="numberDecimal"
-            android:maxLength="5"
-            android:textColor="@color/cardview_dark_background"
-            tools:text="07:30" />
-    </androidx.cardview.widget.CardView>
+    <!--        <TextView-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:text="@string/start"-->
+    <!--            android:textAlignment="center" />-->
 
 
-</RelativeLayout>
+    <!--        <EditText-->
+    <!--            android:id="@+id/etInit_"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:focusable="false"-->
+    <!--            android:inputType="numberDecimal"-->
+    <!--            android:maxLength="5"-->
+    <!--            android:visibility="visible"-->
+    <!--            tools:text="07:30"/>-->
+    <!--    </androidx.cardview.widget.CardView>-->
+
+    <!--    <androidx.cardview.widget.CardView-->
+    <!--        android:id="@+id/card_container_lunch_out"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_below="@id/card_container_start"-->
+    <!--        android:layout_toRightOf="@id/card_container_start">-->
+    <!--        <TextView-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:text="ALMOÇO 1"-->
+    <!--            android:textAlignment="center" />-->
+
+    <!--        <EditText-->
+    <!--            android:id="@+id/etAlmocoSaida"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:focusable="false"-->
+    <!--            android:inputType="numberDecimal"-->
+    <!--            android:maxLength="5"-->
+    <!--            android:textColor="@color/cardview_dark_background"-->
+    <!--            tools:text="07:30" />-->
+    <!--    </androidx.cardview.widget.CardView>-->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
