@@ -1,75 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <!--    https://www.uplabs.com/posts/app-design-to-help-special-children-->
     <!--    https://www.uplabs.com/posts/learning-app-3a0d7040-1fe2-4b5d-a89b-abce9a80c122-->
     <!--    https://www.uplabs.com/posts/smart-home-app-ui-kit-e4bd4d03-4003-41e7-93bb-e7846caa812f-->
 
+    <TextView
+        android:id="@+id/textview_hello"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="35dp"
+        android:text="Hello"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!--    <androidx.cardview.widget.CardView-->
-    <!--        android:id="@+id/card_container_hi"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content">-->
+    <TextView
+        android:id="@+id/textView_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="22dp"
+        android:text="Dijon"
+        android:textSize="36sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_hello" />
 
-    <!--        <TextView-->
-    <!--            android:id="@+id/tvTimetogo_"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_gravity="center_horizontal"-->
-    <!--            android:layout_margin="5dp"-->
-    <!--            android:layout_marginTop="8dp"-->
-    <!--            android:text="@string/time_to_go"-->
-    <!--            android:textSize="30sp" />-->
-    <!--    </androidx.cardview.widget.CardView>-->
-
-
-    <!--    <androidx.cardview.widget.CardView-->
-    <!--        android:id="@+id/card_container_start"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_below="@id/card_container_hi">-->
-
-    <!--        <TextView-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:text="@string/start"-->
-    <!--            android:textAlignment="center" />-->
-
-
-    <!--        <EditText-->
-    <!--            android:id="@+id/etInit_"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:focusable="false"-->
-    <!--            android:inputType="numberDecimal"-->
-    <!--            android:maxLength="5"-->
-    <!--            android:visibility="visible"-->
-    <!--            tools:text="07:30"/>-->
-    <!--    </androidx.cardview.widget.CardView>-->
-
-    <!--    <androidx.cardview.widget.CardView-->
-    <!--        android:id="@+id/card_container_lunch_out"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_below="@id/card_container_start"-->
-    <!--        android:layout_toRightOf="@id/card_container_start">-->
-    <!--        <TextView-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:text="ALMOÇO 1"-->
-    <!--            android:textAlignment="center" />-->
-
-    <!--        <EditText-->
-    <!--            android:id="@+id/etAlmocoSaida"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:focusable="false"-->
-    <!--            android:inputType="numberDecimal"-->
-    <!--            android:maxLength="5"-->
-    <!--            android:textColor="@color/cardview_dark_background"-->
-    <!--            tools:text="07:30" />-->
-    <!--    </androidx.cardview.widget.CardView>-->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_face"
+        style="@style/ImageViewShapeable"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="32dp"
+        android:src="@drawable/abc_vector_test"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/Circular"
+        app:strokeColor="@color/cardview_dark_background"
+        app:strokeWidth="5dp" />
+    <!--    -->
+    <include
+        android:id="@+id/fragment_home_hour"
+        layout="@layout/fragment_home_hour"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
