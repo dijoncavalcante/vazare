@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+<!--    tools:context=".MainActivity">-->
+
     <!--    https://www.uplabs.com/posts/app-design-to-help-special-children-->
     <!--    https://www.uplabs.com/posts/learning-app-3a0d7040-1fe2-4b5d-a89b-abce9a80c122-->
     <!--    https://www.uplabs.com/posts/smart-home-app-ui-kit-e4bd4d03-4003-41e7-93bb-e7846caa812f-->
@@ -34,15 +36,14 @@
         style="@style/ImageViewShapeable"
         android:layout_marginTop="35dp"
         android:layout_marginEnd="32dp"
+        android:adjustViewBounds="true"
         app:layout_constraintBottom_toBottomOf="@+id/textView_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/Circular"
         app:strokeColor="@color/cardview_dark_background"
         app:strokeWidth="5dp"
-        tools:src="@drawable/ic_vazare_foreground" />
-
-    <!--    -->
+        android:src="@drawable/ic_face_test" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_div1"
@@ -63,29 +64,29 @@
         layout="@layout/fragment_home_hour"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="170dp"
         android:layout_marginBottom="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.012" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_countdown_timer"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/timer"
         android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/tv_duration_label"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_home_hour"
         app:layout_constraintWidth_min="100dp" />
 
     <TextView
         android:id="@+id/tvTimer"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:focusable="false"
         android:maxLength="8"
@@ -98,12 +99,13 @@
 
     <TextView
         android:id="@+id/tv_duration_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:focusable="false"
         android:inputType="numberDecimal"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/tv_progressive_counting_label"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tv_countdown_timer"
         app:layout_constraintTop_toTopOf="@+id/tv_countdown_timer"
         app:layout_constraintWidth_min="100dp"
@@ -111,7 +113,7 @@
 
     <TextView
         android:id="@+id/tv_duration"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:focusable="false"
         android:inputType="numberDecimal"
@@ -125,18 +127,20 @@
 
     <TextView
         android:id="@+id/tv_progressive_counting_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="@string/horas_trabalhadas_label"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tv_duration_label"
         app:layout_constraintTop_toTopOf="@+id/tv_duration_label"
         app:layout_constraintWidth_min="100dp" />
 
     <TextView
         android:id="@+id/tv_progressive_counting"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:focusable="false"
         android:maxLength="8"
@@ -151,10 +155,34 @@
         android:id="@+id/switch_banck_hours"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Bank of Hours?"
         app:layout_constraintEnd_toEndOf="@+id/tv_progressive_counting"
         app:layout_constraintStart_toStartOf="@+id/tvTimer"
         app:layout_constraintTop_toBottomOf="@+id/tv_duration" />
     <!--    style="@style/Widget.TipTime.CompoundButton.Switch"-->
+
+    <Button
+        android:id="@+id/btnCalculate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="calculateOnClick"
+        android:text="@string/calcular"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

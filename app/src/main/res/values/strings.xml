@@ -22,7 +22,7 @@
     <string name="time_to_go">TIME TO GO</string>
     <string name="add_banco_de_horas">Adicionar Banco de Horas</string>
     <string name="calcular">Calcular</string>
-    <string name="horas_trabalhadas_label">H. TRABALHADAS</string>
+    <string name="horas_trabalhadas_label">TRABALHADAS</string>
     <string name="timer">TIMER</string>
     <string name="saida">SAÍDA</string>
     <string name="start">START</string>
