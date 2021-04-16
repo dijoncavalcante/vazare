@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<!--    tools:context=".MainActivity">-->
+    <!--    tools:context=".MainActivity">-->
 
     <!--    https://www.uplabs.com/posts/app-design-to-help-special-children-->
     <!--    https://www.uplabs.com/posts/learning-app-3a0d7040-1fe2-4b5d-a89b-abce9a80c122-->
@@ -37,13 +37,13 @@
         android:layout_marginTop="35dp"
         android:layout_marginEnd="32dp"
         android:adjustViewBounds="true"
+        android:src="@drawable/ic_face_test"
         app:layout_constraintBottom_toBottomOf="@+id/textView_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/Circular"
         app:strokeColor="@color/cardview_dark_background"
-        app:strokeWidth="5dp"
-        android:src="@drawable/ic_face_test" />
+        app:strokeWidth="5dp" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_div1"
@@ -90,12 +90,14 @@
         android:layout_height="wrap_content"
         android:focusable="false"
         android:maxLength="8"
+        android:text="04:00:00"
         android:textAlignment="center"
+        android:textSize="22sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/tv_countdown_timer"
         app:layout_constraintStart_toStartOf="@+id/tv_countdown_timer"
         app:layout_constraintTop_toBottomOf="@+id/tv_countdown_timer"
-        app:layout_constraintWidth_min="100dp"
-        tools:text="04:00:00" />
+        app:layout_constraintWidth_min="100dp" />
 
     <TextView
         android:id="@+id/tv_duration_label"
@@ -118,12 +120,14 @@
         android:focusable="false"
         android:inputType="numberDecimal"
         android:maxLength="5"
+        android:text="08:15"
         android:textAlignment="center"
+        android:textSize="22sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/tv_duration_label"
         app:layout_constraintStart_toStartOf="@+id/tv_duration_label"
         app:layout_constraintTop_toBottomOf="@+id/tv_duration_label"
-        app:layout_constraintWidth_min="100dp"
-        tools:text="08:15" />
+        app:layout_constraintWidth_min="100dp" />
 
     <TextView
         android:id="@+id/tv_progressive_counting_label"
@@ -144,12 +148,92 @@
         android:layout_height="wrap_content"
         android:focusable="false"
         android:maxLength="8"
+        android:text="04:00:00"
         android:textAlignment="center"
+        android:textSize="22sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/tv_progressive_counting_label"
         app:layout_constraintStart_toStartOf="@+id/tv_progressive_counting_label"
         app:layout_constraintTop_toBottomOf="@+id/tv_progressive_counting_label"
-        app:layout_constraintWidth_min="100dp"
-        tools:text="04:00:00" />
+        app:layout_constraintWidth_min="100dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/TextInputLayout1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:hint="@string/timer"
+        android:textAlignment="center"
+        android:textColorHint="@color/colorPrimary"
+        app:helperText="Horas trabalhadas"
+        app:helperTextEnabled="true"
+        app:helperTextTextColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="@id/tvTimer"
+        app:layout_constraintStart_toStartOf="@id/tvTimer"
+        app:layout_constraintTop_toBottomOf="@id/tvTimer">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="04:00:00"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textField2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:hint="@string/duracao"
+        android:textAlignment="center"
+        android:textColorHint="@color/colorPrimary"
+        app:helperText="Duração do serviço"
+        app:helperTextEnabled="true"
+        app:helperTextTextColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="@id/tv_duration"
+        app:layout_constraintStart_toStartOf="@id/tv_duration"
+        app:layout_constraintTop_toBottomOf="@id/tv_duration">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="08:15"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textField3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:hint="@string/horas_trabalhadas_label"
+        android:textAlignment="center"
+        android:textColorHint="@color/colorPrimary"
+        app:helperText="Horas concluídas"
+        app:helperTextEnabled="true"
+        app:helperTextTextColor="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="@id/tv_progressive_counting"
+        app:layout_constraintStart_toStartOf="@id/tv_progressive_counting"
+        app:layout_constraintTop_toBottomOf="@id/tv_progressive_counting">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="04:00:00"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switch_banck_hours"
@@ -158,9 +242,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="Bank of Hours?"
-        app:layout_constraintEnd_toEndOf="@+id/tv_progressive_counting"
-        app:layout_constraintStart_toStartOf="@+id/tvTimer"
-        app:layout_constraintTop_toBottomOf="@+id/tv_duration" />
+        android:paddingStart="16dp"
+        android:paddingEnd="8dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="@+id/textField3"
+        app:layout_constraintStart_toStartOf="@+id/TextInputLayout1"
+        app:layout_constraintTop_toBottomOf="@+id/textField2" />
     <!--    style="@style/Widget.TipTime.CompoundButton.Switch"-->
 
     <Button
