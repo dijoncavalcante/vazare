@@ -30,7 +30,8 @@
         android:text="Dijon"
         android:textSize="36sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_hello" />
+        app:layout_constraintTop_toBottomOf="@id/textview_hello"
+        app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"/>
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_face"
@@ -40,6 +41,7 @@
         android:adjustViewBounds="true"
         android:src="@drawable/ic_face_test"
         app:layout_constraintBottom_toBottomOf="@+id/textView_name"
+        app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/Circular"
@@ -78,6 +80,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:enabled="false"
         android:hint="@string/timer"
         android:textColorHint="@color/colorPrimary"
@@ -102,6 +105,7 @@
         android:id="@+id/tv_duration"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:enabled="false"
         android:hint="@string/duracao"
         android:textAlignment="center"
@@ -128,6 +132,7 @@
         android:id="@+id/tv_progressive_counting"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:enabled="false"
         android:hint="@string/horas_trabalhadas_label"
