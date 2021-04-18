@@ -25,7 +25,7 @@
     <string name="horas_trabalhadas_label">TRABALHADAS</string>
     <string name="timer">TIMER</string>
     <string name="saida">SAÍDA</string>
-    <string name="start">START</string>
+    <string name="start">ENTRADA</string>
     <string name="duracao">DURAÇÃO</string>
     <string name="select_time">Selecione o horário</string>
     <string name="pedir_corrida">Pedir Corrida</string>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite">
+    android:background="@color/colorWhiteIce">
 
     <TextView
         android:id="@+id/textview_hello"
@@ -66,24 +66,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="@id/fragment_home_hour"
         app:layout_constraintBottom_toTopOf="@id/tv_duration"
-        app:layout_constraintEnd_toEndOf="@id/iv_face"
-        app:layout_constraintStart_toStartOf="@id/textView_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_face" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tv_countdown_timer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:background="@color/colorWhiteIce"
         android:enabled="false"
         android:hint="@string/timer"
-        android:textColorHint="@color/colorPrimary"
+        android:textColorHint="@color/colorAzul"
         app:helperText="Horas trabalhadas"
         app:helperTextEnabled="true"
-        app:helperTextTextColor="@color/colorPrimary"
+        app:helperTextTextColor="@color/colorAzul"
         app:layout_constraintEnd_toStartOf="@+id/tv_duration"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fragment_home_hour">
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:text="@string/_04_00_00_"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorAzul"
             android:textSize="22sp"
             android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -103,13 +103,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:background="@color/colorWhiteIce"
         android:enabled="false"
         android:hint="@string/duracao"
         android:textAlignment="center"
-        android:textColorHint="@color/colorPrimary"
+        android:textColorHint="@color/colorAzul"
         app:helperText="Duração do serviço"
         app:helperTextEnabled="true"
-        app:helperTextTextColor="@color/colorPrimary"
+        app:helperTextTextColor="@color/colorAzul"
         app:layout_constraintEnd_toStartOf="@+id/tv_progressive_counting"
         app:layout_constraintStart_toEndOf="@id/tv_countdown_timer"
         app:layout_constraintTop_toBottomOf="@id/fragment_home_hour"
@@ -120,7 +121,7 @@
             android:layout_height="wrap_content"
             android:text="@string/_08_15"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorAzul"
             android:textSize="22sp"
             android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -130,14 +131,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/colorWhiteIce"
         android:enabled="false"
         android:hint="@string/horas_trabalhadas_label"
         android:textAlignment="center"
-        android:textColorHint="@color/colorPrimary"
+        android:textColorHint="@color/colorAzul"
         app:helperText="Horas concluídas"
         app:helperTextEnabled="true"
-        app:helperTextTextColor="@color/colorPrimary"
+        app:helperTextTextColor="@color/colorAzul"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_duration"
         app:layout_constraintTop_toBottomOf="@id/fragment_home_hour">
@@ -148,7 +150,7 @@
             android:layout_height="wrap_content"
             android:text="@string/_04_00_00_"
             android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorAzul"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -159,10 +161,11 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="16dp"
-        android:background="@color/colorWhiteIce"
+        android:background="@drawable/bg_square_radius_container"
         android:paddingStart="16dp"
         android:paddingEnd="8dp"
         android:text="@string/bank_of_hours_label"
+        android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toTopOf="@id/fab"
         app:layout_constraintEnd_toEndOf="@+id/tv_progressive_counting"
         app:layout_constraintStart_toStartOf="@+id/tv_countdown_timer"
@@ -173,13 +176,13 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:background="@color/colorLilas"
+        android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btn_calculate"
+        app:layout_constraintEnd_toEndOf="@id/btn_calculate"
+        app:layout_constraintEnd_toStartOf="@+id/btn_calculate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/switch_banck_hours"
         app:srcCompat="@android:drawable/ic_menu_delete" />
@@ -189,18 +192,19 @@
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="1dp"
         android:background="@drawable/bg_square_radius_container"
         android:onClick="calculateOnClick"
+        android:layout_marginEnd="16dp"
+
         android:text="@string/calcular"
         android:textColor="@color/colorWhite"
         app:icon="@drawable/ic_face_test"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toEndOf="@id/fab"
-        app:layout_constraintTop_toTopOf="@+id/fab" />
+        app:layout_constraintStart_toEndOf="@+id/fab"
+        app:layout_constraintTop_toBottomOf="@+id/switch_banck_hours" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

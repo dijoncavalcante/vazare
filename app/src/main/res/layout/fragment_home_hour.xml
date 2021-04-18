@@ -77,7 +77,7 @@
 
             <TextView
                 style="@style/TextViewCustomHomeHour"
-                android:text="@string/saida" />
+                android:text="Almoço Saída" />
 
             <EditText
                 android:id="@+id/et_lunch_out"
@@ -104,7 +104,7 @@
 
             <TextView
                 style="@style/TextViewCustomHomeHour"
-                android:text="@string/saida" />
+                android:text="Almoço Entrada" />
 
             <EditText
                 android:id="@+id/et_lunch_in"
