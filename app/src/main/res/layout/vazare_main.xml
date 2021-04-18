@@ -41,22 +41,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/Circular"
-        app:strokeColor="@color/cardview_dark_background"
-        app:strokeWidth="5dp" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_div1"
-        style="@style/ImageViewShapeable"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:contentDescription="@string/clock_description"
-        android:src="@drawable/ic_vazare_foreground"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_home_hour"
-        app:layout_constraintEnd_toEndOf="@+id/fragment_home_hour"
-        app:layout_constraintStart_toStartOf="@+id/fragment_home_hour"
-        app:layout_constraintTop_toTopOf="@+id/fragment_home_hour"
-        app:shapeAppearanceOverlay="@style/Circular"
-        app:strokeColor="@color/cardview_dark_background"
+        app:strokeColor="@color/colorAzul"
         app:strokeWidth="5dp" />
 
     <include
@@ -70,6 +55,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_face" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_div1"
+        style="@style/ImageViewShapeable"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="@string/clock_description"
+        android:src="@drawable/ic_vazare_foreground"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_home_hour"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragment_home_hour"
+        app:shapeAppearanceOverlay="@style/Circular"
+        app:strokeColor="@color/cardview_dark_background"
+        app:strokeWidth="5dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tv_countdown_timer"
@@ -89,6 +90,8 @@
         app:layout_constraintTop_toBottomOf="@id/fragment_home_hour">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:ellipsize="start"
+            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/_04_00_00_"
@@ -117,6 +120,8 @@
         app:layout_constraintWidth_min="100dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:ellipsize="start"
+            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/_08_15"
@@ -146,6 +151,8 @@
         <!--        Consistencia e Resiliência = 1% melhor a cada dia-->
 
         <com.google.android.material.textfield.TextInputEditText
+            android:ellipsize="start"
+            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/_04_00_00_"
