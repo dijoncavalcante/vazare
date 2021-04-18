@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/colorWhiteIce"
     android:layout_height="wrap_content"
     android:layout_margin="32dp"
     android:gravity="center_horizontal"
@@ -12,7 +13,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_start"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_marginEnd="20dp"
         app:cardCornerRadius="30dp">
         <!--        app:cardBackgroundColor="?attr/cardBackground"-->
@@ -30,14 +31,14 @@
             <EditText
                 android:id="@+id/etStart"
                 style="@style/EditTextCustomHomeHour"
-                tools:text="07:00" />
+                android:text="07:00" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_end"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_marginStart="20dp"
         android:layout_toEndOf="@id/cardview_start"
         app:cardCornerRadius="30dp">
@@ -55,14 +56,14 @@
             <EditText
                 android:id="@+id/et_end"
                 style="@style/EditTextCustomHomeHour"
-                tools:text="17:00" />
+                android:text="17:00" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_lunch_out"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_below="@id/cardview_start"
         android:layout_marginTop="22dp"
         android:layout_marginEnd="20dp"
@@ -81,14 +82,14 @@
             <EditText
                 android:id="@+id/et_lunch_out"
                 style="@style/EditTextCustomHomeHour"
-                tools:text="11:00" />
+                android:text="11:00" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_lunch_in"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:layout_below="@id/cardview_end"
         android:layout_marginStart="20dp"
         android:layout_marginTop="22dp"
@@ -108,7 +109,7 @@
             <EditText
                 android:id="@+id/et_lunch_in"
                 style="@style/EditTextCustomHomeHour"
-                tools:text="12:00" />
+                android:text="12:00" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>
