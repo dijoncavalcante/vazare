@@ -5,11 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite">
-    <!--    tools:context=".MainActivity">-->
-
-    <!--    https://www.uplabs.com/posts/app-design-to-help-special-children-->
-    <!--    https://www.uplabs.com/posts/learning-app-3a0d7040-1fe2-4b5d-a89b-abce9a80c122-->
-    <!--    https://www.uplabs.com/posts/smart-home-app-ui-kit-e4bd4d03-4003-41e7-93bb-e7846caa812f-->
 
     <TextView
         android:id="@+id/textview_hello"
@@ -17,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="22dp"
         android:layout_marginTop="35dp"
-        android:text="Hello"
+        android:text="@string/hello_label"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,11 +22,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="22dp"
-        android:text="Dijon"
+        android:text="@string/name_label"
         android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_hello"
-        app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"/>
+        app:layout_constraintTop_toBottomOf="@id/textview_hello" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_face"
@@ -39,6 +34,7 @@
         android:layout_marginTop="35dp"
         android:layout_marginEnd="16dp"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/face_description"
         android:src="@drawable/ic_face_test"
         app:layout_constraintBottom_toBottomOf="@+id/textView_name"
         app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"
@@ -53,6 +49,7 @@
         style="@style/ImageViewShapeable"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:contentDescription="@string/clock_description"
         android:src="@drawable/ic_vazare_foreground"
         app:layout_constraintBottom_toTopOf="@+id/fragment_home_hour"
         app:layout_constraintEnd_toEndOf="@+id/fragment_home_hour"
@@ -74,7 +71,7 @@
         app:layout_constraintEnd_toEndOf="@id/iv_face"
         app:layout_constraintStart_toStartOf="@id/textView_name"
         app:layout_constraintTop_toBottomOf="@id/iv_face" />
-    <!--    app:layout_constraintTop_toTopOf="parent"-->
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tv_countdown_timer"
         android:layout_width="0dp"
@@ -94,7 +91,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="04:00:00"
+            android:text="@string/_04_00_00_"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="22sp"
@@ -121,7 +118,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="08:15"
+            android:text="@string/_08_15"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="22sp"
@@ -149,7 +146,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="04:00:00"
+            android:text="@string/_04_00_00_"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="22sp"
@@ -165,7 +162,7 @@
         android:background="@color/colorWhiteIce"
         android:paddingStart="16dp"
         android:paddingEnd="8dp"
-        android:text="Bank of Hours?"
+        android:text="@string/bank_of_hours_label"
         app:layout_constraintBottom_toTopOf="@id/fab"
         app:layout_constraintEnd_toEndOf="@+id/tv_progressive_counting"
         app:layout_constraintStart_toStartOf="@+id/tv_countdown_timer"
