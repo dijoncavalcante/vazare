@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhiteIce">
+    android:background="@color/colorWhite">
 
     <TextView
         android:id="@+id/textview_hello"
@@ -13,6 +13,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="35dp"
         android:text="@string/hello_label"
+        android:textColor="@android:color/black"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="@string/name_label"
+        android:textColor="@android:color/black"
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,10 +92,10 @@
         app:layout_constraintTop_toBottomOf="@id/fragment_home_hour">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:ellipsize="start"
-            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="start"
+            android:gravity="center_horizontal"
             android:text="@string/_04_00_00_"
             android:textAlignment="center"
             android:textColor="@color/colorAzul"
@@ -120,10 +122,10 @@
         app:layout_constraintWidth_min="100dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:ellipsize="start"
-            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="start"
+            android:gravity="center_horizontal"
             android:text="@string/_08_15"
             android:textAlignment="center"
             android:textColor="@color/colorAzul"
@@ -151,10 +153,10 @@
         <!--        Consistencia e Resiliência = 1% melhor a cada dia-->
 
         <com.google.android.material.textfield.TextInputEditText
-            android:ellipsize="start"
-            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="start"
+            android:gravity="center_horizontal"
             android:text="@string/_04_00_00_"
             android:textAlignment="center"
             android:textColor="@color/colorAzul"
