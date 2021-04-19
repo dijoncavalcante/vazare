@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="32dp"
     android:background="@color/colorWhiteIce"
-    android:gravity="center_horizontal"
     android:paddingTop="16dp"
     android:paddingBottom="16dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_start"
         style="@style/CardViewCustom"
-        android:layout_marginEnd="20dp">
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardview_lunch_out"
+        app:layout_constraintEnd_toStartOf="@+id/cardview_end"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
         <!--        app:cardBackgroundColor="?attr/cardBackground"-->
         <LinearLayout
             android:layout_width="wrap_content"
@@ -35,8 +38,13 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_end"
         style="@style/CardViewCustom"
-        android:layout_marginStart="20dp"
-        android:layout_toEndOf="@id/cardview_start">
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
+        android:layout_toEndOf="@id/cardview_start"
+        app:layout_constraintBottom_toTopOf="@+id/cardview_lunch_in"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cardview_start"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -59,8 +67,11 @@
         android:id="@+id/cardview_lunch_out"
         style="@style/CardViewCustom"
         android:layout_below="@id/cardview_start"
-        android:layout_marginTop="22dp"
-        android:layout_marginEnd="20dp">
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cardview_lunch_in"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardview_start">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -83,9 +94,12 @@
         android:id="@+id/cardview_lunch_in"
         style="@style/CardViewCustom"
         android:layout_below="@id/cardview_end"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="22dp"
-        android:layout_toEndOf="@id/cardview_lunch_out">
+        android:layout_marginBottom="8dp"
+        android:layout_toEndOf="@id/cardview_lunch_out"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cardview_lunch_out"
+        app:layout_constraintTop_toBottomOf="@+id/cardview_end">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -103,4 +117,5 @@
                 android:text="12:00" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-</RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
