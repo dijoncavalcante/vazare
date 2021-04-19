@@ -24,8 +24,8 @@
     <string name="calcular">Calcular</string>
     <string name="horas_trabalhadas_label">TRABALHADAS</string>
     <string name="timer">TIMER</string>
-    <string name="saida">SAÍDA</string>
-    <string name="start">ENTRADA</string>
+    <string name="saida">Saída</string>
+    <string name="start">Entrada</string>
     <string name="duracao">DURAÇÃO</string>
     <string name="select_time">Selecione o horário</string>
     <string name="pedir_corrida">Pedir Corrida</string>

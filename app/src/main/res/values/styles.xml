@@ -51,4 +51,33 @@
         <item name="android:adjustViewBounds">true</item>
     </style>
 
+    <style name="TextInputLayoutCustom">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:enabled">false</item>
+        <item name="android:textColorHint">@color/colorLilas</item>
+        <item name="helperTextEnabled">true</item>
+        <item name="helperTextTextColor">@color/colorLilas</item>
+        <item name="android:textAlignment">center</item>
+        <item name="layout_constraintWidth_min">100dp</item>
+    </style>
+
+    <style name="TextInputEditTextCustom">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">start</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/colorLilas</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CardViewCustom">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">150dp</item>
+        <item name="android:foregroundGravity">center_horizontal</item>
+        <item name="cardCornerRadius">5dp</item>
+    </style>
 </resources>

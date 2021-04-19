@@ -12,13 +12,9 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_start"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
-        android:layout_marginEnd="20dp"
-        android:foregroundGravity="center_horizontal"
-        app:cardCornerRadius="30dp">
+        style="@style/CardViewCustom"
+        android:layout_marginEnd="20dp">
         <!--        app:cardBackgroundColor="?attr/cardBackground"-->
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -38,12 +34,9 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_end"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        style="@style/CardViewCustom"
         android:layout_marginStart="20dp"
-        android:layout_toEndOf="@id/cardview_start"
-        android:foregroundGravity="center_horizontal"
-        app:cardCornerRadius="30dp">
+        android:layout_toEndOf="@id/cardview_start">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -64,13 +57,10 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_lunch_out"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        style="@style/CardViewCustom"
         android:layout_below="@id/cardview_start"
         android:layout_marginTop="22dp"
-        android:layout_marginEnd="20dp"
-        android:foregroundGravity="center_horizontal"
-        app:cardCornerRadius="30dp">
+        android:layout_marginEnd="20dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -80,7 +70,7 @@
 
             <TextView
                 style="@style/TextViewCustomHomeHour"
-                android:text="Almoço Saída" />
+                android:text="Almoço\nSaída" />
 
             <EditText
                 android:id="@+id/et_lunch_out"
@@ -91,14 +81,11 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_lunch_in"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        style="@style/CardViewCustom"
         android:layout_below="@id/cardview_end"
         android:layout_marginStart="20dp"
         android:layout_marginTop="22dp"
-        android:layout_toEndOf="@id/cardview_lunch_out"
-        android:foregroundGravity="center_horizontal"
-        app:cardCornerRadius="30dp">
+        android:layout_toEndOf="@id/cardview_lunch_out">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -108,7 +95,7 @@
 
             <TextView
                 style="@style/TextViewCustomHomeHour"
-                android:text="Almoço Entrada" />
+                android:text="Almoço\nEntrada" />
 
             <EditText
                 android:id="@+id/et_lunch_in"

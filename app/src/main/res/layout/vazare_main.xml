@@ -76,92 +76,48 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tv_countdown_timer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        style="@style/TextInputLayoutCustom"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorWhiteIce"
-        android:enabled="false"
         android:hint="@string/timer"
-        android:textColorHint="@color/colorAzul"
         app:helperText="Horas trabalhadas"
-        app:helperTextEnabled="true"
-        app:helperTextTextColor="@color/colorAzul"
         app:layout_constraintEnd_toStartOf="@+id/tv_duration"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fragment_home_hour">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="start"
-            android:gravity="center_horizontal"
-            android:text="@string/_04_00_00_"
-            android:textAlignment="center"
-            android:textColor="@color/colorAzul"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+            style="@style/TextInputEditTextCustom"
+            android:text="@string/_04_00_00_" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tv_duration"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorWhiteIce"
-        android:enabled="false"
+        style="@style/TextInputLayoutCustom"
         android:hint="@string/duracao"
-        android:textAlignment="center"
-        android:textColorHint="@color/colorAzul"
         app:helperText="Duração do serviço"
-        app:helperTextEnabled="true"
-        app:helperTextTextColor="@color/colorAzul"
         app:layout_constraintEnd_toStartOf="@+id/tv_progressive_counting"
         app:layout_constraintStart_toEndOf="@id/tv_countdown_timer"
-        app:layout_constraintTop_toBottomOf="@id/fragment_home_hour"
-        app:layout_constraintWidth_min="100dp">
+        app:layout_constraintTop_toBottomOf="@id/fragment_home_hour">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="start"
-            android:gravity="center_horizontal"
-            android:text="@string/_08_15"
-            android:textAlignment="center"
-            android:textColor="@color/colorAzul"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+            style="@style/TextInputEditTextCustom"
+            android:text="@string/_08_15" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tv_progressive_counting"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        style="@style/TextInputLayoutCustom"
         android:layout_marginEnd="16dp"
-        android:background="@color/colorWhiteIce"
-        android:enabled="false"
         android:hint="@string/horas_trabalhadas_label"
-        android:textAlignment="center"
-        android:textColorHint="@color/colorAzul"
         app:helperText="Horas concluídas"
         app:helperTextEnabled="true"
-        app:helperTextTextColor="@color/colorAzul"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_duration"
         app:layout_constraintTop_toBottomOf="@id/fragment_home_hour">
         <!--        Consistencia e Resiliência = 1% melhor a cada dia-->
 
         <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="start"
-            android:gravity="center_horizontal"
-            android:text="@string/_04_00_00_"
-            android:textAlignment="center"
-            android:textColor="@color/colorAzul"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+            style="@style/TextInputEditTextCustom"
+            android:text="@string/_04_00_00_" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
