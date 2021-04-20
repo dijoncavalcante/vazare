@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
     public static EditText etLunchOut;
     public static EditText etLunchIn;
     TextView etEnd;
-
-//    CheckBox cb0147;
     SwitchMaterial switchBankHours;
     Button btnCalculate;
     FloatingActionButton fabClear;
@@ -263,18 +261,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        cb0147.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (campoInicialHasValue()) {
-//                    calculate();
-//                } else {
-//                    cb0147.setChecked(false);
-//                    tvDuration.getEditText().setText("");
-//                }
-//            }
-//        });
-
         switchBankHours.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -352,7 +338,6 @@ public class MainActivity extends AppCompatActivity {
         if (sharedPreferences.contains(check0147Key)) {
             Boolean check = sharedPreferences.getBoolean(check0147Key, false);
             if (check) {
-//                cb0147.setChecked(check);
                 switchBankHours.setChecked(check);
                 tvDuration.getEditText().setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
             } else {// a duração normal de um dia de trabalho
@@ -408,7 +393,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-//                if (cb0147.isChecked()) {
                 if (switchBankHours.isChecked()) {
                     showAlertDialog(getString(R.string.horas_extras_0147));
                 } else {
@@ -516,7 +500,6 @@ public class MainActivity extends AppCompatActivity {
             //horas trabalhadas
             calculateHorasTrabalhadas();
             //calcular horas permitidas
-//            if (cb0147.isChecked()) {
             if (switchBankHours.isChecked()) {
                 etEnd.setText(calcular0147());
                 tvDuration.getEditText().setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
@@ -640,7 +623,6 @@ public class MainActivity extends AppCompatActivity {
         etEnd.setText("");
         tvCountdownTimer.getEditText().setText("");
         tvProgressiveCounting.getEditText().setText("");
-//        cb0147.setChecked(false);
         switchBankHours.setChecked(false);
         isRunning = false;
         handler.removeCallbacks(runnable);
@@ -671,7 +653,6 @@ public class MainActivity extends AppCompatActivity {
         etEnd = findViewById(R.id.et_end);
         tvProgressiveCounting = findViewById(R.id.tv_progressive_counting);
         btnCalculate = findViewById(R.id.btn_calculate);
-//        cb0147 = findViewById(R.id.cb0147);
         switchBankHours = findViewById(R.id.switch_banck_hours);
         tvCountdownTimer = findViewById(R.id.tv_countdown_timer);
         handler = new Handler();
@@ -704,7 +685,7 @@ public class MainActivity extends AppCompatActivity {
                 + " etAlmocoSaida: " + etLunchOut.getText().toString()
                 + " etAlmocoEntrada: " + etLunchIn.getText().toString()
                 + " tvSaida: " + etEnd.getText().toString()
-                + " cb0147: " + switchBankHours.isChecked());
+                + " switchBankHours: " + switchBankHours.isChecked());
     }
 
     public void clearSharedPreferences() {
@@ -787,7 +768,6 @@ public class MainActivity extends AppCompatActivity {
                     mResumedActivity: ActivityRecord{c91a10d u0 net.taxidigital.tocantins/net.taxidigital.ui.main.MainActivity t19}
                  */
                 Intent launchIntent;
-//                if (!cb0147.isChecked()) {
                 if (!switchBankHours.isChecked()) {
                     launchIntent = getPackageManager().getLaunchIntentForPackage("com.ubercab");
                 } else {
