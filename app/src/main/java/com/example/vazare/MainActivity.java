@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     private NotificationReceiver mReceiver = new NotificationReceiver();
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
-    TextView tvTimetogo;
     EditText etStart;
     TextInputLayout tvCountdownTimer;
     TextInputLayout tvDuration;
@@ -640,12 +639,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void initUI() {
         setContentView(R.layout.vazare_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         // Create a notification manager object.
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        tvTimetogo = findViewById(R.id.tvTimetogo);
         etStart = findViewById(R.id.et_start);
         tvDuration = findViewById(R.id.tv_duration);
         etLunchOut = findViewById(R.id.et_lunch_out);
