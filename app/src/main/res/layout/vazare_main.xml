@@ -131,14 +131,14 @@
         android:paddingEnd="8dp"
         android:text="@string/bank_of_hours_label"
         android:textColor="@color/colorWhite"
-        app:layout_constraintBottom_toTopOf="@id/fab"
+        app:layout_constraintBottom_toTopOf="@id/fab_clear"
         app:layout_constraintEnd_toEndOf="@+id/tv_progressive_counting"
         app:layout_constraintStart_toStartOf="@+id/tv_countdown_timer"
         app:layout_constraintTop_toBottomOf="@+id/tv_duration" />
     <!--    style="@style/Widget.TipTime.CompoundButton.Switch"-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fab_clear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
@@ -172,7 +172,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
-        app:layout_constraintStart_toEndOf="@+id/fab"
-        app:layout_constraintTop_toBottomOf="@+id/switch_banck_hours" />
+        app:layout_constraintStart_toEndOf="@id/fab_clear"
+        app:layout_constraintTop_toBottomOf="@id/switch_banck_hours" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

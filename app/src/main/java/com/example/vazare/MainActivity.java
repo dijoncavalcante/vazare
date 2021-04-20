@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -36,6 +37,8 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -61,15 +64,18 @@ public class MainActivity extends AppCompatActivity {
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
     TextView tvTimetogo;
-    TextView tvTimer;
-    EditText etInit;
-    TextView tvDuracao;
-    public static EditText etAlmocoSaida;
-    public static EditText etAlmocoEntrada;
-    TextView tvSaida;
-    static TextView tvhorasTrabalhadas;
-    CheckBox cb0147;
+    EditText etStart;
+    TextInputLayout tvCountdownTimer;
+    TextInputLayout tvDuration;
+    static TextInputLayout tvProgressiveCounting;
+    public static EditText etLunchOut;
+    public static EditText etLunchIn;
+    TextView etEnd;
+
+//    CheckBox cb0147;
+    SwitchMaterial switchBankHours;
     Button btnCalculate;
+    FloatingActionButton fabClear;
     private static final String TAG = "MainActivity";
     public static final String myPreference = "mypref";
     public static final String horaInicialKey = "hora_inicial_key";
@@ -101,14 +107,14 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "initialTime:" + initialTime + " System.currentTimeMillis:" + System.currentTimeMillis() + " ms:" + ms);
                 String timeComplete;
                 //caso não tenha nenhum campo de ALMOÇO preenchido
-                if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
+                if (TextUtils.isEmpty(etLunchOut.getText()) || TextUtils.isEmpty(etLunchIn.getText())) {
                     timeComplete = fullTime(ms);
                 } else {//subtrair o tempo de almoço, caso os dois campos de almoço estejam preenchidos
                     long timeWorkedMillisWithIntervalLunch = ms - intervalLunchMS();
                     Log.d(TAG, "timeWorkedMillisWithIntervalLunch:" + timeWorkedMillisWithIntervalLunch + " = System.currentTimeMillis:" + System.currentTimeMillis() + " - initialTime:" + initialTime + " - ms:" + ms);
                     timeComplete = fullTime(timeWorkedMillisWithIntervalLunch);
                 }
-                tvhorasTrabalhadas.setText(timeComplete);
+                tvProgressiveCounting.getEditText().setText(timeComplete);
                 Log.d(TAG, "timeComplete: " + timeComplete);
                 handler.postDelayed(runnable, MILLIS_IN_SEC);
             }
@@ -139,10 +145,10 @@ public class MainActivity extends AppCompatActivity {
         Calendar calendarEntradaAlmoco = Calendar.getInstance();
         calendarSaidaAlmoco.set(Calendar.SECOND, 0);
         calendarEntradaAlmoco.set(Calendar.SECOND, 0);
-        calendarSaidaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
-        calendarSaidaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
-        calendarEntradaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[0]));
-        calendarEntradaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[1]));
+        calendarSaidaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etLunchOut.getText().toString().split(":")[0]));
+        calendarSaidaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etLunchOut.getText().toString().split(":")[1]));
+        calendarEntradaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etLunchIn.getText().toString().split(":")[0]));
+        calendarEntradaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etLunchIn.getText().toString().split(":")[1]));
 
         return calendarEntradaAlmoco.getTimeInMillis() - calendarSaidaAlmoco.getTimeInMillis();
     }
@@ -150,115 +156,113 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO Adcionado para teste
-        setContentView(R.layout.vazare_main);
-//
-//        initUI();
-//        //TODO Add linha com hora inicial para teste
-//        /* etInit.setText("09:00"); */
-//
-//        verifySharedPreference();
-//        Intent alarmIntent = new Intent(this, MyBroadCastReceiver.class);
-//        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
-//
-//        etInit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int hour, minute = 0;
-//                Calendar mcurrentTime = Calendar.getInstance();
-//                if (TextUtils.isEmpty(etInit.getText())) {
-//                    hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-//                    minute = mcurrentTime.get(Calendar.MINUTE);
-//                } else {
-//                    hour = getHour(etInit.getText().toString());
-//                    minute = getMinute(etInit.getText().toString());
-//                }
-//                TimePickerDialog mTimePicker;
-//                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
-//                    @Override
-//                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-//                        etInit.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
-//                        etInit.setError(null);
-//                    }
-//                }, hour, minute, true);//Yes 24 hour time
-//                mTimePicker.setTitle(R.string.select_time);
-//                mTimePicker.show();
-//            }
-//        });
-//
-//        etAlmocoSaida.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                int hour, minute = 0;
-//                Calendar mcurrentTime = Calendar.getInstance();
-//
-//                if (TextUtils.isEmpty(etAlmocoSaida.getText())) {
-//                    hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-//                    minute = mcurrentTime.get(Calendar.MINUTE);
-//                } else {
-//                    hour = getHour(etAlmocoSaida.getText().toString());
-//                    minute = getMinute(etAlmocoSaida.getText().toString());
-//                }
-//                TimePickerDialog mTimePicker;
-//                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
-//                    @Override
-//                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-//                        etAlmocoSaida.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
-//
-//                    }
-//                }, hour, minute, true);//Yes 24 hour time
-//                mTimePicker.setTitle(R.string.select_time);
-//                mTimePicker.show();
-//            }
-//        });
-//
-//        etAlmocoEntrada.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (!TextUtils.isEmpty(etAlmocoSaida.getText())) {
-//                    etAlmocoSaida.setError(null);
-//                    final Date dateSaidaAlmoco = new Date();
-//                    final Date dateEntradaAlmoco = new Date();
-//                    dateSaidaAlmoco.setHours(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
-//                    dateSaidaAlmoco.setMinutes(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
-//
-//                    int hour, minute = 0;
-//                    Calendar mcurrentTime = Calendar.getInstance();
-//                    if (TextUtils.isEmpty(etAlmocoEntrada.getText())) {
-//                        hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-//                        minute = mcurrentTime.get(Calendar.MINUTE);
-//                    } else {
-//                        hour = getHour(etAlmocoEntrada.getText().toString());
-//                        minute = getMinute(etAlmocoEntrada.getText().toString());
-//                    }
-//
-//                    TimePickerDialog mTimePicker;
-//                    mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
-//                        @Override
-//                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-//                            dateEntradaAlmoco.setHours(selectedHour);
-//                            dateEntradaAlmoco.setMinutes(selectedMinute);
-//
-//                            if (dateSaidaAlmoco.getTime() >= dateEntradaAlmoco.getTime()) {
-//                                etAlmocoEntrada.setError(getString(R.string.validate_return_lunch_bigger));
-//                                etAlmocoEntrada.requestFocus();
-//                                return;
-//                            }
-//
-//                            etAlmocoEntrada.setError(null);
-//                            etAlmocoEntrada.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
-//
-//                        }
-//                    }, hour, minute, true);//Yes 24 hour time
-//                    mTimePicker.setTitle(R.string.select_time);
-//                    mTimePicker.show();
-//                } else {
-//                    etAlmocoSaida.setError(getString(R.string.validate_return_lunch));
-//                    etAlmocoSaida.requestFocus();
-//                }
-//            }
-//        });
-//
+
+        initUI();
+        //TODO Add linha com hora inicial para teste
+        /* etInit.setText("09:00"); */
+
+        verifySharedPreference();
+        Intent alarmIntent = new Intent(this, MyBroadCastReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+
+        etStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int hour, minute = 0;
+                Calendar mcurrentTime = Calendar.getInstance();
+                if (TextUtils.isEmpty(etStart.getText())) {
+                    hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    minute = mcurrentTime.get(Calendar.MINUTE);
+                } else {
+                    hour = getHour(etStart.getText().toString());
+                    minute = getMinute(etStart.getText().toString());
+                }
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        etStart.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
+                        etStart.setError(null);
+                    }
+                }, hour, minute, true);//Yes 24 hour time
+                mTimePicker.setTitle(R.string.select_time);
+                mTimePicker.show();
+            }
+        });
+
+        etLunchOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int hour, minute = 0;
+                Calendar mcurrentTime = Calendar.getInstance();
+
+                if (TextUtils.isEmpty(etLunchOut.getText())) {
+                    hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                    minute = mcurrentTime.get(Calendar.MINUTE);
+                } else {
+                    hour = getHour(etLunchOut.getText().toString());
+                    minute = getMinute(etLunchOut.getText().toString());
+                }
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        etLunchOut.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
+
+                    }
+                }, hour, minute, true);//Yes 24 hour time
+                mTimePicker.setTitle(R.string.select_time);
+                mTimePicker.show();
+            }
+        });
+
+        etLunchIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(etLunchOut.getText())) {
+                    etLunchOut.setError(null);
+                    final Date dateSaidaAlmoco = new Date();
+                    final Date dateEntradaAlmoco = new Date();
+                    dateSaidaAlmoco.setHours(Integer.parseInt(etLunchOut.getText().toString().split(":")[0]));
+                    dateSaidaAlmoco.setMinutes(Integer.parseInt(etLunchOut.getText().toString().split(":")[1]));
+
+                    int hour, minute = 0;
+                    Calendar mcurrentTime = Calendar.getInstance();
+                    if (TextUtils.isEmpty(etLunchIn.getText())) {
+                        hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                        minute = mcurrentTime.get(Calendar.MINUTE);
+                    } else {
+                        hour = getHour(etLunchIn.getText().toString());
+                        minute = getMinute(etLunchIn.getText().toString());
+                    }
+
+                    TimePickerDialog mTimePicker;
+                    mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                            dateEntradaAlmoco.setHours(selectedHour);
+                            dateEntradaAlmoco.setMinutes(selectedMinute);
+
+                            if (dateSaidaAlmoco.getTime() >= dateEntradaAlmoco.getTime()) {
+                                etLunchIn.setError(getString(R.string.validate_return_lunch_bigger));
+                                etLunchIn.requestFocus();
+                                return;
+                            }
+
+                            etLunchIn.setError(null);
+                            etLunchIn.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
+
+                        }
+                    }, hour, minute, true);//Yes 24 hour time
+                    mTimePicker.setTitle(R.string.select_time);
+                    mTimePicker.show();
+                } else {
+                    etLunchOut.setError(getString(R.string.validate_return_lunch));
+                    etLunchOut.requestFocus();
+                }
+            }
+        });
+
 //        cb0147.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -266,33 +270,45 @@ public class MainActivity extends AppCompatActivity {
 //                    calculate();
 //                } else {
 //                    cb0147.setChecked(false);
-//                    tvDuracao.setText("");
+//                    tvDuration.getEditText().setText("");
 //                }
 //            }
 //        });
-//
-//        FloatingActionButton fab = findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, clear_values, Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//                reset();
-//                clearSharedPreferences();
-//                cancelCountDownTimer();
-//            }
-//        });
-//
-//
-//
-//        /*
-//            Notificao
-//         */
-//        // Create the notification channel.
-//        createNotificationChannel();
-//        // Register the broadcast receiver to receive the update action from the notification.
-//        registerReceiver(mReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
-//
+
+        switchBankHours.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (campoInicialHasValue()) {
+                    calculate();
+                } else {
+                    switchBankHours.setChecked(false);
+                    tvDuration.getEditText().setText("");
+                }
+            }
+        });
+
+
+        fabClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, clear_values, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                reset();
+                clearSharedPreferences();
+                cancelCountDownTimer();
+            }
+        });
+
+
+
+        /*
+            Notificao
+         */
+        // Create the notification channel.
+        createNotificationChannel();
+        // Register the broadcast receiver to receive the update action from the notification.
+        registerReceiver(mReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
+
     }
 
     public void cancelCountDownTimer() {
@@ -307,43 +323,44 @@ public class MainActivity extends AppCompatActivity {
         if (sharedPreferences.contains(horaInicialKey)) {
             String horaInicial = sharedPreferences.getString(horaInicialKey, "");
             if (!horaInicial.isEmpty()) {
-                etInit.setText(horaInicial);
-                Log.d(TAG, "verifySharedPreference: etInit: " + etInit.getText().toString());
+                etStart.setText(horaInicial);
+                Log.d(TAG, "verifySharedPreference: etInit: " + etStart.getText().toString());
             }
         }
         if (sharedPreferences.contains(horaSaidaAlmocoKey)) {
             String horaSaidaAlmoco = sharedPreferences.getString(horaSaidaAlmocoKey, "");
             if (!horaSaidaAlmoco.isEmpty()) {
-                etAlmocoSaida.setText(horaSaidaAlmoco);
-                Log.d(TAG, "verifySharedPreference: etAlmocoSaida: " + etAlmocoSaida.getText().toString());
+                etLunchOut.setText(horaSaidaAlmoco);
+                Log.d(TAG, "verifySharedPreference: etAlmocoSaida: " + etLunchOut.getText().toString());
             }
         }
         if (sharedPreferences.contains(horaEntradaAlmocoKey)) {
             String horaEntradaAlmoco = sharedPreferences.getString(horaEntradaAlmocoKey, "");
             if (!horaEntradaAlmoco.isEmpty()) {
-                etAlmocoEntrada.setText(horaEntradaAlmoco);
-                Log.d(TAG, "verifySharedPreference: etAlmocoEntrada: " + etAlmocoEntrada.getText().toString());
+                etLunchIn.setText(horaEntradaAlmoco);
+                Log.d(TAG, "verifySharedPreference: etAlmocoEntrada: " + etLunchIn.getText().toString());
             }
         }
         if (sharedPreferences.contains(horaFinalKey)) {
             String horaFinal = sharedPreferences.getString(horaFinalKey, "");
             if (!horaFinal.isEmpty()) {
-                tvSaida.setText(horaFinal);
+                etEnd.setText(horaFinal);
                 countDownTimerNotification();
-                Log.d(TAG, "verifySharedPreference: tvSaida: " + tvSaida.getText().toString());
+                Log.d(TAG, "verifySharedPreference: tvSaida: " + etEnd.getText().toString());
             }
         }
         if (sharedPreferences.contains(check0147Key)) {
             Boolean check = sharedPreferences.getBoolean(check0147Key, false);
             if (check) {
-                cb0147.setChecked(check);
-                tvDuracao.setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
+//                cb0147.setChecked(check);
+                switchBankHours.setChecked(check);
+                tvDuration.getEditText().setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
             } else {// a duração normal de um dia de trabalho
-                tvDuracao.setText(STR_DURACAO_TRABALHO__DIARIO_2021);
+                tvDuration.getEditText().setText(STR_DURACAO_TRABALHO__DIARIO_2021);
             }
-            Log.d(TAG, "verifySharedPreference: cb0147: " + cb0147.isChecked());
+            Log.d(TAG, "verifySharedPreference: switch_banck_hours: " + switchBankHours.isChecked());
         }
-        if (!TextUtils.isEmpty(etInit.getText().toString())) {
+        if (!TextUtils.isEmpty(etStart.getText().toString())) {
             calculateHourWorked();
         }
     }
@@ -357,8 +374,8 @@ public class MainActivity extends AppCompatActivity {
         dataHoraEntrada.setSeconds(calendarCurrent.get(Calendar.SECOND));
 
         Date dataHoraSaida = new Date();
-        dataHoraSaida.setHours(getHour(tvSaida.getText().toString()));
-        dataHoraSaida.setMinutes(getMinute(tvSaida.getText().toString()));
+        dataHoraSaida.setHours(getHour(etEnd.getText().toString()));
+        dataHoraSaida.setMinutes(getMinute(etEnd.getText().toString()));
         dataHoraSaida.setSeconds(getSecond());
 
         long diffDate = dataHoraSaida.getTime() - dataHoraEntrada.getTime();
@@ -371,27 +388,28 @@ public class MainActivity extends AppCompatActivity {
                         TimeUnit.MILLISECONDS.toHours(millisUntilFinished),
                         TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)),
                         TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
-                tvTimer.setText(minutosRestantes);
+                tvCountdownTimer.getEditText().setText(minutosRestantes);
 
-                if (tvTimer.getText().toString().equals("00:15:00")) {
-                    tvTimer.setBackgroundColor(Color.GREEN);
+                if (tvCountdownTimer.getEditText().getText().toString().equals("00:15:00")) {
+                    tvCountdownTimer.setBackgroundColor(Color.GREEN);
                     sendNotification(15);
-                } else if (tvTimer.getText().toString().equals("00:10:00")) {
-                    tvTimer.setBackgroundColor(Color.YELLOW);
+                } else if (tvCountdownTimer.getEditText().getText().toString().equals("00:10:00")) {
+                    tvCountdownTimer.setBackgroundColor(Color.YELLOW);
                     sendNotification(10);
-                } else if (tvTimer.getText().toString().equals("00:05:00")) {
-                    tvTimer.setBackgroundColor(Color.RED);
+                } else if (tvCountdownTimer.getEditText().getText().toString().equals("00:05:00")) {
+                    tvCountdownTimer.setBackgroundColor(Color.RED);
                     // Send the notification
                     sendNotification(5);
-                } else if (tvTimer.getText().toString().equals("00:02:00")) {
+                } else if (tvCountdownTimer.getEditText().getText().toString().equals("00:02:00")) {
                     sendNotification(2);
-                } else if (tvTimer.getText().toString().equals("00:01:00")) {
+                } else if (tvCountdownTimer.getEditText().getText().toString().equals("00:01:00")) {
                     sendNotification(1);
                 }
             }
 
             public void onFinish() {
-                if (cb0147.isChecked()) {
+//                if (cb0147.isChecked()) {
+                if (switchBankHours.isChecked()) {
                     showAlertDialog(getString(R.string.horas_extras_0147));
                 } else {
                     showAlertDialog(getString(R.string.horas_trabalhadas));
@@ -412,9 +430,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean campoInicialHasValue() {
-        if (TextUtils.isEmpty(etInit.getText())) {
-            etInit.setError("Informe a hora de entrada!");
-            etInit.requestFocus();
+        if (TextUtils.isEmpty(etStart.getText())) {
+            etStart.setError("Informe a hora de entrada!");
+            etStart.requestFocus();
             return false;
         } else
             return true;
@@ -494,15 +512,16 @@ public class MainActivity extends AppCompatActivity {
 
             calculateSaida();
             //TODO Validar se o calculo é necessário antes iniciar o alarme
-            startAlarm(tvSaida.getText().toString());
+            startAlarm(etEnd.getText().toString());
             //horas trabalhadas
             calculateHorasTrabalhadas();
             //calcular horas permitidas
-            if (cb0147.isChecked()) {
-                tvSaida.setText(calcular0147());
-                tvDuracao.setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
+//            if (cb0147.isChecked()) {
+            if (switchBankHours.isChecked()) {
+                etEnd.setText(calcular0147());
+                tvDuration.getEditText().setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
             } else {
-                tvDuracao.setText(STR_DURACAO_TRABALHO__DIARIO_2021);
+                tvDuration.getEditText().setText(STR_DURACAO_TRABALHO__DIARIO_2021);
             }
             //start countDownTimer
             countDownTimerNotification();
@@ -513,7 +532,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void calculateSaida() {
         String almoco = calculateLunch();
-        String[] horaMinuto = etInit.getText().toString().split(":");
+        String[] horaMinuto = etStart.getText().toString().split(":");
         int horaSaida = Integer.parseInt(horaMinuto[0]) + INT_DURACAO_TRABALHO__DIARIO_HORA_2021 + Integer.parseInt(almoco.split(":")[0]);
         int minutoSaida = Integer.parseInt(horaMinuto[1]) + INT_DURACAO_TRABALHO__DIARIO_MINUTO_2021 + Integer.parseInt(almoco.split(":")[1]);
         //horario de saída
@@ -521,7 +540,7 @@ public class MainActivity extends AppCompatActivity {
         dateTimeExit.set(Calendar.HOUR_OF_DAY, horaSaida);
         dateTimeExit.set(Calendar.MINUTE, minutoSaida);
         dateTimeExit.set(Calendar.SECOND, getSecond());
-        tvSaida.setText(String.format(FORMAT_HOUR_MIN, dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
+        etEnd.setText(String.format(FORMAT_HOUR_MIN, dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
     }
 
     public int getHour(String fullTime) {
@@ -551,22 +570,22 @@ public class MainActivity extends AppCompatActivity {
 
 
     public boolean validateLunch() {
-        if (TextUtils.isEmpty(etAlmocoSaida.getText()) || TextUtils.isEmpty(etAlmocoEntrada.getText())) {
+        if (TextUtils.isEmpty(etLunchOut.getText()) || TextUtils.isEmpty(etLunchIn.getText())) {
             return true;
         }
-        if (!TextUtils.isEmpty(etAlmocoSaida.getText().toString()) && !TextUtils.isEmpty(etAlmocoEntrada.getText().toString())) {
+        if (!TextUtils.isEmpty(etLunchOut.getText().toString()) && !TextUtils.isEmpty(etLunchIn.getText().toString())) {
             Date dateSaida = new Date();
-            dateSaida.setHours(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[0]));
-            dateSaida.setMinutes(Integer.parseInt(etAlmocoSaida.getText().toString().split(":")[1]));
+            dateSaida.setHours(Integer.parseInt(etLunchOut.getText().toString().split(":")[0]));
+            dateSaida.setMinutes(Integer.parseInt(etLunchOut.getText().toString().split(":")[1]));
             Date dateEntrada = new Date();
-            dateEntrada.setHours(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[0]));
-            dateEntrada.setMinutes(Integer.parseInt(etAlmocoEntrada.getText().toString().split(":")[1]));
+            dateEntrada.setHours(Integer.parseInt(etLunchIn.getText().toString().split(":")[0]));
+            dateEntrada.setMinutes(Integer.parseInt(etLunchIn.getText().toString().split(":")[1]));
             int totalSaidaAlmoco = dateSaida.getHours() * 60 + dateSaida.getMinutes();
             int totalRetornoAlmoco = dateEntrada.getHours() * 60 + dateEntrada.getMinutes();
             //se a saida do almoco(12:00) for maior que a hora de retorno do almoço(13:00)
             if (totalSaidaAlmoco > totalRetornoAlmoco) {
-                etAlmocoEntrada.setError("Horário de entrada do almoço deve ser maior que o horário de saída para o almoço");
-                etAlmocoEntrada.setFocusable(true);
+                etLunchIn.setError("Horário de entrada do almoço deve ser maior que o horário de saída para o almoço");
+                etLunchIn.setFocusable(true);
                 return false;
             }
         }
@@ -575,7 +594,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String calculateHorasTrabalhadas() {
-        String horaEntrada = etInit.getText().toString();
+        String horaEntrada = etStart.getText().toString();
         Date dateHoraEntrada = new Date();
         dateHoraEntrada.setHours(Integer.parseInt(horaEntrada.split(":")[0]));
         dateHoraEntrada.setMinutes(Integer.parseInt(horaEntrada.split(":")[1]));
@@ -587,7 +606,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void calculateHourWorked() {
-        String horaEntrada = etInit.getText().toString();
+        String horaEntrada = etStart.getText().toString();
         Date dateHoraEntrada = new Date();
         dateHoraEntrada.setHours(Integer.parseInt(horaEntrada.split(":")[0]));
         dateHoraEntrada.setMinutes(Integer.parseInt(horaEntrada.split(":")[1]));
@@ -597,7 +616,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String calcular0147() {
-        String saida = tvSaida.getText().toString();
+        String saida = etEnd.getText().toString();
         Date dateSaida = new Date();
         dateSaida.setHours(Integer.parseInt(saida.split(":")[0]));
         dateSaida.setMinutes(Integer.parseInt(saida.split(":")[1]));
@@ -614,14 +633,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void reset() {
-        etInit.setText("");
-        tvDuracao.setText("");
-        etAlmocoSaida.setText("");
-        etAlmocoEntrada.setText("");
-        tvSaida.setText("");
-        tvTimer.setText("");
-        tvhorasTrabalhadas.setText("");
-        cb0147.setChecked(false);
+        etStart.setText("");
+        tvDuration.getEditText().setText("");
+        etLunchOut.setText("");
+        etLunchIn.setText("");
+        etEnd.setText("");
+        tvCountdownTimer.getEditText().setText("");
+        tvProgressiveCounting.getEditText().setText("");
+//        cb0147.setChecked(false);
+        switchBankHours.setChecked(false);
         isRunning = false;
         handler.removeCallbacks(runnable);
         ignoreNotification();
@@ -637,23 +657,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.vazare_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         // Create a notification manager object.
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         tvTimetogo = findViewById(R.id.tvTimetogo);
-        etInit = findViewById(R.id.etInit);
-        tvDuracao = findViewById(R.id.tvDuracao);
-        etAlmocoSaida = findViewById(R.id.etAlmocoSaida);
-        etAlmocoEntrada = findViewById(R.id.etAlmocoEntrada);
-        tvSaida = findViewById(R.id.tvSaida);
-        tvhorasTrabalhadas = findViewById(R.id.tvhorasTrabalhadas);
-        btnCalculate = findViewById(R.id.btnCalculate);
-        cb0147 = findViewById(R.id.cb0147);
-        tvTimer = findViewById(R.id.tvTimer);
+        etStart = findViewById(R.id.et_start);
+        tvDuration = findViewById(R.id.tv_duration);
+        etLunchOut = findViewById(R.id.et_lunch_out);
+        etLunchIn = findViewById(R.id.et_lunch_in);
+        etEnd = findViewById(R.id.et_end);
+        tvProgressiveCounting = findViewById(R.id.tv_progressive_counting);
+        btnCalculate = findViewById(R.id.btn_calculate);
+//        cb0147 = findViewById(R.id.cb0147);
+        switchBankHours = findViewById(R.id.switch_banck_hours);
+        tvCountdownTimer = findViewById(R.id.tv_countdown_timer);
         handler = new Handler();
+        fabClear = findViewById(R.id.fab_clear);
     }
 
     @Override
@@ -671,18 +693,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveSharedPreferences() {
-        editor.putString(horaInicialKey, etInit.getText().toString());
-        editor.putString(horaFinalKey, tvSaida.getText().toString());
-        editor.putString(horaSaidaAlmocoKey, etAlmocoSaida.getText().toString());
-        editor.putString(horaEntradaAlmocoKey, etAlmocoEntrada.getText().toString());
-        editor.putBoolean(check0147Key, cb0147.isChecked());
+        editor.putString(horaInicialKey, etStart.getText().toString());
+        editor.putString(horaFinalKey, etEnd.getText().toString());
+        editor.putString(horaSaidaAlmocoKey, etLunchOut.getText().toString());
+        editor.putString(horaEntradaAlmocoKey, etLunchIn.getText().toString());
+        editor.putBoolean(check0147Key, switchBankHours.isChecked());
         editor.commit();
         Log.d(TAG, "salveSharedPreferences:"
-                + " etInit: " + etInit.getText().toString()
-                + " etAlmocoSaida: " + etAlmocoSaida.getText().toString()
-                + " etAlmocoEntrada: " + etAlmocoEntrada.getText().toString()
-                + " tvSaida: " + tvSaida.getText().toString()
-                + " cb0147: " + cb0147.isChecked());
+                + " etInit: " + etStart.getText().toString()
+                + " etAlmocoSaida: " + etLunchOut.getText().toString()
+                + " etAlmocoEntrada: " + etLunchIn.getText().toString()
+                + " tvSaida: " + etEnd.getText().toString()
+                + " cb0147: " + switchBankHours.isChecked());
     }
 
     public void clearSharedPreferences() {
@@ -765,7 +787,8 @@ public class MainActivity extends AppCompatActivity {
                     mResumedActivity: ActivityRecord{c91a10d u0 net.taxidigital.tocantins/net.taxidigital.ui.main.MainActivity t19}
                  */
                 Intent launchIntent;
-                if (!cb0147.isChecked()) {
+//                if (!cb0147.isChecked()) {
+                if (!switchBankHours.isChecked()) {
                     launchIntent = getPackageManager().getLaunchIntentForPackage("com.ubercab");
                 } else {
                     launchIntent = getPackageManager().getLaunchIntentForPackage("com.taxis99");
@@ -795,9 +818,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean validate() {
-        if (TextUtils.isEmpty(etInit.getText())) {
-            etInit.setError(getString(R.string.put_hour_initial));
-            etInit.requestFocus();
+        if (TextUtils.isEmpty(etStart.getText())) {
+            etStart.setError(getString(R.string.put_hour_initial));
+            etStart.requestFocus();
             return false;
         }
         return true;
