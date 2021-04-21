@@ -40,6 +40,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.example.vazare.R.string.clear_values;
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "timeWorkedMillisWithIntervalLunch:" + timeWorkedMillisWithIntervalLunch + " = System.currentTimeMillis:" + System.currentTimeMillis() + " - initialTime:" + initialTime + " - ms:" + ms);
                     timeComplete = fullTime(timeWorkedMillisWithIntervalLunch);
                 }
-                tvProgressiveCounting.getEditText().setText(timeComplete);
+                Objects.requireNonNull(tvProgressiveCounting.getEditText()).setText(timeComplete);
                 Log.d(TAG, "timeComplete: " + timeComplete);
                 handler.postDelayed(runnable, MILLIS_IN_SEC);
             }
@@ -741,7 +742,7 @@ public class MainActivity extends AppCompatActivity {
         else if (opcao == 15) txtNotificacao = getString(R.string.notification_text_15);
         else if (opcao == 1) txtNotificacao = getString(R.string.notification_text_1);
         // Build the notification with all of the parameters.
-        NotificationCompat.Builder notifyBuilder = new NotificationCompat
+        return new NotificationCompat
                 .Builder(this, PRIMARY_CHANNEL_ID)
                 .setContentTitle(getString(R.string.notification_title))
                 .setContentText(txtNotificacao)
@@ -750,7 +751,6 @@ public class MainActivity extends AppCompatActivity {
                 .setContentIntent(notificationPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
-        return notifyBuilder;
     }
 
     private void showAlertDialog(String message) {
