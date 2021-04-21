@@ -31,7 +31,7 @@
             <EditText
                 android:id="@+id/et_start"
                 style="@style/EditTextCustomHomeHour"
-                android:text="07:00" />
+                tools:text="@string/_07_00_" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -59,7 +59,7 @@
             <EditText
                 android:id="@+id/et_end"
                 style="@style/EditTextCustomHomeHour"
-                android:text="17:00" />
+                tools:text="@string/_17_00_" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -86,7 +86,7 @@
             <EditText
                 android:id="@+id/et_lunch_out"
                 style="@style/EditTextCustomHomeHour"
-                android:text="11:00" />
+                tools:text="@string/_11_00_" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -114,7 +114,7 @@
             <EditText
                 android:id="@+id/et_lunch_in"
                 style="@style/EditTextCustomHomeHour"
-                android:text="12:00" />
+                tools:text="@string/_12_00_" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

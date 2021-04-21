@@ -41,6 +41,10 @@
     <string name="face_description">Face of the person</string>
     <string name="clock_description">Clock image</string>
     <string name="_04_00_00_">04:00:00</string>
+    <string name="_07_00_">07:00</string>
+    <string name="_17_00_">17:00</string>
+    <string name="_11_00_">11:00</string>
+    <string name="_12_00_">12:00</string>
     <string name="_08_15">08:15</string>
     <string name="bank_of_hours_label">Bank of Hours?</string>
 </resources>
