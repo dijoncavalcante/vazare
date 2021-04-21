@@ -307,7 +307,18 @@ public class MainActivity extends AppCompatActivity {
             String horaInicial = sharedPreferences.getString(horaInicialKey, "");
             if (!horaInicial.isEmpty()) {
                 etStart.setText(horaInicial);
-                Log.d(TAG, "verifySharedPreference: etInit: " + etStart.getText().toString());
+                Log.d(TAG, "verifySharedPreference: etStart: " + etStart.getText().toString());
+
+                if (sharedPreferences.contains(check0147Key)) {
+                    Boolean check = sharedPreferences.getBoolean(check0147Key, false);
+                    if (check) {
+                        switchBankHours.setChecked(check);
+                        tvDuration.getEditText().setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
+                    } else {// a duração normal de um dia de trabalho
+                        tvDuration.getEditText().setText(STR_DURACAO_TRABALHO__DIARIO_2021);
+                    }
+                    Log.d(TAG, "verifySharedPreference: switchBankHours: " + switchBankHours.isChecked());
+                }
             }
         }
         if (sharedPreferences.contains(horaSaidaAlmocoKey)) {
@@ -332,16 +343,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "verifySharedPreference: tvSaida: " + etEnd.getText().toString());
             }
         }
-        if (sharedPreferences.contains(check0147Key)) {
-            Boolean check = sharedPreferences.getBoolean(check0147Key, false);
-            if (check) {
-                switchBankHours.setChecked(check);
-                tvDuration.getEditText().setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
-            } else {// a duração normal de um dia de trabalho
-                tvDuration.getEditText().setText(STR_DURACAO_TRABALHO__DIARIO_2021);
-            }
-            Log.d(TAG, "verifySharedPreference: switch_banck_hours: " + switchBankHours.isChecked());
-        }
+
         if (!TextUtils.isEmpty(etStart.getText().toString())) {
             calculateHourWorked();
         }
