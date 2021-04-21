@@ -68,7 +68,6 @@
         app:layout_constraintBottom_toTopOf="@+id/fragment_home_hour"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintTop_toTopOf="@+id/fragment_home_hour"
         app:shapeAppearanceOverlay="@style/Circular"
         app:strokeColor="@color/cardview_dark_background"
