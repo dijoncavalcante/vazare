@@ -23,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private NotificationManager mNotifyManager;
     private NotificationReceiver mReceiver = new NotificationReceiver();
     AlarmManager alarmManager;
-    PendingIntent pendingIntent;
+    PendingIntent alarmPendingIntent;
     EditText etStart;
     TextInputLayout tvCountdownTimer;
     TextInputLayout tvDuration;
@@ -152,147 +151,151 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initUI();
         //TODO Add linha com hora inicial para teste
         /* etInit.setText("09:00"); */
-
         verifySharedPreference();
-        Intent alarmIntent = new Intent(this, MyBroadCastReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        clicks();
+        createNotificationChannel();
+        // Register the broadcast receiver to receive the update action from the notification.
+        registerReceiver(mReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
+    }
 
-        etStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int hour, minute = 0;
-                Calendar mcurrentTime = Calendar.getInstance();
-                if (TextUtils.isEmpty(etStart.getText())) {
-                    hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                    minute = mcurrentTime.get(Calendar.MINUTE);
-                } else {
-                    hour = getHour(etStart.getText().toString());
-                    minute = getMinute(etStart.getText().toString());
-                }
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        etStart.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
-                        etStart.setError(null);
-                    }
-                }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle(R.string.select_time);
-                mTimePicker.show();
-            }
-        });
+    /**
+     * Listen the events of the click
+     */
+    private void clicks() {
+        etStartClickListener();
+        etLunchOutClickListener();
+        etLunchInClickListener();
+        switchBankHoursCheckedChangeListener();
+        fabClearClickListener();
+    }
 
-        etLunchOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int hour, minute = 0;
-                Calendar mcurrentTime = Calendar.getInstance();
-
-                if (TextUtils.isEmpty(etLunchOut.getText())) {
-                    hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                    minute = mcurrentTime.get(Calendar.MINUTE);
-                } else {
-                    hour = getHour(etLunchOut.getText().toString());
-                    minute = getMinute(etLunchOut.getText().toString());
-                }
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        etLunchOut.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
-
-                    }
-                }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle(R.string.select_time);
-                mTimePicker.show();
-            }
-        });
-
-        etLunchIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!TextUtils.isEmpty(etLunchOut.getText())) {
-                    etLunchOut.setError(null);
-                    final Date dateSaidaAlmoco = new Date();
-                    final Date dateEntradaAlmoco = new Date();
-                    dateSaidaAlmoco.setHours(Integer.parseInt(etLunchOut.getText().toString().split(":")[0]));
-                    dateSaidaAlmoco.setMinutes(Integer.parseInt(etLunchOut.getText().toString().split(":")[1]));
-
+    private void etStartClickListener() {
+        etStart.setOnClickListener(
+                v -> {
                     int hour, minute = 0;
                     Calendar mcurrentTime = Calendar.getInstance();
-                    if (TextUtils.isEmpty(etLunchIn.getText())) {
+                    if (TextUtils.isEmpty(etStart.getText())) {
                         hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                         minute = mcurrentTime.get(Calendar.MINUTE);
                     } else {
-                        hour = getHour(etLunchIn.getText().toString());
-                        minute = getMinute(etLunchIn.getText().toString());
+                        hour = getHour(etStart.getText().toString());
+                        minute = getMinute(etStart.getText().toString());
                     }
-
                     TimePickerDialog mTimePicker;
                     mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                            dateEntradaAlmoco.setHours(selectedHour);
-                            dateEntradaAlmoco.setMinutes(selectedMinute);
+                            etStart.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
+                            etStart.setError(null);
+                        }
+                    }, hour, minute, true);//Yes 24 hour time
+                    mTimePicker.setTitle(R.string.select_time);
+                    mTimePicker.show();
+                }
+        );
+    }
 
-                            if (dateSaidaAlmoco.getTime() >= dateEntradaAlmoco.getTime()) {
-                                etLunchIn.setError(getString(R.string.validate_return_lunch_bigger));
-                                etLunchIn.requestFocus();
-                                return;
-                            }
+    private void etLunchOutClickListener() {
+        etLunchOut.setOnClickListener(
+                v -> {
+                    int hour, minute = 0;
+                    Calendar mcurrentTime = Calendar.getInstance();
 
-                            etLunchIn.setError(null);
-                            etLunchIn.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
+                    if (TextUtils.isEmpty(etLunchOut.getText())) {
+                        hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                        minute = mcurrentTime.get(Calendar.MINUTE);
+                    } else {
+                        hour = getHour(etLunchOut.getText().toString());
+                        minute = getMinute(etLunchOut.getText().toString());
+                    }
+                    TimePickerDialog mTimePicker;
+                    mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                            etLunchOut.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
 
                         }
                     }, hour, minute, true);//Yes 24 hour time
                     mTimePicker.setTitle(R.string.select_time);
                     mTimePicker.show();
-                } else {
-                    etLunchOut.setError(getString(R.string.validate_return_lunch));
-                    etLunchOut.requestFocus();
                 }
-            }
-        });
+        );
+    }
 
-        switchBankHours.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (campoInicialHasValue()) {
-                    calculate();
-                } else {
-                    switchBankHours.setChecked(false);
-                    tvDuration.getEditText().setText("");
+    private void etLunchInClickListener() {
+        etLunchIn.setOnClickListener(
+                v -> {
+                    if (!TextUtils.isEmpty(etLunchOut.getText())) {
+                        etLunchOut.setError(null);
+                        final Date dateSaidaAlmoco = new Date();
+                        final Date dateEntradaAlmoco = new Date();
+                        dateSaidaAlmoco.setHours(Integer.parseInt(etLunchOut.getText().toString().split(":")[0]));
+                        dateSaidaAlmoco.setMinutes(Integer.parseInt(etLunchOut.getText().toString().split(":")[1]));
+
+                        int hour, minute = 0;
+                        Calendar mcurrentTime = Calendar.getInstance();
+                        if (TextUtils.isEmpty(etLunchIn.getText())) {
+                            hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                            minute = mcurrentTime.get(Calendar.MINUTE);
+                        } else {
+                            hour = getHour(etLunchIn.getText().toString());
+                            minute = getMinute(etLunchIn.getText().toString());
+                        }
+
+                        TimePickerDialog mTimePicker;
+                        mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                                dateEntradaAlmoco.setHours(selectedHour);
+                                dateEntradaAlmoco.setMinutes(selectedMinute);
+
+                                if (dateSaidaAlmoco.getTime() >= dateEntradaAlmoco.getTime()) {
+                                    etLunchIn.setError(getString(R.string.validate_return_lunch_bigger));
+                                    etLunchIn.requestFocus();
+                                    return;
+                                }
+
+                                etLunchIn.setError(null);
+                                etLunchIn.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
+                            }
+                        }, hour, minute, true);//Yes 24 hour time
+                        mTimePicker.setTitle(R.string.select_time);
+                        mTimePicker.show();
+                    } else {
+                        etLunchOut.setError(getString(R.string.validate_return_lunch));
+                        etLunchOut.requestFocus();
+                    }
                 }
-            }
-        });
+        );
+    }
 
+    private void switchBankHoursCheckedChangeListener() {
+        switchBankHours.setOnCheckedChangeListener(
+                (buttonView, isChecked) -> {
+                    if (campoInicialHasValue()) {
+                        calculate();
+                    } else {
+                        switchBankHours.setChecked(false);
+                        Objects.requireNonNull(tvDuration.getEditText()).setText("");
+                    }
+                }
+        );
+    }
 
-        fabClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, clear_values, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                reset();
-                clearSharedPreferences();
-                cancelCountDownTimer();
-            }
-        });
-
-
-
-        /*
-            Notificao
-         */
-        // Create the notification channel.
-        createNotificationChannel();
-        // Register the broadcast receiver to receive the update action from the notification.
-        registerReceiver(mReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
-
+    private void fabClearClickListener() {
+        fabClear.setOnClickListener(
+                view -> {
+                    Snackbar.make(view, clear_values, Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                    reset();
+                    clearSharedPreferences();
+                    cancelCountDownTimer();
+                    cancelAlarm();
+                }
+        );
     }
 
     public void cancelCountDownTimer() {
@@ -422,10 +425,10 @@ public class MainActivity extends AppCompatActivity {
             return true;
     }
 
-    private void startAlarm(String HoraMinutoSegundo) {
-        // primeiro cria a intenção
+    private void setAlarm(String HoraMinutoSegundo) {
         Intent it = new Intent(this, MyBroadCastReceiver.class);
-        PendingIntent p = PendingIntent.getBroadcast(this, 0, it, 0);
+        alarmPendingIntent = PendingIntent.getBroadcast(this, 0, it, 0);
+
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
         String txtNotificacao = "Start do Alarme  às: " + Calendar.getInstance().get(Calendar.HOUR) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":" + Calendar.getInstance().get(Calendar.SECOND);
@@ -438,16 +441,18 @@ public class MainActivity extends AppCompatActivity {
         c.set(Calendar.HOUR_OF_DAY, hora);
         c.set(Calendar.MINUTE, minutos);
         c.set(Calendar.SECOND, segundos);
-        // agendar o alarme
-        AlarmManager alarme = (AlarmManager) getSystemService(ALARM_SERVICE);
+        //set alarm
+        AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
         long time = c.getTimeInMillis();
-        alarme.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, p);
+        alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmPendingIntent);
         Toast.makeText(getApplicationContext(), "Agendado para: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND), Toast.LENGTH_SHORT).show();
     }
 
     private void cancelAlarm() {
-        alarmManager.cancel(pendingIntent);
+        alarmManager.cancel(alarmPendingIntent);
+        alarmPendingIntent.cancel();
         Toast.makeText(getApplicationContext(), "Alarm Cancelled", Toast.LENGTH_LONG).show();
+        Log.d(TAG, "Alarm Cancelled");
     }
 
     @Override
@@ -496,7 +501,7 @@ public class MainActivity extends AppCompatActivity {
 
             calculateSaida();
             //TODO Validar se o calculo é necessário antes iniciar o alarme
-            startAlarm(etEnd.getText().toString());
+            setAlarm(etEnd.getText().toString());
             //horas trabalhadas
             calculateHorasTrabalhadas();
             //calcular horas permitidas
@@ -638,6 +643,9 @@ public class MainActivity extends AppCompatActivity {
         return String.format(FORMAT_HOUR_MIN, horas, minutos);
     }
 
+    /**
+     * Start the widgets on screen
+     */
     private void initUI() {
         setContentView(R.layout.vazare_main);
 //        Toolbar toolbar = findViewById(R.id.toolbar);
