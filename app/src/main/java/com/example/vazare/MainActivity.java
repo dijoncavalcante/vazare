@@ -43,6 +43,9 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import static com.example.vazare.R.string.clear_values;
+import static java.lang.String.format;
+import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class MainActivity extends AppCompatActivity {
     /*
@@ -128,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         hour = (time / 3600000) % 24;
         minute = (time / 60000) % 60;
         second = (time / 1000) % 60;
-        return String.format(FORMAT_HOUR_MIN_SEC, hour, minute, second);
+        return format(FORMAT_HOUR_MIN_SEC, hour, minute, second);
     }
 
     /***
@@ -188,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                     mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                            etStart.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
+                            etStart.setText(format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
                             etStart.setError(null);
                         }
                     }, hour, minute, true);//Yes 24 hour time
@@ -215,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
                     mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                            etLunchOut.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
+                            etLunchOut.setText(format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
 
                         }
                     }, hour, minute, true);//Yes 24 hour time
@@ -259,7 +262,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
 
                                 etLunchIn.setError(null);
-                                etLunchIn.setText(String.format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
+                                etLunchIn.setText(format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
                             }
                         }, hour, minute, true);//Yes 24 hour time
                         mTimePicker.setTitle(R.string.select_time);
@@ -372,10 +375,10 @@ public class MainActivity extends AppCompatActivity {
 
             public void onTick(long millisUntilFinished) {
 
-                String minutosRestantes = String.format(FORMAT_HOUR_MIN_SEC,
-                        TimeUnit.MILLISECONDS.toHours(millisUntilFinished),
-                        TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)),
-                        TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
+                @SuppressLint("DefaultLocale") String minutosRestantes = format(FORMAT_HOUR_MIN_SEC,
+                        MILLISECONDS.toHours(millisUntilFinished),
+                        MILLISECONDS.toMinutes(millisUntilFinished) - HOURS.toMinutes(MILLISECONDS.toHours(millisUntilFinished)),
+                        MILLISECONDS.toSeconds(millisUntilFinished) - MINUTES.toSeconds(MILLISECONDS.toMinutes(millisUntilFinished)));
                 tvCountdownTimer.getEditText().setText(minutosRestantes);
 
                 if (tvCountdownTimer.getEditText().getText().toString().equals("00:15:00")) {
@@ -478,9 +481,9 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.night_mode) {
             if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
             recreate();
         }
@@ -528,7 +531,7 @@ public class MainActivity extends AppCompatActivity {
         dateTimeExit.set(Calendar.HOUR_OF_DAY, horaSaida);
         dateTimeExit.set(Calendar.MINUTE, minutoSaida);
         dateTimeExit.set(Calendar.SECOND, getSecond());
-        etEnd.setText(String.format(FORMAT_HOUR_MIN, dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
+        etEnd.setText(format(FORMAT_HOUR_MIN, dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
     }
 
     public int getHour(String fullTime) {
@@ -617,17 +620,17 @@ public class MainActivity extends AppCompatActivity {
         int total = totalHoras + horasPermitidas;
         int horas = total / 60;
         int minutos = total % 60;
-        return String.format(FORMAT_HOUR_MIN, horas, minutos);
+        return format(FORMAT_HOUR_MIN, horas, minutos);
     }
 
     public void reset() {
         etStart.setText("");
-        tvDuration.getEditText().setText("");
+        Objects.requireNonNull(tvDuration.getEditText()).setText("");
         etLunchOut.setText("");
         etLunchIn.setText("");
         etEnd.setText("");
-        tvCountdownTimer.getEditText().setText("");
-        tvProgressiveCounting.getEditText().setText("");
+        Objects.requireNonNull(tvCountdownTimer.getEditText()).setText("");
+        Objects.requireNonNull(tvProgressiveCounting.getEditText()).setText("");
         switchBankHours.setChecked(false);
         isRunning = false;
         handler.removeCallbacks(runnable);
@@ -640,7 +643,7 @@ public class MainActivity extends AppCompatActivity {
         int total = totalRetorno - totalSaida;
         int horas = total / 60;
         int minutos = total % 60;
-        return String.format(FORMAT_HOUR_MIN, horas, minutos);
+        return format(FORMAT_HOUR_MIN, horas, minutos);
     }
 
     /**
