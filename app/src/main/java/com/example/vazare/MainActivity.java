@@ -40,7 +40,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 import static com.example.vazare.R.string.clear_values;
 import static java.lang.String.format;
@@ -429,9 +428,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAlarm(String HoraMinutoSegundo) {
-        Intent it = new Intent(this, MyBroadCastReceiver.class);
-        alarmPendingIntent = PendingIntent.getBroadcast(this, 0, it, 0);
-
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
         String txtNotificacao = "Start do Alarme  às: " + Calendar.getInstance().get(Calendar.HOUR) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":" + Calendar.getInstance().get(Calendar.SECOND);
@@ -445,17 +441,35 @@ public class MainActivity extends AppCompatActivity {
         c.set(Calendar.MINUTE, minutos);
         c.set(Calendar.SECOND, segundos);
         //set alarm
-        AlarmManager alarm = (AlarmManager) getSystemService(ALARM_SERVICE);
+
         long time = c.getTimeInMillis();
-        alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmPendingIntent);
+        initAlarmPendingIntent();
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmPendingIntent);
         Toast.makeText(getApplicationContext(), "Agendado para: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND), Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Alarme set to: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND));
+    }
+
+    private void initAlarmPendingIntent() {
+        Intent it = new Intent(this, MyBroadCastReceiver.class);
+        alarmPendingIntent = PendingIntent.getBroadcast(this, 0, it, 0);
     }
 
     private void cancelAlarm() {
-        alarmManager.cancel(alarmPendingIntent);
-        alarmPendingIntent.cancel();
-        Toast.makeText(getApplicationContext(), "Alarm Cancelled", Toast.LENGTH_LONG).show();
-        Log.d(TAG, "Alarm Cancelled");
+        if (isAlarmExists()) {
+            initAlarmPendingIntent();
+            alarmManager.cancel(alarmPendingIntent);
+            alarmPendingIntent.cancel();
+            Toast.makeText(getApplicationContext(), "Alarm Cancelled", Toast.LENGTH_LONG).show();
+            Log.d(TAG, "Alarm Cancelled");
+        }
+    }
+
+    private boolean isAlarmExists() {
+        boolean alarmUp = (PendingIntent.getBroadcast(this, 0
+                , new Intent(this, MyBroadCastReceiver.class)
+                , PendingIntent.FLAG_NO_CREATE) != null);
+        Log.d(TAG, "Alarm already exists");
+        return alarmUp;
     }
 
     @Override
