@@ -477,9 +477,9 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         int nightMode = AppCompatDelegate.getDefaultNightMode();
         if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
-            menu.findItem(R.id.night_mode).setTitle(R.string.day_mode);
+            menu.findItem(R.id.menu_night_mode).setTitle(R.string.day_mode);
         } else {
-            menu.findItem(R.id.night_mode).setTitle(R.string.night_mode);
+            menu.findItem(R.id.menu_night_mode).setTitle(R.string.night_mode);
         }
         return true;
     }
@@ -488,12 +488,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         int nightMode = AppCompatDelegate.getDefaultNightMode();
-        //noinspection SimplifiableIfStatement
-
-        if (id == R.id.action_settings) {
+        if(id == R.id.menu_notificaton){
+            Toast.makeText(this, "Sem notificações.", Toast.LENGTH_SHORT).show();
+        }
+        if (id == R.id.menu_action_settings) {
             return true;
         }
-        if (id == R.id.night_mode) {
+        if (id == R.id.menu_night_mode) {
             if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             } else {
@@ -502,8 +503,6 @@ public class MainActivity extends AppCompatActivity {
             recreate();
         }
         return true;
-        //return super.onOptionsItemSelected(item);
-
     }
 
     public void calculateOnClick(View view) {
