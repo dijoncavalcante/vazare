@@ -441,15 +441,15 @@ public class MainActivity extends AppCompatActivity {
         c.set(Calendar.SECOND, segundos);
         //set alarm
         alarmPendingIntent = alarmManagerImpl.prepareAlarmPendingIntent(this);
-        alarmManagerImpl.set(AlarmManager.RTC, c.getTimeInMillis(), alarmPendingIntent);
-        Toast.makeText(getApplicationContext(), "Agendado para: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND), Toast.LENGTH_SHORT).show();
+        alarmManagerImpl.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), alarmPendingIntent);
+        Toast.makeText(this, "Agendado para: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND), Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Alarme set to: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND));
     }
 
     private void cancelAlarm() {
         if (alarmManagerImpl.isAlarmExists(this)) {
             alarmManagerImpl.cancel(alarmPendingIntent);
-            Toast.makeText(getApplicationContext(), "Alarm Cancelled", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_LONG).show();
         }
     }
 

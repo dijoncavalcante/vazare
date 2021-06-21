@@ -32,7 +32,7 @@ public class AlarmManagerImpl implements IAlarmManager {
 
     @Override
     public void set(int type, long triggerAtMillis, PendingIntent operation) {
-        singletonInstance.alarmManager.set(type, triggerAtMillis, operation);
+        singletonInstance.alarmManager.setExactAndAllowWhileIdle(type, triggerAtMillis, operation);
         Log.d(TAG, "Set alarm with information: " + "type: " + type + "triggerAtMillis: " + triggerAtMillis + "operation: " + operation);
     }
 
