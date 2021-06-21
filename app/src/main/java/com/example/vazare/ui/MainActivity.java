@@ -30,9 +30,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 
-import com.example.vazare.MyBroadCastReceiver;
 import com.example.vazare.R;
 import com.example.vazare.manager.AlarmManagerImpl;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,8 +46,9 @@ import java.util.Objects;
 
 import static com.example.vazare.R.string.clear_values;
 import static java.lang.String.format;
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 public class MainActivity extends AppCompatActivity {
     /*
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     SwitchMaterial switchBankHours;
     Button btnCalculate;
     FloatingActionButton fabClear;
+    Toolbar toolbar;
     private static final String TAG = "MainActivity";
     public static final String myPreference = "mypref";
     public static final String horaInicialKey = "hora_inicial_key";
@@ -645,8 +647,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private void initUI() {
         setContentView(R.layout.vazare_main);
-//        Toolbar toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        toolbar = findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
         alarmManagerImpl = new AlarmManagerImpl().getInstance(this);
         // Create a notification manager object.
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
