@@ -4,16 +4,22 @@
     tools:context="com.example.vazare.ui.MainActivity">
     <item
         android:id="@+id/menu_notificaton"
+        android:icon="@drawable/ic_notifications_none_black_24dp"
         android:title="@string/menu_notification"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_notifications_none_black_24dp"/>
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:orderInCategory="1"
+        android:title="@string/menu_settings"
         app:showAsAction="never" />
     <item
         android:id="@+id/menu_night_mode"
-        android:title="@string/night_mode"
-        app:showAsAction="never"/>
+        android:orderInCategory="2"
+        android:title="@string/menu_night_mode"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_about"
+        android:orderInCategory="3"
+        android:title="@string/menu_about"
+        app:showAsAction="never" />
 </menu>

@@ -29,19 +29,19 @@ public class MyBroadCastReceiver extends BroadcastReceiver {
         createNotificationChannel(context);
         sendNotification(context);
         //verifySharedPreference(context);
-        sharedPreferences = context.getSharedPreferences(MainActivity.myPreference, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(MainActivity.MY_PREFERENCE, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        editor.remove(MainActivity.horaInicialKey);
-        editor.remove(MainActivity.horaFinalKey);
+        editor.remove(MainActivity.HORA_INICIAL_KEY);
+        editor.remove(MainActivity.HORA_FINAL_KEY);
         editor.clear();
         editor.commit();
     }
 
     public void verifySharedPreference(Context context) {
-        sharedPreferences = context.getSharedPreferences(MainActivity.myPreference, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(MainActivity.MY_PREFERENCE, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        if (sharedPreferences.contains(MainActivity.horaFinalKey)) {
-            String horaFinal = sharedPreferences.getString(MainActivity.horaFinalKey, "");
+        if (sharedPreferences.contains(MainActivity.HORA_FINAL_KEY)) {
+            String horaFinal = sharedPreferences.getString(MainActivity.HORA_FINAL_KEY, "");
             if (!horaFinal.isEmpty()) {
                 //TODO fazer o calculo para limpar a preferencia
             }

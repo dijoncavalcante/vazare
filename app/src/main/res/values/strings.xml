@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Vazare</string>
-    <string name="action_settings">Configurações</string>
+    <string name="menu_settings">Configurações</string>
 
 
     <string name="notification_title">Chegou a hora de dar um VAZARE!</string>
@@ -17,7 +17,7 @@
     <string name="notification_channel_description">Notification from Vazare</string>
     <string name="horas_extras_0147">Você COMPLETOU 10 horas de trabalho ja devia ter batido o ponto e dado um VAZARE!</string>
     <string name="horas_trabalhadas">Você completou seu horário PADRÃO de trabalho e agora pode dar um VAZARE!</string>
-    <string name="night_mode">Modo Noturno</string>
+    <string name="menu_night_mode">Modo Noturno</string>
     <string name="day_mode">Modo Dia</string>
     <string name="time_to_go">TIME TO GO</string>
     <string name="add_banco_de_horas">Adicionar Banco de Horas</string>
@@ -48,4 +48,5 @@
     <string name="_08_15">08:15</string>
     <string name="bank_of_hours_label">Bank of Hours?</string>
     <string name="menu_notification">Notificações</string>
+    <string name="menu_about">Sobre</string>
 </resources>

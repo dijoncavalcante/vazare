@@ -51,45 +51,38 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 public class MainActivity extends AppCompatActivity {
-    /*
-    variaveis para mostrar o countdown mais vibração
-     */
-    private static final String FORMAT_HOUR_MIN_SEC = "%02d:%02d:%02d";
-    private static final String FORMAT_HOUR_MIN = "%02d:%02d";
-    /*    variaveis para a notificação     */
-    // Constants for the notification actions buttons.
-    public static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.notifyme.ACTION_UPDATE_NOTIFICATION";
-    // Notification channel ID.
-    public static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
-    // Notification ID.
-    public static final int NOTIFICATION_ID = 0;
+    Toolbar toolbar;
     private NotificationManager mNotifyManager;
-    private NotificationReceiver mReceiver = new NotificationReceiver();
+    private NotificationReceiver mReceiver;
     AlarmManagerImpl alarmManagerImpl;
     PendingIntent alarmPendingIntent;
     EditText etStart;
     TextInputLayout tvCountdownTimer;
     TextInputLayout tvDuration;
-    static TextInputLayout tvProgressiveCounting;
+    TextInputLayout tvProgressiveCounting;
     public static EditText etLunchOut;
     public static EditText etLunchIn;
     TextView etEnd;
     SwitchMaterial switchBankHours;
     Button btnCalculate;
     FloatingActionButton fabClear;
-    Toolbar toolbar;
+
     private static final String TAG = "MainActivity";
-    public static final String myPreference = "mypref";
-    public static final String horaInicialKey = "hora_inicial_key";
-    public static final String horaFinalKey = "hora_final_key";
-    public static final String horaSaidaAlmocoKey = "hora_saida_almoco";
-    public static final String horaEntradaAlmocoKey = "hora_entrada_almoco";
-    public static final String check0147Key = "check_0147_Key";
+    public static final String MY_PREFERENCE = "mypref";
+    public static final String HORA_INICIAL_KEY = "hora_inicial_key";
+    public static final String HORA_FINAL_KEY = "hora_final_key";
+    public static final String HORA_SAIDA_ALMOCO_KEY = "hora_saida_almoco";
+    public static final String HORA_ENTRADA_ALMOCO_KEY = "hora_entrada_almoco";
+    public static final String CHECK_BANK_OF_HOUR_KEY = "check_0147_Key";
     public static final String STR_DURACAO_TRABALHO__DIARIO_2021 = "08:15";
+    public static final String STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS = "10:00";
     public static final Integer INT_DURACAO_TRABALHO__DIARIO_HORA_2021 = 8;
     public static final Integer INT_DURACAO_TRABALHO__DIARIO_MINUTO_2021 = 15;
-    public static final String STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS = "10:00";
-
+    private static final String FORMAT_HOUR_MIN_SEC = "%02d:%02d:%02d";
+    private static final String FORMAT_HOUR_MIN = "%02d:%02d";
+    public static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.notifyme.ACTION_UPDATE_NOTIFICATION";
+    public static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
+    public static final int NOTIFICATION_ID = 0;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -312,16 +305,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void verifySharedPreference() {
-        sharedPreferences = getApplication().getSharedPreferences(myPreference, Context.MODE_PRIVATE);
+        sharedPreferences = getApplication().getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        if (sharedPreferences.contains(horaInicialKey)) {
-            String horaInicial = sharedPreferences.getString(horaInicialKey, "");
+        if (sharedPreferences.contains(HORA_INICIAL_KEY)) {
+            String horaInicial = sharedPreferences.getString(HORA_INICIAL_KEY, "");
             if (!horaInicial.isEmpty()) {
                 etStart.setText(horaInicial);
                 Log.d(TAG, "verifySharedPreference: etStart: " + etStart.getText().toString());
 
-                if (sharedPreferences.contains(check0147Key)) {
-                    Boolean check = sharedPreferences.getBoolean(check0147Key, false);
+                if (sharedPreferences.contains(CHECK_BANK_OF_HOUR_KEY)) {
+                    Boolean check = sharedPreferences.getBoolean(CHECK_BANK_OF_HOUR_KEY, false);
                     if (check) {
                         switchBankHours.setChecked(check);
                         tvDuration.getEditText().setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
@@ -332,22 +325,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        if (sharedPreferences.contains(horaSaidaAlmocoKey)) {
-            String horaSaidaAlmoco = sharedPreferences.getString(horaSaidaAlmocoKey, "");
+        if (sharedPreferences.contains(HORA_SAIDA_ALMOCO_KEY)) {
+            String horaSaidaAlmoco = sharedPreferences.getString(HORA_SAIDA_ALMOCO_KEY, "");
             if (!horaSaidaAlmoco.isEmpty()) {
                 etLunchOut.setText(horaSaidaAlmoco);
                 Log.d(TAG, "verifySharedPreference: etAlmocoSaida: " + etLunchOut.getText().toString());
             }
         }
-        if (sharedPreferences.contains(horaEntradaAlmocoKey)) {
-            String horaEntradaAlmoco = sharedPreferences.getString(horaEntradaAlmocoKey, "");
+        if (sharedPreferences.contains(HORA_ENTRADA_ALMOCO_KEY)) {
+            String horaEntradaAlmoco = sharedPreferences.getString(HORA_ENTRADA_ALMOCO_KEY, "");
             if (!horaEntradaAlmoco.isEmpty()) {
                 etLunchIn.setText(horaEntradaAlmoco);
                 Log.d(TAG, "verifySharedPreference: etAlmocoEntrada: " + etLunchIn.getText().toString());
             }
         }
-        if (sharedPreferences.contains(horaFinalKey)) {
-            String horaFinal = sharedPreferences.getString(horaFinalKey, "");
+        if (sharedPreferences.contains(HORA_FINAL_KEY)) {
+            String horaFinal = sharedPreferences.getString(HORA_FINAL_KEY, "");
             if (!horaFinal.isEmpty()) {
                 etEnd.setText(horaFinal);
                 countDownTimerNotification();
@@ -462,7 +455,7 @@ public class MainActivity extends AppCompatActivity {
         if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
             menu.findItem(R.id.menu_night_mode).setTitle(R.string.day_mode);
         } else {
-            menu.findItem(R.id.menu_night_mode).setTitle(R.string.night_mode);
+            menu.findItem(R.id.menu_night_mode).setTitle(R.string.menu_night_mode);
         }
         return true;
     }
@@ -650,8 +643,9 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+        mReceiver = new NotificationReceiver();
         alarmManagerImpl = new AlarmManagerImpl().getInstance(this);
-        // Create a notification manager object.
+        handler = new Handler();
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         etStart = findViewById(R.id.et_start);
         tvDuration = findViewById(R.id.tv_duration);
@@ -662,7 +656,6 @@ public class MainActivity extends AppCompatActivity {
         btnCalculate = findViewById(R.id.btn_calculate);
         switchBankHours = findViewById(R.id.switch_banck_hours);
         tvCountdownTimer = findViewById(R.id.tv_countdown_timer);
-        handler = new Handler();
         fabClear = findViewById(R.id.fab_clear);
     }
 
@@ -681,11 +674,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveSharedPreferences() {
-        editor.putString(horaInicialKey, etStart.getText().toString());
-        editor.putString(horaFinalKey, etEnd.getText().toString());
-        editor.putString(horaSaidaAlmocoKey, etLunchOut.getText().toString());
-        editor.putString(horaEntradaAlmocoKey, etLunchIn.getText().toString());
-        editor.putBoolean(check0147Key, switchBankHours.isChecked());
+        editor.putString(HORA_INICIAL_KEY, etStart.getText().toString());
+        editor.putString(HORA_FINAL_KEY, etEnd.getText().toString());
+        editor.putString(HORA_SAIDA_ALMOCO_KEY, etLunchOut.getText().toString());
+        editor.putString(HORA_ENTRADA_ALMOCO_KEY, etLunchIn.getText().toString());
+        editor.putBoolean(CHECK_BANK_OF_HOUR_KEY, switchBankHours.isChecked());
         editor.commit();
         Log.d(TAG, "salveSharedPreferences:"
                 + " etInit: " + etStart.getText().toString()
@@ -696,11 +689,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clearSharedPreferences() {
-        editor.remove(horaInicialKey);
-        editor.remove(horaFinalKey);
-        editor.remove(check0147Key);
-        editor.remove(horaSaidaAlmocoKey);
-        editor.remove(horaEntradaAlmocoKey);
+        editor.remove(HORA_INICIAL_KEY);
+        editor.remove(HORA_FINAL_KEY);
+        editor.remove(CHECK_BANK_OF_HOUR_KEY);
+        editor.remove(HORA_SAIDA_ALMOCO_KEY);
+        editor.remove(HORA_ENTRADA_ALMOCO_KEY);
         editor.clear();
         editor.commit();
     }
