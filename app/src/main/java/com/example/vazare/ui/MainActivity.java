@@ -1,4 +1,4 @@
-package com.example.vazare;
+package com.example.vazare.ui;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
@@ -32,6 +32,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 
+import com.example.vazare.MyBroadCastReceiver;
+import com.example.vazare.R;
+import com.example.vazare.manager.AlarmManagerImpl;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int NOTIFICATION_ID = 0;
     private NotificationManager mNotifyManager;
     private NotificationReceiver mReceiver = new NotificationReceiver();
-    AlarmManager alarmManager;
+    AlarmManagerImpl alarmManagerImpl;
     PendingIntent alarmPendingIntent;
     EditText etStart;
     TextInputLayout tvCountdownTimer;
@@ -427,49 +430,27 @@ public class MainActivity extends AppCompatActivity {
             return true;
     }
 
-    private void setAlarm(String HoraMinutoSegundo) {
+    private void setAlarm(String horario) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
-        String txtNotificacao = "Start do Alarme  às: " + Calendar.getInstance().get(Calendar.HOUR) + ":" + Calendar.getInstance().get(Calendar.MINUTE) + ":" + Calendar.getInstance().get(Calendar.SECOND);
-        Log.d(TAG, txtNotificacao);
-        //Toast.makeText(getApplicationContext(), "Alarm Start = " + txtNotificacao, Toast.LENGTH_LONG).show();
-
-        int hora = getHour(HoraMinutoSegundo);
-        int minutos = getMinute(HoraMinutoSegundo);
+        int hora = getHour(horario);
+        int minutos = getMinute(horario);
         int segundos = getSecond();
         c.set(Calendar.HOUR_OF_DAY, hora);
         c.set(Calendar.MINUTE, minutos);
         c.set(Calendar.SECOND, segundos);
         //set alarm
-
-        long time = c.getTimeInMillis();
-        initAlarmPendingIntent();
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, alarmPendingIntent);
+        alarmPendingIntent = alarmManagerImpl.prepareAlarmPendingIntent(this);
+        alarmManagerImpl.set(AlarmManager.RTC, c.getTimeInMillis(), alarmPendingIntent);
         Toast.makeText(getApplicationContext(), "Agendado para: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND), Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Alarme set to: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND));
     }
 
-    private void initAlarmPendingIntent() {
-        Intent it = new Intent(this, MyBroadCastReceiver.class);
-        alarmPendingIntent = PendingIntent.getBroadcast(this, 0, it, 0);
-    }
-
     private void cancelAlarm() {
-        if (isAlarmExists()) {
-            initAlarmPendingIntent();
-            alarmManager.cancel(alarmPendingIntent);
-            alarmPendingIntent.cancel();
+        if (alarmManagerImpl.isAlarmExists(this)) {
+            alarmManagerImpl.cancel(alarmPendingIntent);
             Toast.makeText(getApplicationContext(), "Alarm Cancelled", Toast.LENGTH_LONG).show();
-            Log.d(TAG, "Alarm Cancelled");
         }
-    }
-
-    private boolean isAlarmExists() {
-        boolean alarmUp = (PendingIntent.getBroadcast(this, 0
-                , new Intent(this, MyBroadCastReceiver.class)
-                , PendingIntent.FLAG_NO_CREATE) != null);
-        Log.d(TAG, "Alarm already exists");
-        return alarmUp;
     }
 
     @Override
@@ -488,7 +469,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         int nightMode = AppCompatDelegate.getDefaultNightMode();
-        if(id == R.id.menu_notificaton){
+        if (id == R.id.menu_notificaton) {
             Toast.makeText(this, "Sem notificações.", Toast.LENGTH_SHORT).show();
         }
         if (id == R.id.menu_action_settings) {
@@ -666,7 +647,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.vazare_main);
 //        Toolbar toolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
-        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManagerImpl = new AlarmManagerImpl().getInstance(this);
         // Create a notification manager object.
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         etStart = findViewById(R.id.et_start);
