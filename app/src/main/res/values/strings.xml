@@ -49,4 +49,24 @@
     <string name="bank_of_hours_label">Bank of Hours?</string>
     <string name="menu_notification">Notificações</string>
     <string name="menu_about">Sobre</string>
+    <string name="title_activity_settings_manager">SettingsManagerActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="night_mode_summary_off">O modo noturno pode ser habilitado a qualquer momento</string>
+    <string name="night_mode_summary_on">Você pode sair do modo noturno a qualquer momento</string>
+    <string name="name_title">Defina seu nome</string>
+    <string name="hour_defalt_title">Defina o horário padrão de trabalho</string>
 </resources>

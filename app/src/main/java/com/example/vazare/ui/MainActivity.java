@@ -34,6 +34,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 
 import com.example.vazare.R;
+import com.example.vazare.SettingsManagerActivity;
 import com.example.vazare.manager.AlarmManagerImpl;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -468,7 +469,8 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Sem notificações.", Toast.LENGTH_SHORT).show();
         }
         if (id == R.id.menu_action_settings) {
-            return true;
+            Intent intent = new Intent(this, SettingsManagerActivity.class);
+            startActivity(intent);
         }
         if (id == R.id.menu_night_mode) {
             if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
