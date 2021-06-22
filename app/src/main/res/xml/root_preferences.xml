@@ -1,7 +1,7 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory app:title="@string/general_header">
 
         <EditTextPreference
             app:key="user_name"
@@ -11,6 +11,12 @@
         <EditTextPreference
             app:key="hour_default"
             app:title="@string/hour_defalt_title"
+            android:inputType="numberDecimal"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="max_hour"
+            app:title="@string/max_hour_title"
             android:inputType="numberDecimal"
             app:useSimpleSummaryProvider="true" />
 
