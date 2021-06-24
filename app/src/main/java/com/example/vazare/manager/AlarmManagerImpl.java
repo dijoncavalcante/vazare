@@ -12,36 +12,30 @@ import com.example.vazare.contracts.IAlarmManager;
 import static android.content.Context.ALARM_SERVICE;
 
 public class AlarmManagerImpl implements IAlarmManager {
-
-    private static final AlarmManagerImpl singletonInstance = new AlarmManagerImpl();
-    private AlarmManager alarmManager;
     private static String TAG = "AlarmManagerImpl";
+    private AlarmManager alarmManager;
 
-    public AlarmManagerImpl() {
+    public AlarmManagerImpl(Context context) {
+        this.init(context);
     }
 
-    @Override
-    public AlarmManagerImpl getInstance(Context context) {
-        return singletonInstance.init(context);
-    }
-
-    private AlarmManagerImpl init(Context context) {
-        singletonInstance.alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-        return singletonInstance;
+    private void init(Context context) {
+        alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
     }
 
     @Override
     public void set(int type, long triggerAtMillis, PendingIntent operation) {
-        singletonInstance.alarmManager.cancel(operation);
-        singletonInstance.alarmManager.setExactAndAllowWhileIdle(type, triggerAtMillis, operation);
-        Log.d(TAG, "Set alarm with information: " + "type: " + type + "triggerAtMillis: " + triggerAtMillis + "operation: " + operation);
+        Log.d(TAG, "Set alarm with information: " + "type: " + type + "triggerAtMillis: "
+                + triggerAtMillis + "operation: " + operation);
+        alarmManager.cancel(operation);
+        alarmManager.set(type, triggerAtMillis, operation);
     }
 
     @Override
     public void cancel(PendingIntent pendingIntent) {
-        singletonInstance.alarmManager.cancel(pendingIntent);
-        pendingIntent.cancel();
         Log.d(TAG, "Alarm Cancelled");
+        alarmManager.cancel(pendingIntent);
+        pendingIntent.cancel();
     }
 
     @Override
@@ -55,13 +49,6 @@ public class AlarmManagerImpl implements IAlarmManager {
 
     @Override
     public PendingIntent prepareAlarmPendingIntent(Context context) {
-        return PendingIntent
-                .getBroadcast(
-                        context
-                        , 0
-                        , new Intent(
-                                context
-                                , MyBroadCastReceiver.class)
-                        , 0);
+        return PendingIntent.getBroadcast(context, 0, new Intent(context, MyBroadCastReceiver.class), 0);
     }
 }

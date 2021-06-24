@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.notifyme.ACTION_UPDATE_NOTIFICATION";
     public static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
     public static final int NOTIFICATION_ID = 0;
+    public static final int SECOND_DEFAULT = 0;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -365,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
         Date dataHoraSaida = new Date();
         dataHoraSaida.setHours(getHour(etEnd.getText().toString()));
         dataHoraSaida.setMinutes(getMinute(etEnd.getText().toString()));
-        dataHoraSaida.setSeconds(getSecond());
+        dataHoraSaida.setSeconds(SECOND_DEFAULT);
 
         long diffDate = dataHoraSaida.getTime() - dataHoraEntrada.getTime();
 
@@ -426,20 +427,21 @@ public class MainActivity extends AppCompatActivity {
             return true;
     }
 
-    private void setAlarm(String horario) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(System.currentTimeMillis());
-        int hora = getHour(horario);
-        int minutos = getMinute(horario);
-        int segundos = getSecond();
-        c.set(Calendar.HOUR_OF_DAY, hora);
-        c.set(Calendar.MINUTE, minutos);
-        c.set(Calendar.SECOND, segundos);
-        //set alarm
+    private void setAlarm(String hour) {
+        Calendar calendar = getCalendar(hour);
         alarmPendingIntent = alarmManagerImpl.prepareAlarmPendingIntent(this);
-        alarmManagerImpl.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), alarmPendingIntent);
-        Toast.makeText(this, "Agendado para: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND), Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "Alarme set to: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND));
+        alarmManagerImpl.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.getTimeInMillis(), alarmPendingIntent);
+        Toast.makeText(this, "Agendado para: " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND), Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "Alarme set to: " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND));
+    }
+
+    private Calendar getCalendar(String hour) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, getHour(hour));
+        calendar.set(Calendar.MINUTE, getMinute(hour));
+        calendar.set(Calendar.SECOND, SECOND_DEFAULT);
+        return calendar;
     }
 
     private void cancelAlarm() {
@@ -452,33 +454,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        int nightMode = AppCompatDelegate.getDefaultNightMode();
-        if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
-            menu.findItem(R.id.menu_night_mode).setTitle(R.string.day_mode);
-        } else {
-            menu.findItem(R.id.menu_night_mode).setTitle(R.string.menu_night_mode);
-        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        int nightMode = AppCompatDelegate.getDefaultNightMode();
         if (id == R.id.menu_notificaton) {
             Toast.makeText(this, "Sem notificações.", Toast.LENGTH_SHORT).show();
         }
         if (id == R.id.menu_action_settings) {
             Intent intent = new Intent(this, SettingsManagerActivity.class);
             startActivity(intent);
-        }
-        if (id == R.id.menu_night_mode) {
-            if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            }
-            recreate();
         }
         return true;
     }
@@ -521,7 +508,7 @@ public class MainActivity extends AppCompatActivity {
         Calendar dateTimeExit = Calendar.getInstance();
         dateTimeExit.set(Calendar.HOUR_OF_DAY, horaSaida);
         dateTimeExit.set(Calendar.MINUTE, minutoSaida);
-        dateTimeExit.set(Calendar.SECOND, getSecond());
+        dateTimeExit.set(Calendar.SECOND, SECOND_DEFAULT);
         etEnd.setText(format(FORMAT_HOUR_MIN, dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
     }
 
@@ -536,11 +523,6 @@ public class MainActivity extends AppCompatActivity {
         int minutoSaida = Integer.parseInt(horaMinuto[1]);
         return minutoSaida;
     }
-
-    public int getSecond() {
-        return 0;
-    }
-
 
     public String calculateLunch() {
         if (validateLunch()) {
@@ -646,7 +628,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         mReceiver = new NotificationReceiver();
-        alarmManagerImpl = new AlarmManagerImpl().getInstance(this);
+        alarmManagerImpl = new AlarmManagerImpl(this);
         handler = new Handler();
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         etStart = findViewById(R.id.et_start);
