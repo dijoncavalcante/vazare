@@ -7,7 +7,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,13 +28,13 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 
 import com.example.vazare.R;
 import com.example.vazare.SettingsManagerActivity;
 import com.example.vazare.manager.AlarmManagerImpl;
+import com.example.vazare.receiver.NotificationReceiver;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -46,55 +45,67 @@ import java.util.Date;
 import java.util.Objects;
 
 import static com.example.vazare.R.string.clear_values;
+import static com.example.vazare.util.Constants.ACTION_UPDATE_NOTIFICATION;
+import static com.example.vazare.util.Constants.CHECK_BANK_OF_HOUR_KEY;
+import static com.example.vazare.util.Constants.FORMAT_HOUR_MIN;
+import static com.example.vazare.util.Constants.FORMAT_HOUR_MIN_SEC;
+import static com.example.vazare.util.Constants.HORA_ENTRADA_ALMOCO_KEY;
+import static com.example.vazare.util.Constants.HORA_FINAL_KEY;
+import static com.example.vazare.util.Constants.HORA_INICIAL_KEY;
+import static com.example.vazare.util.Constants.HORA_SAIDA_ALMOCO_KEY;
+import static com.example.vazare.util.Constants.INT_DURACAO_TRABALHO__DIARIO_HORA_2021;
+import static com.example.vazare.util.Constants.INT_DURACAO_TRABALHO__DIARIO_MINUTO_2021;
+import static com.example.vazare.util.Constants.MILLIS_IN_SEC;
+import static com.example.vazare.util.Constants.MY_PREFERENCE;
+import static com.example.vazare.util.Constants.NOTIFICATION_ID;
+import static com.example.vazare.util.Constants.PRIMARY_CHANNEL_ID;
+import static com.example.vazare.util.Constants.SECOND_DEFAULT;
+import static com.example.vazare.util.Constants.STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS;
+import static com.example.vazare.util.Constants.STR_DURACAO_TRABALHO__DIARIO_2021;
 import static java.lang.String.format;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     Toolbar toolbar;
     private NotificationManager mNotifyManager;
-    private NotificationReceiver mReceiver;
+    private NotificationReceiver notificationReceiver;
     AlarmManagerImpl alarmManagerImpl;
     PendingIntent alarmPendingIntent;
     EditText etStart;
     TextInputLayout tvCountdownTimer;
     TextInputLayout tvDuration;
     TextInputLayout tvProgressiveCounting;
+    @SuppressLint("StaticFieldLeak")
     public static EditText etLunchOut;
+    @SuppressLint("StaticFieldLeak")
     public static EditText etLunchIn;
     TextView etEnd;
     SwitchMaterial switchBankHours;
     Button btnCalculate;
     FloatingActionButton fabClear;
-
-    private static final String TAG = "MainActivity";
-    public static final String MY_PREFERENCE = "mypref";
-    public static final String HORA_INICIAL_KEY = "hora_inicial_key";
-    public static final String HORA_FINAL_KEY = "hora_final_key";
-    public static final String HORA_SAIDA_ALMOCO_KEY = "hora_saida_almoco";
-    public static final String HORA_ENTRADA_ALMOCO_KEY = "hora_entrada_almoco";
-    public static final String CHECK_BANK_OF_HOUR_KEY = "check_0147_Key";
-    public static final String STR_DURACAO_TRABALHO__DIARIO_2021 = "08:15";
-    public static final String STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS = "10:00";
-    public static final Integer INT_DURACAO_TRABALHO__DIARIO_HORA_2021 = 8;
-    public static final Integer INT_DURACAO_TRABALHO__DIARIO_MINUTO_2021 = 15;
-    private static final String FORMAT_HOUR_MIN_SEC = "%02d:%02d:%02d";
-    private static final String FORMAT_HOUR_MIN = "%02d:%02d";
-    public static final String ACTION_UPDATE_NOTIFICATION = "com.android.example.notifyme.ACTION_UPDATE_NOTIFICATION";
-    public static final String PRIMARY_CHANNEL_ID = "primary_notification_channel";
-    public static final int NOTIFICATION_ID = 0;
-    public static final int SECOND_DEFAULT = 0;
-
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     CountDownTimer countDownTimer;
-
     //cronometro horas trabalhadas
-    private static long initialTime;
-    private static Handler handler;
-    private static boolean isRunning;
-    private static final long MILLIS_IN_SEC = 1000L;
+    private long initialTime;
+    private Handler handler;
+    private boolean isRunning;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initUI();
+        //TODO Add linha com hora inicial para teste
+        /* etInit.setText("09:00"); */
+        verifySharedPreference();
+        clicks();
+        createNotificationChannel();
+        // Register the broadcast receiver to receive the update action from the notification.
+        registerReceiver(notificationReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
+    }
 
     private final Runnable runnable = new Runnable() {
         @Override
@@ -150,19 +161,6 @@ public class MainActivity extends AppCompatActivity {
         return calendarEntradaAlmoco.getTimeInMillis() - calendarSaidaAlmoco.getTimeInMillis();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        initUI();
-        //TODO Add linha com hora inicial para teste
-        /* etInit.setText("09:00"); */
-        verifySharedPreference();
-        clicks();
-        createNotificationChannel();
-        // Register the broadcast receiver to receive the update action from the notification.
-        registerReceiver(mReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
-    }
-
     /**
      * Listen the events of the click
      */
@@ -177,7 +175,8 @@ public class MainActivity extends AppCompatActivity {
     private void etStartClickListener() {
         etStart.setOnClickListener(
                 v -> {
-                    int hour, minute = 0;
+                    int hour;
+                    int minute;
                     Calendar mcurrentTime = Calendar.getInstance();
                     if (TextUtils.isEmpty(etStart.getText())) {
                         hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
@@ -187,12 +186,9 @@ public class MainActivity extends AppCompatActivity {
                         minute = getMinute(etStart.getText().toString());
                     }
                     TimePickerDialog mTimePicker;
-                    mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
-                        @Override
-                        public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                            etStart.setText(format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
-                            etStart.setError(null);
-                        }
+                    mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, (timePicker, selectedHour, selectedMinute) -> {
+                        etStart.setText(format(FORMAT_HOUR_MIN, selectedHour, selectedMinute));
+                        etStart.setError(null);
                     }, hour, minute, true);//Yes 24 hour time
                     mTimePicker.setTitle(R.string.select_time);
                     mTimePicker.show();
@@ -435,6 +431,13 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Alarme set to: " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND));
     }
 
+    private void cancelAlarm() {
+        if (alarmManagerImpl.isAlarmExists(this)) {
+            alarmManagerImpl.cancel(alarmPendingIntent);
+            Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_LONG).show();
+        }
+    }
+
     private Calendar getCalendar(String hour) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
@@ -442,13 +445,6 @@ public class MainActivity extends AppCompatActivity {
         calendar.set(Calendar.MINUTE, getMinute(hour));
         calendar.set(Calendar.SECOND, SECOND_DEFAULT);
         return calendar;
-    }
-
-    private void cancelAlarm() {
-        if (alarmManagerImpl.isAlarmExists(this)) {
-            alarmManagerImpl.cancel(alarmPendingIntent);
-            Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override
@@ -568,7 +564,6 @@ public class MainActivity extends AppCompatActivity {
         return diff_time(dateHoraEntrada, new Date());
     }
 
-
     public void calculateHourWorked() {
         String horaEntrada = etStart.getText().toString();
         Date dateHoraEntrada = new Date();
@@ -607,7 +602,7 @@ public class MainActivity extends AppCompatActivity {
         switchBankHours.setChecked(false);
         isRunning = false;
         handler.removeCallbacks(runnable);
-        ignoreNotification();
+        notificationReceiver.ignoreNotification(mNotifyManager, this);
     }
 
     public String diff_time(Date saida, Date retorno) {
@@ -627,7 +622,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
-        mReceiver = new NotificationReceiver();
+        notificationReceiver = new NotificationReceiver(this);
         alarmManagerImpl = new AlarmManagerImpl(this);
         handler = new Handler();
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -653,7 +648,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy");
-        unregisterReceiver(mReceiver);
+        unregisterReceiver(notificationReceiver);
         super.onDestroy();
     }
 
@@ -709,11 +704,6 @@ public class MainActivity extends AppCompatActivity {
         notifyBuilder.addAction(R.mipmap.ic_vazare, getString(R.string.ignore), updatePendingIntent);
         // Deliver the notification.
         mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
-    }
-
-    public void ignoreNotification() {
-        mNotifyManager.cancel(NOTIFICATION_ID);
-        Log.d(TAG, "ignoreNotification NOTIFICATION_ID: " + NOTIFICATION_ID);
     }
 
     private NotificationCompat.Builder getNotificationBuilder(int opcao) {
@@ -788,21 +778,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
-    //--------------------new class//
-    public class NotificationReceiver extends BroadcastReceiver {
-        private static final String TAG = "NotificationReceiver";
-
-        public NotificationReceiver() {
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Ignora the notification.
-            Log.d(TAG, "onReceive");
-            ignoreNotification();
-        }
-    }
-
-
 }
