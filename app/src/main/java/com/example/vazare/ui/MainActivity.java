@@ -425,14 +425,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void setAlarm(String hour) {
         Calendar calendar = getCalendar(hour);
-        alarmPendingIntent = alarmManagerImpl.prepareAlarmPendingIntent(this);
+        alarmPendingIntent = alarmManagerImpl.prepareAlarmPendingIntent();
         alarmManagerImpl.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.getTimeInMillis(), alarmPendingIntent);
         Toast.makeText(this, "Agendado para: " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND), Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Alarme set to: " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND));
     }
 
     private void cancelAlarm() {
-        if (alarmManagerImpl.isAlarmExists(this)) {
+        if (alarmManagerImpl.isAlarmExists()) {
             alarmManagerImpl.cancel(alarmPendingIntent);
             Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_LONG).show();
         }
@@ -623,7 +623,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         notificationReceiver = new NotificationReceiver(this);
-        alarmManagerImpl = new AlarmManagerImpl(this);
+        alarmManagerImpl = new AlarmManagerImpl();
         handler = new Handler();
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         etStart = findViewById(R.id.et_start);

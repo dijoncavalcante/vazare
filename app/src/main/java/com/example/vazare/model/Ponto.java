@@ -3,6 +3,7 @@ package com.example.vazare.model;
 import java.util.Calendar;
 
 public class Ponto {
+    private long id;
     private String entrada;
     private String saidaAlmoco;
     private String entradaAlmoco;

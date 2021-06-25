@@ -1,9 +1,6 @@
 package com.example.vazare.contracts;
 
 import android.app.PendingIntent;
-import android.content.Context;
-
-import com.example.vazare.manager.AlarmManagerImpl;
 
 public interface IAlarmManager {
 
@@ -11,7 +8,7 @@ public interface IAlarmManager {
 
     void cancel(PendingIntent pendingIntent);
 
-    boolean isAlarmExists(Context context);
+    boolean isAlarmExists();
 
-    PendingIntent prepareAlarmPendingIntent(Context context);
+    PendingIntent prepareAlarmPendingIntent();
 }

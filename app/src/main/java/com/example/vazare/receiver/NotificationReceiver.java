@@ -1,14 +1,11 @@
 package com.example.vazare.receiver;
 
-import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import static android.content.Context.NOTIFICATION_SERVICE;
-import static androidx.core.content.ContextCompat.getSystemService;
 import static com.example.vazare.util.Constants.NOTIFICATION_ID;
 
 public class NotificationReceiver extends BroadcastReceiver {

@@ -12,14 +12,15 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.example.vazare.ui.MainActivity;
 import com.example.vazare.util.Constants;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
-import static com.example.vazare.util.Constants.*;
+import static com.example.vazare.util.Constants.ACTION_UPDATE_NOTIFICATION;
 import static com.example.vazare.util.Constants.HORA_FINAL_KEY;
 import static com.example.vazare.util.Constants.HORA_INICIAL_KEY;
 import static com.example.vazare.util.Constants.MY_PREFERENCE;
+import static com.example.vazare.util.Constants.NOTIFICATION_ID;
+import static com.example.vazare.util.Constants.PRIMARY_CHANNEL_ID;
 
 
 public class MyBroadCastReceiver extends BroadcastReceiver {

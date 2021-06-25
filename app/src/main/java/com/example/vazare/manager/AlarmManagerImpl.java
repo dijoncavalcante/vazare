@@ -2,25 +2,25 @@ package com.example.vazare.manager;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 import com.example.vazare.MyBroadCastReceiver;
+import com.example.vazare.app.VazareApp;
 import com.example.vazare.contracts.IAlarmManager;
 
 import static android.content.Context.ALARM_SERVICE;
 
 public class AlarmManagerImpl implements IAlarmManager {
-    private static String TAG = "AlarmManagerImpl";
+    private static final String TAG = "AlarmManagerImpl";
     private AlarmManager alarmManager;
 
-    public AlarmManagerImpl(Context context) {
-        this.init(context);
+    public AlarmManagerImpl() {
+        this.init();
     }
 
-    private void init(Context context) {
-        alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+    private void init() {
+        alarmManager = (AlarmManager) VazareApp.getInstance().getSystemService(ALARM_SERVICE);
     }
 
     @Override
@@ -39,16 +39,17 @@ public class AlarmManagerImpl implements IAlarmManager {
     }
 
     @Override
-    public boolean isAlarmExists(Context context) {
-        boolean alarmUp = (PendingIntent.getBroadcast(context, 0
-                , new Intent(context, MyBroadCastReceiver.class)
+    public boolean isAlarmExists() {
+        boolean alarmUp = (PendingIntent.getBroadcast(VazareApp.getInstance().getApplicationContext(), 0
+                , new Intent(VazareApp.getInstance().getApplicationContext(), MyBroadCastReceiver.class)
                 , PendingIntent.FLAG_NO_CREATE) != null);
         Log.d(TAG, "Alarm already exists");
         return alarmUp;
     }
 
     @Override
-    public PendingIntent prepareAlarmPendingIntent(Context context) {
-        return PendingIntent.getBroadcast(context, 0, new Intent(context, MyBroadCastReceiver.class), 0);
+    public PendingIntent prepareAlarmPendingIntent() {
+        return PendingIntent.getBroadcast(VazareApp.getInstance().getApplicationContext(), 0
+                , new Intent(VazareApp.getInstance().getApplicationContext(), MyBroadCastReceiver.class), 0);
     }
 }
