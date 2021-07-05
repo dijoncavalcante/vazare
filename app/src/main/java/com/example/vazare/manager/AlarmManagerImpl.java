@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.example.vazare.MyBroadCastReceiver;
-import com.example.vazare.app.VazareApp;
+import com.example.vazare.application.VazareApp;
 import com.example.vazare.contracts.IAlarmManager;
 
 import static android.content.Context.ALARM_SERVICE;

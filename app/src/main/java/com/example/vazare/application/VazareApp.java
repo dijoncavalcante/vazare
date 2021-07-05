@@ -1,4 +1,4 @@
-package com.example.vazare.app;
+package com.example.vazare.application;
 
 
 import android.app.Application;
