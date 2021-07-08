@@ -45,6 +45,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import static com.example.vazare.R.string.clear_values;
+import static com.example.vazare.R.string.not_clear_values;
 import static com.example.vazare.util.Constants.ACTION_UPDATE_NOTIFICATION;
 import static com.example.vazare.util.Constants.CHECK_BANK_OF_HOUR_KEY;
 import static com.example.vazare.util.Constants.FORMAT_HOUR_MIN;
@@ -286,12 +287,16 @@ public class MainActivity extends AppCompatActivity {
     private void fabClearClickListener() {
         fabClear.setOnClickListener(
                 view -> {
-                    Snackbar.make(view, clear_values, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                    reset();
-                    clearSharedPreferences();
-                    cancelCountDownTimer();
-                    cancelAlarm();
+                    if (!etStart.getText().toString().isEmpty() || !etEnd.getText().toString().isEmpty()
+                            || !etLunchIn.getText().toString().isEmpty() || !etLunchOut.getText().toString().isEmpty()) {
+                        reset();
+                        clearSharedPreferences();
+                        cancelCountDownTimer();
+                        cancelAlarm();
+                        Snackbar.make(view, clear_values, Snackbar.LENGTH_SHORT).setAction("Limpar", null).show();
+                    } else {
+                        Snackbar.make(view, not_clear_values, Snackbar.LENGTH_SHORT).setAction("Limpar", null).show();
+                    }
                 }
         );
     }
@@ -425,7 +430,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void setAlarm(String hour) {
         Calendar calendar = getCalendar(hour);
-        alarmPendingIntent = alarmManagerImpl.prepareAlarmPendingIntent();
         alarmManagerImpl.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.getTimeInMillis(), alarmPendingIntent);
         Toast.makeText(this, "Agendado para: " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND), Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Alarme set to: " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND));
@@ -636,6 +640,7 @@ public class MainActivity extends AppCompatActivity {
         switchBankHours = findViewById(R.id.switch_banck_hours);
         tvCountdownTimer = findViewById(R.id.tv_countdown_timer);
         fabClear = findViewById(R.id.fab_clear);
+        alarmPendingIntent = alarmManagerImpl.prepareAlarmPendingIntent();
     }
 
     @Override

@@ -43,7 +43,7 @@ public class AlarmManagerImpl implements IAlarmManager {
         boolean alarmUp = (PendingIntent.getBroadcast(VazareApp.getInstance().getApplicationContext(), 0
                 , new Intent(VazareApp.getInstance().getApplicationContext(), MyBroadCastReceiver.class)
                 , PendingIntent.FLAG_NO_CREATE) != null);
-        Log.d(TAG, "Alarm already exists");
+        Log.d(TAG, "isAlarmExists: " + alarmUp);
         return alarmUp;
     }
 
