@@ -26,20 +26,8 @@
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/textview_hello"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginStart="16dp"-->
-    <!--        android:layout_marginTop="16dp"-->
-    <!--        android:text="@string/hello_label"-->
-    <!--        android:textColor="@android:color/black"-->
-    <!--        android:textSize="8sp"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/main_toolbar" />-->
-
     <TextView
-        android:id="@+id/textView_name"
+        android:id="@+id/tv_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -52,21 +40,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/main_toolbar" />
 
-    <!--    <com.google.android.material.imageview.ShapeableImageView-->
-    <!--        android:id="@+id/iv_face"-->
-    <!--        style="@style/ImageViewShapeable"-->
-    <!--        android:layout_marginTop="20dp"-->
-    <!--        android:layout_marginEnd="16dp"-->
-    <!--        android:adjustViewBounds="true"-->
-    <!--        android:contentDescription="@string/face_description"-->
-    <!--        android:src="@drawable/ic_face_test"-->
-    <!--        app:layout_constraintBottom_toBottomOf="@+id/textView_name"-->
-    <!--        app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/main_toolbar"-->
-    <!--        app:shapeAppearanceOverlay="@style/Circular"-->
-    <!--        app:strokeColor="@color/colorAzul"-->
-    <!--        app:strokeWidth="5dp" />-->
+    <include
+        android:id="@+id/fragment_home_hour"
+        layout="@layout/fragment_home_hour"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_duration"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_name"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_div1"
@@ -82,17 +66,6 @@
         app:shapeAppearanceOverlay="@style/Circular"
         app:strokeColor="@color/cardview_dark_background"
         app:strokeWidth="5dp" />
-
-    <include
-        android:id="@+id/fragment_home_hour"
-        layout="@layout/fragment_home_hour"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/tv_duration"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tv_countdown_timer"
