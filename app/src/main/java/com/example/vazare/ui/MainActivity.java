@@ -35,6 +35,7 @@ import com.example.vazare.R;
 import com.example.vazare.SettingsManagerActivity;
 import com.example.vazare.manager.AlarmManagerImpl;
 import com.example.vazare.receiver.NotificationReceiver;
+import com.example.vazare.util.VazareUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -90,10 +91,10 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     CountDownTimer countDownTimer;
-    //cronometro horas trabalhadas
     private long initialTime;
     private Handler handler;
     private boolean isRunning;
+    private VazareUtils vazareUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,11 +118,11 @@ public class MainActivity extends AppCompatActivity {
                 String timeComplete;
                 //caso não tenha nenhum campo de ALMOÇO preenchido
                 if (TextUtils.isEmpty(etLunchOut.getText()) || TextUtils.isEmpty(etLunchIn.getText())) {
-                    timeComplete = fullTime(ms);
+                    timeComplete = vazareUtils.fullTime(ms);
                 } else {//subtrair o tempo de almoço, caso os dois campos de almoço estejam preenchidos
-                    long timeWorkedMillisWithIntervalLunch = ms - intervalLunchMS();
+                    long timeWorkedMillisWithIntervalLunch = ms - vazareUtils.intervalLunchMS(etLunchOut.getText().toString(), etLunchIn.getText().toString());
                     Log.d(TAG, "timeWorkedMillisWithIntervalLunch:" + timeWorkedMillisWithIntervalLunch + " = System.currentTimeMillis:" + System.currentTimeMillis() + " - initialTime:" + initialTime + " - ms:" + ms);
-                    timeComplete = fullTime(timeWorkedMillisWithIntervalLunch);
+                    timeComplete = vazareUtils.fullTime(timeWorkedMillisWithIntervalLunch);
                 }
                 Objects.requireNonNull(tvProgressiveCounting.getEditText()).setText(timeComplete);
                 Log.d(TAG, "timeComplete: " + timeComplete);
@@ -129,38 +130,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-
-    /***
-     *  ms / 3600000 % 24  HORAS 86400000  = 24 * 60 * 60 * 1000
-     *  (ms / 60000) % 60  MINUTOS 60000   = 60 * 1000
-     *  (ms / 1000) % 60)  SEGUNDOS
-     * @return Return the hour formated. E.g: 00:00:00
-     * */
-    @SuppressLint("DefaultLocale")
-    public String fullTime(long time) {
-        long hour, minute, second;
-        hour = (time / 3600000) % 24;
-        minute = (time / 60000) % 60;
-        second = (time / 1000) % 60;
-        return format(FORMAT_HOUR_MIN_SEC, hour, minute, second);
-    }
-
-    /***
-     *
-     * @return Return the quantity of the milliSeconds of the interval of the lunch
-     */
-    public long intervalLunchMS() {
-        Calendar calendarSaidaAlmoco = Calendar.getInstance();
-        Calendar calendarEntradaAlmoco = Calendar.getInstance();
-        calendarSaidaAlmoco.set(Calendar.SECOND, 0);
-        calendarEntradaAlmoco.set(Calendar.SECOND, 0);
-        calendarSaidaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etLunchOut.getText().toString().split(":")[0]));
-        calendarSaidaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etLunchOut.getText().toString().split(":")[1]));
-        calendarEntradaAlmoco.set(Calendar.HOUR_OF_DAY, Integer.parseInt(etLunchIn.getText().toString().split(":")[0]));
-        calendarEntradaAlmoco.set(Calendar.MINUTE, Integer.parseInt(etLunchIn.getText().toString().split(":")[1]));
-
-        return calendarEntradaAlmoco.getTimeInMillis() - calendarSaidaAlmoco.getTimeInMillis();
-    }
 
     /**
      * Listen the events of the click
@@ -183,8 +152,8 @@ public class MainActivity extends AppCompatActivity {
                         hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                         minute = mcurrentTime.get(Calendar.MINUTE);
                     } else {
-                        hour = getHour(etStart.getText().toString());
-                        minute = getMinute(etStart.getText().toString());
+                        hour = vazareUtils.getHour(etStart.getText().toString());
+                        minute = vazareUtils.getMinute(etStart.getText().toString());
                     }
                     TimePickerDialog mTimePicker;
                     mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, (timePicker, selectedHour, selectedMinute) -> {
@@ -200,15 +169,15 @@ public class MainActivity extends AppCompatActivity {
     private void etLunchOutClickListener() {
         etLunchOut.setOnClickListener(
                 v -> {
-                    int hour, minute = 0;
+                    int hour, minute;
                     Calendar mcurrentTime = Calendar.getInstance();
 
                     if (TextUtils.isEmpty(etLunchOut.getText())) {
                         hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                         minute = mcurrentTime.get(Calendar.MINUTE);
                     } else {
-                        hour = getHour(etLunchOut.getText().toString());
-                        minute = getMinute(etLunchOut.getText().toString());
+                        hour = vazareUtils.getHour(etLunchOut.getText().toString());
+                        minute = vazareUtils.getMinute(etLunchOut.getText().toString());
                     }
                     TimePickerDialog mTimePicker;
                     mTimePicker = new TimePickerDialog(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
@@ -234,14 +203,14 @@ public class MainActivity extends AppCompatActivity {
                         dateSaidaAlmoco.setHours(Integer.parseInt(etLunchOut.getText().toString().split(":")[0]));
                         dateSaidaAlmoco.setMinutes(Integer.parseInt(etLunchOut.getText().toString().split(":")[1]));
 
-                        int hour, minute = 0;
+                        int hour, minute;
                         Calendar mcurrentTime = Calendar.getInstance();
                         if (TextUtils.isEmpty(etLunchIn.getText())) {
                             hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                             minute = mcurrentTime.get(Calendar.MINUTE);
                         } else {
-                            hour = getHour(etLunchIn.getText().toString());
-                            minute = getMinute(etLunchIn.getText().toString());
+                            hour = vazareUtils.getHour(etLunchIn.getText().toString());
+                            minute = vazareUtils.getMinute(etLunchIn.getText().toString());
                         }
 
                         TimePickerDialog mTimePicker;
@@ -307,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("CommitPrefEdits")
     public void verifySharedPreference() {
         sharedPreferences = getApplication().getSharedPreferences(MY_PREFERENCE, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -317,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "verifySharedPreference: etStart: " + etStart.getText().toString());
 
                 if (sharedPreferences.contains(CHECK_BANK_OF_HOUR_KEY)) {
-                    Boolean check = sharedPreferences.getBoolean(CHECK_BANK_OF_HOUR_KEY, false);
+                    boolean check = sharedPreferences.getBoolean(CHECK_BANK_OF_HOUR_KEY, false);
                     if (check) {
                         switchBankHours.setChecked(check);
                         tvDuration.getEditText().setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
@@ -365,8 +335,8 @@ public class MainActivity extends AppCompatActivity {
         dataHoraEntrada.setSeconds(calendarCurrent.get(Calendar.SECOND));
 
         Date dataHoraSaida = new Date();
-        dataHoraSaida.setHours(getHour(etEnd.getText().toString()));
-        dataHoraSaida.setMinutes(getMinute(etEnd.getText().toString()));
+        dataHoraSaida.setHours(vazareUtils.getHour(etEnd.getText().toString()));
+        dataHoraSaida.setMinutes(vazareUtils.getMinute(etEnd.getText().toString()));
         dataHoraSaida.setSeconds(SECOND_DEFAULT);
 
         long diffDate = dataHoraSaida.getTime() - dataHoraEntrada.getTime();
@@ -381,20 +351,26 @@ public class MainActivity extends AppCompatActivity {
                         MILLISECONDS.toSeconds(millisUntilFinished) - MINUTES.toSeconds(MILLISECONDS.toMinutes(millisUntilFinished)));
                 tvCountdownTimer.getEditText().setText(minutosRestantes);
 
-                if (tvCountdownTimer.getEditText().getText().toString().equals("00:15:00")) {
-                    tvCountdownTimer.setBackgroundColor(Color.GREEN);
-                    sendNotification(15);
-                } else if (tvCountdownTimer.getEditText().getText().toString().equals("00:10:00")) {
-                    tvCountdownTimer.setBackgroundColor(Color.YELLOW);
-                    sendNotification(10);
-                } else if (tvCountdownTimer.getEditText().getText().toString().equals("00:05:00")) {
-                    tvCountdownTimer.setBackgroundColor(Color.RED);
-                    // Send the notification
-                    sendNotification(5);
-                } else if (tvCountdownTimer.getEditText().getText().toString().equals("00:02:00")) {
-                    sendNotification(2);
-                } else if (tvCountdownTimer.getEditText().getText().toString().equals("00:01:00")) {
-                    sendNotification(1);
+                switch (tvCountdownTimer.getEditText().getText().toString()) {
+                    case "00:15:00":
+                        tvCountdownTimer.setBackgroundColor(Color.GREEN);
+                        sendNotification(15);
+                        break;
+                    case "00:10:00":
+                        tvCountdownTimer.setBackgroundColor(Color.YELLOW);
+                        sendNotification(10);
+                        break;
+                    case "00:05:00":
+                        tvCountdownTimer.setBackgroundColor(Color.RED);
+                        // Send the notification
+                        sendNotification(5);
+                        break;
+                    case "00:02:00":
+                        sendNotification(2);
+                        break;
+                    case "00:01:00":
+                        sendNotification(1);
+                        break;
                 }
             }
 
@@ -429,7 +405,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAlarm(String hour) {
-        Calendar calendar = getCalendar(hour);
+        Calendar calendar = vazareUtils.getCalendar(hour);
         alarmManagerImpl.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, calendar.getTimeInMillis(), alarmPendingIntent);
         Toast.makeText(this, "Agendado para: " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND), Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Alarme set to: " + calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND));
@@ -440,15 +416,6 @@ public class MainActivity extends AppCompatActivity {
             alarmManagerImpl.cancel(alarmPendingIntent);
             Toast.makeText(this, "Alarm Cancelled", Toast.LENGTH_LONG).show();
         }
-    }
-
-    private Calendar getCalendar(String hour) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, getHour(hour));
-        calendar.set(Calendar.MINUTE, getMinute(hour));
-        calendar.set(Calendar.SECOND, SECOND_DEFAULT);
-        return calendar;
     }
 
     @Override
@@ -487,7 +454,7 @@ public class MainActivity extends AppCompatActivity {
             calculateHorasTrabalhadas();
             //calcular horas permitidas
             if (switchBankHours.isChecked()) {
-                etEnd.setText(calcular0147());
+                etEnd.setText(vazareUtils.calculateBH(etEnd.getText().toString()));
                 tvDuration.getEditText().setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
             } else {
                 tvDuration.getEditText().setText(STR_DURACAO_TRABALHO__DIARIO_2021);
@@ -512,26 +479,13 @@ public class MainActivity extends AppCompatActivity {
         etEnd.setText(format(FORMAT_HOUR_MIN, dateTimeExit.get(Calendar.HOUR_OF_DAY), dateTimeExit.get(Calendar.MINUTE)));
     }
 
-    public int getHour(String fullTime) {
-        String[] horaMinuto = fullTime.split(":");
-        int horaSaida = Integer.parseInt(horaMinuto[0]);
-        return horaSaida;
-    }
-
-    public int getMinute(String fullTime) {
-        String[] horaMinuto = fullTime.split(":");
-        int minutoSaida = Integer.parseInt(horaMinuto[1]);
-        return minutoSaida;
-    }
-
     public String calculateLunch() {
         if (validateLunch()) {
             return "01:00";
         }
-        long timeLunchMS = intervalLunchMS();
-        return fullTime(timeLunchMS);
+        long timeLunchMS = vazareUtils.intervalLunchMS(etLunchOut.getText().toString(), etLunchIn.getText().toString());
+        return vazareUtils.fullTime(timeLunchMS);
     }
-
 
     public boolean validateLunch() {
         if (TextUtils.isEmpty(etLunchOut.getText()) || TextUtils.isEmpty(etLunchIn.getText())) {
@@ -565,7 +519,7 @@ public class MainActivity extends AppCompatActivity {
         //calcular horas trabalhadas
         initCronometro(dateHoraEntrada);
 //        retorna meu horário ja trabalhado até o momento
-        return diff_time(dateHoraEntrada, new Date());
+        return vazareUtils.diff_time(dateHoraEntrada, new Date());
     }
 
     public void calculateHourWorked() {
@@ -576,23 +530,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "calculateHourWorked: dateHoraEntrada: " + dateHoraEntrada);
         //calcular horas trabalhadas
         initCronometro(dateHoraEntrada);
-    }
-
-    public String calcular0147() {
-        String saida = etEnd.getText().toString();
-        Date dateSaida = new Date();
-        dateSaida.setHours(Integer.parseInt(saida.split(":")[0]));
-        dateSaida.setMinutes(Integer.parseInt(saida.split(":")[1]));
-        return calcular0147(dateSaida);
-    }
-
-    public String calcular0147(Date dateHoraInial) {
-        int totalHoras = (dateHoraInial.getHours() * 60) + dateHoraInial.getMinutes();
-        int horasPermitidas = 105;//01:45 == 105 minutos permitidos
-        int total = totalHoras + horasPermitidas;
-        int horas = total / 60;
-        int minutos = total % 60;
-        return format(FORMAT_HOUR_MIN, horas, minutos);
     }
 
     public void reset() {
@@ -607,15 +544,6 @@ public class MainActivity extends AppCompatActivity {
         isRunning = false;
         handler.removeCallbacks(runnable);
         notificationReceiver.ignoreNotification(mNotifyManager, this);
-    }
-
-    public String diff_time(Date saida, Date retorno) {
-        int totalRetorno = retorno.getHours() * 60 + retorno.getMinutes();
-        int totalSaida = saida.getHours() * 60 + saida.getMinutes();
-        int total = totalRetorno - totalSaida;
-        int horas = total / 60;
-        int minutos = total % 60;
-        return format(FORMAT_HOUR_MIN, horas, minutos);
     }
 
     /**
@@ -641,6 +569,7 @@ public class MainActivity extends AppCompatActivity {
         tvCountdownTimer = findViewById(R.id.tv_countdown_timer);
         fabClear = findViewById(R.id.fab_clear);
         alarmPendingIntent = alarmManagerImpl.prepareAlarmPendingIntent();
+        vazareUtils = new VazareUtils();
     }
 
     @Override
