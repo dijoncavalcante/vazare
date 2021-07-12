@@ -47,7 +47,8 @@
     <string name="_11_00_">11:00</string>
     <string name="_12_00_">12:00</string>
     <string name="_08_15">08:15</string>
-    <string name="bank_of_hours_label">Bank of Hours?</string>
+    <string name="bank_of_hours_hint">Bank of Hours</string>
+    <string name="bank_of_hours_label">BH</string>
     <string name="menu_notification">Notificações</string>
     <string name="menu_about">Sobre</string>
     <string name="title_activity_settings_manager">SettingsManagerActivity</string>
