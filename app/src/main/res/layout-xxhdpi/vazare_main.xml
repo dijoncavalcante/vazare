@@ -27,45 +27,17 @@
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
-        android:id="@+id/textview_hello"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/hello_label"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        app:layout_constraintTop_toBottomOf="@id/main_toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-
-    <TextView
         android:id="@+id/textView_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:text="@string/name_label"
         android:textColor="@android:color/black"
-        android:textSize="36sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textview_hello" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_face"
-        style="@style/ImageViewShapeable"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/face_description"
-        android:src="@drawable/ic_face_test"
-        app:layout_constraintBottom_toBottomOf="@+id/textView_name"
-        app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_toolbar"
-        app:shapeAppearanceOverlay="@style/Circular"
-        app:strokeColor="@color/colorAzul"
-        app:strokeWidth="5dp" />
+        app:layout_constraintTop_toBottomOf="@id/main_toolbar" />
 
     <include
         android:id="@+id/fragment_home_hour"
@@ -73,7 +45,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@id/tv_duration"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView_name"
@@ -114,7 +86,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tv_duration"
         style="@style/TextInputLayoutCustom"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:hint="@string/duracao"
         app:helperText="Duração do serviço"
         app:layout_constraintBottom_toBottomOf="@id/tv_countdown_timer"
