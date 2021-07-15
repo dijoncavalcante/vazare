@@ -26,45 +26,16 @@
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/textView_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/name_label"
-        android:textColor="@android:color/black"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/main_toolbar" />
-
     <include
         android:id="@+id/fragment_home_hour"
         layout="@layout/fragment_home_hour"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@id/tv_duration"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView_name"
+        app:layout_constraintTop_toBottomOf="@id/main_toolbar"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_div1"
-        style="@style/ImageViewShapeable"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:contentDescription="@string/clock_description"
-        android:src="@drawable/ic_vazare_foreground"
-        app:layout_constraintBottom_toTopOf="@+id/fragment_home_hour"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/fragment_home_hour"
-        app:shapeAppearanceOverlay="@style/Circular"
-        app:strokeColor="@color/cardview_dark_background"
-        app:strokeWidth="5dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tv_countdown_timer"
@@ -138,7 +109,7 @@
         android:layout_height="56dp"
         android:background="@drawable/bg_square_radius_container"
         android:paddingStart="16dp"
-        android:paddingEnd="8dp"
+        android:paddingEnd="16dp"
         android:text="@string/bank_of_hours_label"
         android:contentDescription="@string/bank_of_hours_hint"
         android:textColor="@color/colorWhite"
@@ -152,7 +123,6 @@
         style="?attr/materialButtonOutlinedStyle"
         android:layout_width="120dp"
         android:layout_height="56dp"
-        android:layout_marginStart="16dp"
         android:background="@drawable/bg_square_radius_container"
         android:onClick="calculateOnClick"
         android:text="@string/calcular"
