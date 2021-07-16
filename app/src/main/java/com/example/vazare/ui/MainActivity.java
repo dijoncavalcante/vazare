@@ -2,13 +2,10 @@ package com.example.vazare.ui;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -29,12 +26,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
 
 import com.example.vazare.R;
 import com.example.vazare.SettingsManagerActivity;
 import com.example.vazare.manager.AlarmManagerImpl;
 import com.example.vazare.receiver.NotificationReceiver;
+import com.example.vazare.util.Notification;
 import com.example.vazare.util.VazareUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -59,8 +56,6 @@ import static com.example.vazare.util.Constants.INT_DURACAO_TRABALHO__DIARIO_HOR
 import static com.example.vazare.util.Constants.INT_DURACAO_TRABALHO__DIARIO_MINUTO_2021;
 import static com.example.vazare.util.Constants.MILLIS_IN_SEC;
 import static com.example.vazare.util.Constants.MY_PREFERENCE;
-import static com.example.vazare.util.Constants.NOTIFICATION_ID;
-import static com.example.vazare.util.Constants.PRIMARY_CHANNEL_ID;
 import static com.example.vazare.util.Constants.SECOND_DEFAULT;
 import static com.example.vazare.util.Constants.STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS;
 import static com.example.vazare.util.Constants.STR_DURACAO_TRABALHO__DIARIO_2021;
@@ -95,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler;
     private boolean isRunning;
     private VazareUtils vazareUtils;
+    Notification notification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         /* etInit.setText("09:00"); */
         verifySharedPreference();
         clicks();
-        createNotificationChannel();
+        notification.createNotificationChannel(mNotifyManager, this);
         // Register the broadcast receiver to receive the update action from the notification.
         registerReceiver(notificationReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
     }
@@ -346,32 +342,32 @@ public class MainActivity extends AppCompatActivity {
                 switch (tvCountdownTimer.getEditText().getText().toString()) {
                     case "00:15:00":
                         tvCountdownTimer.setBackgroundColor(Color.GREEN);
-                        sendNotification(15);
+                        notification.sendNotification(15, mNotifyManager, getApplication());
                         break;
                     case "00:10:00":
                         tvCountdownTimer.setBackgroundColor(Color.YELLOW);
-                        sendNotification(10);
+                        notification.sendNotification(10, mNotifyManager, getApplication());
                         break;
                     case "00:05:00":
                         tvCountdownTimer.setBackgroundColor(Color.RED);
                         // Send the notification
-                        sendNotification(5);
+                        notification.sendNotification(5, mNotifyManager, getApplication());
                         break;
                     case "00:02:00":
-                        sendNotification(2);
+                        notification.sendNotification(2, mNotifyManager, getApplication());
                         break;
                     case "00:01:00":
-                        sendNotification(1);
+                        notification.sendNotification(1, mNotifyManager, getApplication());
                         break;
                 }
             }
 
             public void onFinish() {
                 if (switchBankHours.isChecked()) {
-                    showAlertDialog(getString(R.string.horas_extras_0147));
+                    notification.showAlertDialog(getString(R.string.horas_extras_0147), getApplicationContext(), switchBankHours.isChecked());
                 } else {
-                    showAlertDialog(getString(R.string.horas_trabalhadas));
-                    sendNotification(1);
+                    notification.showAlertDialog(getString(R.string.horas_trabalhadas), getApplicationContext(), switchBankHours.isChecked());
+                    notification.sendNotification(1, mNotifyManager, getApplication());
                 }
                 //TODO não limpar quando acabar os minutos restantes
                 // clearSharedPreferences();
@@ -547,6 +543,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         notificationReceiver = new NotificationReceiver(this);
+        notification = new Notification();
         alarmManagerImpl = new AlarmManagerImpl();
         handler = new Handler();
         mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -601,99 +598,6 @@ public class MainActivity extends AppCompatActivity {
         editor.remove(HORA_ENTRADA_ALMOCO_KEY);
         editor.clear();
         editor.commit();
-    }
-
-    public void createNotificationChannel() {
-        // Notification channels are only available in OREO and higher.
-        // So, add a check on SDK version.
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            // Create the NotificationChannel with all the parameters.
-            NotificationChannel notificationChannel = new NotificationChannel(PRIMARY_CHANNEL_ID, getString(R.string.notification_channel_name), NotificationManager.IMPORTANCE_HIGH);
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.enableVibration(true);
-            notificationChannel.setDescription(getString(R.string.notification_channel_description));
-            mNotifyManager.createNotificationChannel(notificationChannel);
-        }
-    }
-
-    public void sendNotification(int opcao) {
-        // Create a notification manager object.
-        mNotifyManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        Intent updateIntent = new Intent(ACTION_UPDATE_NOTIFICATION);
-        PendingIntent updatePendingIntent = PendingIntent.getBroadcast(this, NOTIFICATION_ID, updateIntent, PendingIntent.FLAG_ONE_SHOT);
-        // Build the notification with all of the parameters using helper method
-        NotificationCompat.Builder notifyBuilder = getNotificationBuilder(opcao);
-        // Add the action button using the pending intent.
-        //definir a imagem da notificacao
-        notifyBuilder.addAction(R.mipmap.ic_vazare, getString(R.string.ignore), updatePendingIntent);
-        // Deliver the notification.
-        mNotifyManager.notify(NOTIFICATION_ID, notifyBuilder.build());
-    }
-
-    private NotificationCompat.Builder getNotificationBuilder(int opcao) {
-        // Set up the pending intent that is delivered when the notification is clicked.
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent notificationPendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ID, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        String txtNotificacao = "";
-
-        if (opcao == 5) txtNotificacao = getString(R.string.notification_text_5);
-        else if (opcao == 10) txtNotificacao = getString(R.string.notification_text_10);
-        else if (opcao == 15) txtNotificacao = getString(R.string.notification_text_15);
-        else if (opcao == 1) txtNotificacao = getString(R.string.notification_text_1);
-        // Build the notification with all of the parameters.
-        return new NotificationCompat
-                .Builder(this, PRIMARY_CHANNEL_ID)
-                .setContentTitle(getString(R.string.notification_title))
-                .setContentText(txtNotificacao)
-                .setSmallIcon(R.mipmap.ic_vazare)
-                .setAutoCancel(true)
-                .setContentIntent(notificationPendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setDefaults(NotificationCompat.DEFAULT_ALL);
-    }
-
-    private void showAlertDialog(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.hours_worked);
-        builder.setMessage(message);
-        builder.setPositiveButton(R.string.pedir_corrida, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
-                /* adb shell "dumpsys activity activities | grep mResumedActivity
-                    mResumedActivity: ActivityRecord{5986b19 u0 com.example.vazare/.MainActivity t17}
-                    mResumedActivity: ActivityRecord{51b9692 u0 com.ubercab/.presidio.app.core.root.RootActivity t16
-                    mResumedActivity: ActivityRecord{5909209 u0 com.taxis99/com.didi.sdk.app.MainActivityImpl t18}
-                    mResumedActivity: ActivityRecord{c91a10d u0 net.taxidigital.tocantins/net.taxidigital.ui.main.MainActivity t19}
-                 */
-                Intent launchIntent;
-                if (!switchBankHours.isChecked()) {
-                    launchIntent = getPackageManager().getLaunchIntentForPackage("com.ubercab");
-                } else {
-                    launchIntent = getPackageManager().getLaunchIntentForPackage("com.taxis99");
-                    if (launchIntent == null) {
-                        launchIntent = getPackageManager().getLaunchIntentForPackage("net.taxidigital.tocantins");
-                        if (launchIntent == null) {
-                            launchIntent = getPackageManager().getLaunchIntentForPackage("com.ubercab");
-                        }
-                    }
-                }
-                if (launchIntent != null) {
-                    startActivity(launchIntent);
-                    Toast.makeText(MainActivity.this, "Abrindo App de Corrida.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "Aplicativos: UBER, 99Taxi ou Tocantins não foram encontrados.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        //define um botão como negativo.
-        builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(MainActivity.this, R.string.close_popup, Toast.LENGTH_SHORT).show();
-            }
-        });
-        AlertDialog alerta = builder.create();
-        alerta.show();
     }
 
     public boolean validate() {
