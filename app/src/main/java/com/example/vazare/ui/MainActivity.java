@@ -327,22 +327,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void countDownTimerNotification() {
-        /*        Logica para calcular o countdown para sair do trabalho         */
+        /* Logica para calcular o countdown para sair do trabalho         */
         Calendar calendarCurrent = Calendar.getInstance();
-        Date dataHoraEntrada = new Date();
-        dataHoraEntrada.setHours(calendarCurrent.get(Calendar.HOUR_OF_DAY));
-        dataHoraEntrada.setMinutes(calendarCurrent.get(Calendar.MINUTE));
-        dataHoraEntrada.setSeconds(calendarCurrent.get(Calendar.SECOND));
-
-        Date dataHoraSaida = new Date();
-        dataHoraSaida.setHours(vazareUtils.getHour(etEnd.getText().toString()));
-        dataHoraSaida.setMinutes(vazareUtils.getMinute(etEnd.getText().toString()));
-        dataHoraSaida.setSeconds(SECOND_DEFAULT);
-
-        long diffDate = dataHoraSaida.getTime() - dataHoraEntrada.getTime();
-
+        Calendar calendarEndDay = Calendar.getInstance();
+        calendarEndDay.set(Calendar.HOUR_OF_DAY, vazareUtils.getHour(etEnd.getText().toString()));
+        calendarEndDay.set(Calendar.MINUTE, vazareUtils.getMinute(etEnd.getText().toString()));
+        calendarEndDay.set(Calendar.SECOND, SECOND_DEFAULT);
+        long diffDate = calendarEndDay.getTimeInMillis() - calendarCurrent.getTimeInMillis();
         countDownTimer = new CountDownTimer(diffDate, 1000) { // adjust the milli seconds here 16069000
-
             public void onTick(long millisUntilFinished) {
 
                 @SuppressLint("DefaultLocale") String minutosRestantes = format(FORMAT_HOUR_MIN_SEC,
