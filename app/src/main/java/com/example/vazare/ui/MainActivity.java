@@ -96,13 +96,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initUI();
+        notification.createNotificationChannel(mNotifyManager, this);
+        // Register the broadcast receiver to receive the update action from the notification.
+        registerReceiver(notificationReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
         //TODO Add linha com hora inicial para teste
         /* etInit.setText("09:00"); */
         verifySharedPreference();
         clicks();
-        notification.createNotificationChannel(mNotifyManager, this);
-        // Register the broadcast receiver to receive the update action from the notification.
-        registerReceiver(notificationReceiver, new IntentFilter(ACTION_UPDATE_NOTIFICATION));
     }
 
     private final Runnable runnable = new Runnable() {
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
         calendarEndDay.set(Calendar.MINUTE, vazareUtils.getMinute(etEnd.getText().toString()));
         calendarEndDay.set(Calendar.SECOND, SECOND_DEFAULT);
         long diffDate = calendarEndDay.getTimeInMillis() - calendarCurrent.getTimeInMillis();
-        countDownTimer = new CountDownTimer(diffDate, 1000) { // adjust the milli seconds here 16069000
+        countDownTimer = new CountDownTimer(diffDate, 1000) {
             public void onTick(long millisUntilFinished) {
 
                 @SuppressLint("DefaultLocale") String minutosRestantes = format(FORMAT_HOUR_MIN_SEC,
