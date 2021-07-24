@@ -364,13 +364,11 @@ public class MainActivity extends AppCompatActivity {
 
             public void onFinish() {
                 if (switchBankHours.isChecked()) {
-                    notification.showAlertDialog(getString(R.string.horas_extras_0147), getApplicationContext(), switchBankHours.isChecked());
+                    notification.showAlertDialog(getString(R.string.horas_extras_0147), MainActivity.this, switchBankHours.isChecked());
                 } else {
-                    notification.showAlertDialog(getString(R.string.horas_trabalhadas), getApplicationContext(), switchBankHours.isChecked());
+                    notification.showAlertDialog(getString(R.string.horas_trabalhadas), MainActivity.this, switchBankHours.isChecked());
                     notification.sendNotification(1, mNotifyManager, getApplication());
                 }
-                //TODO não limpar quando acabar os minutos restantes
-                // clearSharedPreferences();
             }
         }.start();
     }

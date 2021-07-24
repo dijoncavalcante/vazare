@@ -72,45 +72,40 @@ public class Notification {
                 .setDefaults(NotificationCompat.DEFAULT_ALL);
     }
 
+    /**
+     * adb shell "dumpsys activity activities | grep mResumedActivity
+     * mResumedActivity: ActivityRecord{5986b19 u0 com.example.vazare/.MainActivity t17}
+     * mResumedActivity: ActivityRecord{51b9692 u0 com.ubercab/.presidio.app.core.root.RootActivity t16
+     * mResumedActivity: ActivityRecord{5909209 u0 com.taxis99/com.didi.sdk.app.MainActivityImpl t18}
+     * mResumedActivity: ActivityRecord{c91a10d u0 net.taxidigital.tocantins/net.taxidigital.ui.main.MainActivity t19}
+     */
     public void showAlertDialog(String message, Context context, boolean isSwitchChecked) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.hours_worked);
         builder.setMessage(message);
-        builder.setPositiveButton(R.string.pedir_corrida, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
-                /* adb shell "dumpsys activity activities | grep mResumedActivity
-                    mResumedActivity: ActivityRecord{5986b19 u0 com.example.vazare/.MainActivity t17}
-                    mResumedActivity: ActivityRecord{51b9692 u0 com.ubercab/.presidio.app.core.root.RootActivity t16
-                    mResumedActivity: ActivityRecord{5909209 u0 com.taxis99/com.didi.sdk.app.MainActivityImpl t18}
-                    mResumedActivity: ActivityRecord{c91a10d u0 net.taxidigital.tocantins/net.taxidigital.ui.main.MainActivity t19}
-                 */
-                Intent launchIntent;
-                if (!isSwitchChecked) {
-                    launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.ubercab");
-                } else {
-                    launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.taxis99");
+        builder.setPositiveButton(R.string.pedir_corrida, (arg0, arg1) -> {
+            Intent launchIntent;
+            if (!isSwitchChecked) {
+                launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.ubercab");
+            } else {
+                launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.taxis99");
+                if (launchIntent == null) {
+                    launchIntent = context.getPackageManager().getLaunchIntentForPackage("net.taxidigital.tocantins");
                     if (launchIntent == null) {
-                        launchIntent = context.getPackageManager().getLaunchIntentForPackage("net.taxidigital.tocantins");
-                        if (launchIntent == null) {
-                            launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.ubercab");
-                        }
+                        launchIntent = context.getPackageManager().getLaunchIntentForPackage("com.ubercab");
                     }
                 }
-                if (launchIntent != null) {
-                    context.startActivity(launchIntent);
-                    Toast.makeText(context, "Abrindo App de Corrida.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, "Aplicativos: UBER, 99Taxi ou Tocantins não foram encontrados.", Toast.LENGTH_SHORT).show();
-                }
+            }
+            if (launchIntent != null) {
+                context.startActivity(launchIntent);
+                Toast.makeText(context, "Abrindo App de Corrida.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Aplicativos: UBER, 99Taxi ou Tocantins não foram encontrados.", Toast.LENGTH_SHORT).show();
             }
         });
         //define um botão como negativo.
-        builder.setNegativeButton(R.string.close, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
-                Toast.makeText(context, R.string.close_popup, Toast.LENGTH_SHORT).show();
-            }
-        });
-        AlertDialog alerta = builder.create();
-        alerta.show();
+        builder.setNegativeButton(R.string.close, (arg0, arg1) -> Toast.makeText(context, R.string.close_popup, Toast.LENGTH_SHORT).show());
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

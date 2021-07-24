@@ -7,12 +7,12 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/colorWhite">
 
             <androidx.appcompat.widget.Toolbar
@@ -69,7 +69,7 @@
                 android:src="@drawable/ic_face_test"
                 app:layout_constraintBottom_toBottomOf="@+id/textView_name"
                 app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/btn_calculate"
                 app:layout_constraintTop_toBottomOf="@id/main_toolbar"
                 app:shapeAppearanceOverlay="@style/Circular"
                 app:strokeColor="@color/colorAzul"
@@ -160,6 +160,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|start"
+                android:layout_marginTop="16dp"
                 android:background="@color/colorLilas"
                 android:contentDescription="@string/clear_values"
                 app:layout_constraintBottom_toBottomOf="parent"
