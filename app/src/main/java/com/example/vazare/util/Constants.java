@@ -10,7 +10,7 @@ public class Constants {
     public static final String HORA_SAIDA_ALMOCO_KEY = "hora_saida_almoco";
     public static final String HORA_ENTRADA_ALMOCO_KEY = "hora_entrada_almoco";
     public static final String CHECK_BANK_OF_HOUR_KEY = "check_0147_Key";
-    public static final String STR_DURACAO_TRABALHO__DIARIO_2021 = "08:15";
+    public static final String STR_DURACAO_TRABALHO__DIARIO_2021 = "08:16";
     public static final String STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS = "10:00";
     public static final Integer INT_DURACAO_TRABALHO__DIARIO_HORA_2021 = 8;
     public static final Integer INT_DURACAO_TRABALHO__DIARIO_MINUTO_2021 = 15;

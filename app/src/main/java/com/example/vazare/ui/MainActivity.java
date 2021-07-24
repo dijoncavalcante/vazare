@@ -286,9 +286,9 @@ public class MainActivity extends AppCompatActivity {
                     boolean check = sharedPreferences.getBoolean(CHECK_BANK_OF_HOUR_KEY, false);
                     if (check) {
                         switchBankHours.setChecked(check);
-                        tvDuration.getEditText().setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
+                        Objects.requireNonNull(tvDuration.getEditText()).setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
                     } else {// a duração normal de um dia de trabalho
-                        tvDuration.getEditText().setText(STR_DURACAO_TRABALHO__DIARIO_2021);
+                        Objects.requireNonNull(tvDuration.getEditText()).setText(STR_DURACAO_TRABALHO__DIARIO_2021);
                     }
                     Log.d(TAG, "verifySharedPreference: switchBankHours: " + switchBankHours.isChecked());
                 }
@@ -441,9 +441,9 @@ public class MainActivity extends AppCompatActivity {
             //calcular horas permitidas
             if (switchBankHours.isChecked()) {
                 etEnd.setText(vazareUtils.calculateBH(etEnd.getText().toString()));
-                tvDuration.getEditText().setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
+                Objects.requireNonNull(tvDuration.getEditText()).setText(STR_DURACAO_TRABALHO_BANCO_HORAS_PERMITIDAS);
             } else {
-                tvDuration.getEditText().setText(STR_DURACAO_TRABALHO__DIARIO_2021);
+                Objects.requireNonNull(tvDuration.getEditText()).setText(STR_DURACAO_TRABALHO__DIARIO_2021);
             }
             //start countDownTimer
             countDownTimerNotification();
@@ -539,7 +539,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.vazare_main);
         toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
         notificationReceiver = new NotificationReceiver(this);
         notification = new Notification();
         alarmManagerImpl = new AlarmManagerImpl();

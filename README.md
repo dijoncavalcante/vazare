@@ -26,8 +26,7 @@ This projecet have the following features in the wich you can to use:
 - Limpar todos os campos de uma só vez.
 
 # TODO
-- Change layout.
-- Change architecture to MMV.
-- Save datas daily.
+- Change architecture to MVVM.
+- Save data daily.
 - Add local storage.
 - Add layout for six hours of the work.(to use navigation botton or tabLayout.)
