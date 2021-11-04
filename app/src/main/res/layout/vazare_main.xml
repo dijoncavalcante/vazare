@@ -1,205 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorWhite">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:background="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorWhite">
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.Toolbar>
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/main_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryDark"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+    <TextView
+        android:id="@+id/textview_hello"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/hello_label"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_toolbar" />
 
-                <TextView
-                    android:id="@+id/toolbar_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/app_name"
-                    android:textColor="@android:color/white"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
-            </androidx.appcompat.widget.Toolbar>
+    <TextView
+        android:id="@+id/textView_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/name_label"
+        android:textColor="@android:color/black"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textview_hello" />
 
-            <TextView
-                android:id="@+id/textview_hello"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/hello_label"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/main_toolbar" />
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_face"
+        style="@style/ImageViewShapeable"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/face_description"
+        android:src="@drawable/ic_face_test"
+        app:layout_constraintBottom_toBottomOf="@+id/textView_name"
+        app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"
+        app:layout_constraintEnd_toEndOf="@id/btn_calculate"
+        app:layout_constraintTop_toBottomOf="@id/main_toolbar"
+        app:shapeAppearanceOverlay="@style/Circular"
+        app:strokeColor="@color/colorAzul"
+        app:strokeWidth="5dp" />
 
-            <TextView
-                android:id="@+id/textView_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="@string/name_label"
-                android:textColor="@android:color/black"
-                android:textSize="36sp"
-                app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textview_hello" />
+    <include
+        android:id="@+id/fragment_home_hour"
+        layout="@layout/fragment_home_hour"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_duration"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textView_name" />
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_face"
-                style="@style/ImageViewShapeable"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/face_description"
-                android:src="@drawable/ic_face_test"
-                app:layout_constraintBottom_toBottomOf="@+id/textView_name"
-                app:layout_constraintBottom_toTopOf="@id/fragment_home_hour"
-                app:layout_constraintEnd_toEndOf="@id/btn_calculate"
-                app:layout_constraintTop_toBottomOf="@id/main_toolbar"
-                app:shapeAppearanceOverlay="@style/Circular"
-                app:strokeColor="@color/colorAzul"
-                app:strokeWidth="5dp" />
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_div1"
+        style="@style/ImageViewShapeable"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:contentDescription="@string/clock_description"
+        android:src="@drawable/ic_vazare_foreground"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_home_hour"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragment_home_hour"
+        app:shapeAppearanceOverlay="@style/Circular"
+        app:strokeColor="@color/cardview_dark_background"
+        app:strokeWidth="5dp" />
 
-            <include
-                android:id="@+id/fragment_home_hour"
-                layout="@layout/fragment_home_hour"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                app:layout_constraintBottom_toTopOf="@id/tv_duration"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/textView_name" />
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tv_countdown_timer"
+        style="@style/TextInputLayoutCustom"
+        android:layout_marginStart="16dp"
+        android:hint="@string/timer"
+        app:helperText="Horas trabalhadas"
+        app:layout_constraintBottom_toBottomOf="@id/tv_duration"
+        app:layout_constraintEnd_toStartOf="@id/tv_duration"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_home_hour"
+        app:layout_constraintTop_toTopOf="@id/tv_duration">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_div1"
-                style="@style/ImageViewShapeable"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:contentDescription="@string/clock_description"
-                android:src="@drawable/ic_vazare_foreground"
-                app:layout_constraintBottom_toTopOf="@+id/fragment_home_hour"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/fragment_home_hour"
-                app:shapeAppearanceOverlay="@style/Circular"
-                app:strokeColor="@color/cardview_dark_background"
-                app:strokeWidth="5dp" />
+        <com.google.android.material.textfield.TextInputEditText
+            style="@style/TextInputEditTextCustom"
+            tools:text="@string/_04_00_00_" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tv_countdown_timer"
-                style="@style/TextInputLayoutCustom"
-                android:layout_marginStart="16dp"
-                android:hint="@string/timer"
-                app:helperText="Horas trabalhadas"
-                app:layout_constraintBottom_toBottomOf="@id/tv_duration"
-                app:layout_constraintEnd_toStartOf="@id/tv_duration"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fragment_home_hour"
-                app:layout_constraintTop_toTopOf="@id/tv_duration">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tv_duration"
+        style="@style/TextInputLayoutCustom"
+        android:layout_marginBottom="16dp"
+        android:hint="@string/duracao"
+        app:helperText="Duração do serviço"
+        app:layout_constraintBottom_toBottomOf="@id/tv_countdown_timer"
+        app:layout_constraintEnd_toStartOf="@id/tv_progressive_counting"
+        app:layout_constraintStart_toEndOf="@id/tv_countdown_timer"
+        app:layout_constraintTop_toBottomOf="@id/fragment_home_hour">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/TextInputEditTextCustom"
-                    tools:text="@string/_04_00_00_" />
-            </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputEditText
+            style="@style/TextInputEditTextCustom"
+            tools:text="@string/_08_15" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tv_duration"
-                style="@style/TextInputLayoutCustom"
-                android:layout_marginBottom="16dp"
-                android:hint="@string/duracao"
-                app:helperText="Duração do serviço"
-                app:layout_constraintBottom_toBottomOf="@id/tv_countdown_timer"
-                app:layout_constraintEnd_toStartOf="@id/tv_progressive_counting"
-                app:layout_constraintStart_toEndOf="@id/tv_countdown_timer"
-                app:layout_constraintTop_toBottomOf="@id/fragment_home_hour">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tv_progressive_counting"
+        style="@style/TextInputLayoutCustom"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/horas_trabalhadas_label"
+        app:helperText="Horas concluídas"
+        app:helperTextEnabled="true"
+        app:layout_constraintBottom_toBottomOf="@id/tv_duration"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_duration"
+        app:layout_constraintTop_toBottomOf="@id/fragment_home_hour"
+        app:layout_constraintTop_toTopOf="@id/tv_duration">
+        <!--        Consistencia e Resiliência = 1% melhor a cada dia-->
 
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/TextInputEditTextCustom"
-                    tools:text="@string/_08_15" />
-            </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputEditText
+            style="@style/TextInputEditTextCustom"
+            tools:text="@string/_04_00_00_" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tv_progressive_counting"
-                style="@style/TextInputLayoutCustom"
-                android:layout_marginEnd="16dp"
-                android:hint="@string/horas_trabalhadas_label"
-                app:helperText="Horas concluídas"
-                app:helperTextEnabled="true"
-                app:layout_constraintBottom_toBottomOf="@id/tv_duration"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_duration"
-                app:layout_constraintTop_toBottomOf="@id/fragment_home_hour"
-                app:layout_constraintTop_toTopOf="@id/tv_duration">
-                <!--        Consistencia e Resiliência = 1% melhor a cada dia-->
+    </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/TextInputEditTextCustom"
-                    tools:text="@string/_04_00_00_" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorLilas"
+        android:contentDescription="@string/clear_values"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/switch_banck_hours"
+        app:layout_constraintStart_toStartOf="@id/tv_countdown_timer"
+        app:layout_constraintTop_toBottomOf="@id/tv_duration"
+        app:srcCompat="@android:drawable/ic_menu_delete" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switch_banck_hours"
+        android:layout_width="120dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_square_radius_container"
+        android:contentDescription="@string/bank_of_hours_hint"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/bank_of_hours_label"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="@id/fab_clear"
+        app:layout_constraintEnd_toStartOf="@+id/btn_calculate"
+        app:layout_constraintStart_toEndOf="@+id/fab_clear"
+        app:layout_constraintTop_toTopOf="@id/fab_clear" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_clear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|start"
-                android:layout_marginTop="16dp"
-                android:background="@color/colorLilas"
-                android:contentDescription="@string/clear_values"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/switch_banck_hours"
-                app:layout_constraintStart_toStartOf="@id/tv_countdown_timer"
-                app:layout_constraintTop_toBottomOf="@id/tv_duration"
-                app:srcCompat="@android:drawable/ic_menu_delete" />
+    <Button
+        android:id="@+id/btn_calculate"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="120dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_square_radius_container"
+        android:contentDescription="@string/calcular"
+        android:onClick="calculateOnClick"
+        android:text="@string/calcular"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintBottom_toBottomOf="@id/fab_clear"
+        app:layout_constraintEnd_toEndOf="@id/tv_progressive_counting"
+        app:layout_constraintStart_toEndOf="@id/switch_banck_hours"
+        app:layout_constraintTop_toBottomOf="@id/tv_duration"
+        app:layout_constraintTop_toTopOf="@id/fab_clear" />
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/switch_banck_hours"
-                android:layout_width="120dp"
-                android:layout_height="56dp"
-                android:background="@drawable/bg_square_radius_container"
-                android:contentDescription="@string/bank_of_hours_hint"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:text="@string/bank_of_hours_label"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintBottom_toBottomOf="@id/fab_clear"
-                app:layout_constraintEnd_toStartOf="@+id/btn_calculate"
-                app:layout_constraintStart_toEndOf="@+id/fab_clear"
-                app:layout_constraintTop_toTopOf="@id/fab_clear" />
-
-            <Button
-                android:id="@+id/btn_calculate"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="120dp"
-                android:layout_height="56dp"
-                android:background="@drawable/bg_square_radius_container"
-                android:contentDescription="@string/calcular"
-                android:onClick="calculateOnClick"
-                android:text="@string/calcular"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintBottom_toBottomOf="@id/fab_clear"
-                app:layout_constraintEnd_toEndOf="@id/tv_progressive_counting"
-                app:layout_constraintStart_toEndOf="@id/switch_banck_hours"
-                app:layout_constraintTop_toBottomOf="@id/tv_duration"
-                app:layout_constraintTop_toTopOf="@id/fab_clear" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.appcompat.widget.LinearLayoutCompat>
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
