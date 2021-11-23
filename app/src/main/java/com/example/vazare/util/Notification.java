@@ -5,7 +5,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.widget.Toast;
@@ -13,7 +12,7 @@ import android.widget.Toast;
 import androidx.core.app.NotificationCompat;
 
 import com.example.vazare.R;
-import com.example.vazare.ui.MainActivity;
+import com.example.vazare.presentation.MainActivity;
 
 import static com.example.vazare.util.Constants.ACTION_UPDATE_NOTIFICATION;
 import static com.example.vazare.util.Constants.NOTIFICATION_ID;

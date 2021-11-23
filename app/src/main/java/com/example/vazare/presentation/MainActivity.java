@@ -1,4 +1,4 @@
-package com.example.vazare.ui;
+package com.example.vazare.presentation;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;

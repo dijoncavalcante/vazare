@@ -17,14 +17,14 @@
         <activity
             android:name=".SettingsManagerActivity"
             android:label="@string/title_activity_settings_manager"
-            android:parentActivityName=".ui.MainActivity">
+            android:parentActivityName=".presentation.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity"/>
+                android:value=".presentation.MainActivity"/>
 
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".presentation.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
